@@ -1,0 +1,30 @@
+<table class="basicTable" style="border: 0;">
+  <thead>
+    <tr>
+      <th *ngFor="let key of headerMap; let i = index">
+        <span>{{key.displayName}}</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody *ngIf="dataSource?.Data?.length == 0">
+    <tr>
+      <td [colSpan]="9" class="text-center">No Data Found</td>
+    </tr>
+  </tbody>
+  <tbody *ngIf="dataSource?.Data?.length > 0">
+    <tr *ngFor="let item of dataSource?.Data; let i = index">
+      <td *ngFor="let key of headerMap">
+        <div *ngIf="ColumnMap.indexOf(item[key.objectKey])==-1 ; else otherProcess" >
+          <span  *ngIf="columnList.indexOf(key.objectKey)==-1;else otherProcess1">{{item[key.objectKey]   | number:'1.0-2'}}</span>
+          <ng-template #otherProcess1>          
+            <span>${{item[key.objectKey]   | number:'1.0-2'}}</span>
+          </ng-template>
+        </div>
+        <ng-template #otherProcess>          
+          <span>{{item[key.objectKey] }}</span>
+        </ng-template>
+
+      </td>
+    </tr>
+  </tbody>
+</table>

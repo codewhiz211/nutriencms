@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h5>Create</h5>
+    <button type="button" class="close" aria-label="Close" (click)="Close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" role="document" aria-label="Modal heading text content">
+    <div class="p-3" style="max-height:400px;overflow:auto;">
+      <form>
+        <label for="folderName"> Folder Name:</label>
+        <input type="text" class="form-control" #txtFolder id="folderName">
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="cta-button-group">
+      <button class="btn btn-sm btn-primary text-white" (click)="CreateFolder(txtFolder);" type="submit" data-dismiss="modal">Create</button>
+      <button class="btn btn-clear btn-sm" (click)="Close();" type="button"
+        data-dismiss="modal">Cancel</button>
+    </div>
+  </div>

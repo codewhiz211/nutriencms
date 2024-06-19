@@ -1,0 +1,79 @@
+<section class="configurePop">
+  <div class="pop_box largePop">
+    <section class="modal-header">
+      <h3 class="FR22 padding-0">Export</h3>     
+      <div class="corner-button">
+        <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </section>
+    <section aria-label="Modal heading text content" class="modal-body" role="document">
+      <!---------------------Customize Grid columns Section--------------------->
+      <div class="fWrap sections">        
+        <div class="showHide">
+          <div class="custom_wrap">           
+            <div class="drag_grid">
+              <div class="row">
+                <div class="left_cell">
+                  <div class="wfMainGSearch">
+                    <div class="globalSearchWrap">
+                      <div class="field-group">
+                        <input class="span12" name="txtColSearch" id="txtColSearch" placeholder="Search Term"
+                          type="search" [(ngModel)]="columnName">
+                        <button aria-label="Search" class="btn-search" routerlink="" style="z-index: 1;" tabindex="0"
+                          type="button">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-right paddingTop-xs">
+                    <a id="aAddAllColumns" (click)="AddALLGridColumn()" href="javascript:void(0)">Add all columns</a>
+                  </div>
+                </div>
+                <div class="right_cell">
+                  <div class="text-right"><a (click)="DeleteAllGridColumn(GridColumnList)"
+                      href="javascript:void(0)">Clear All</a></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="left_cell">
+                  <div class="scroll_wrap">                  
+                    <ul>
+                      <li *ngFor="let column of ColumnList | searchColumn:columnName:'DisplayName'; let i=index">
+                        <span>{{column.DataModelObjectGroup === undefined ? '': column.DataModelObjectGroup.Name + '>'}}
+                          {{column.DisplayName}}</span>
+                        <span><a *ngIf="GridColumns[column.GUID]==undefined ? 'Add' : 'Added'  as btnColumnText"
+                            (click)="AddGridColumn(column)" href="javascript:void(0)">{{btnColumnText}}</a></span></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="right_cell">
+                  <div class="scroll_wrap">
+                    <ul cdkDropList (cdkDropListDropped)="dropColumn($event)">
+                      <li class="pop" cdkDrag *ngFor="let column of GridColumnList; let i = index">
+                        <span>{{column.DataModelObjectGroup === undefined ? '': column.DataModelObjectGroup.Name + '>'}}
+                          {{column.DisplayName}}</span>
+                        <span><a (click)="DeleteGridColumn(column)" href="javascript:void(0)">Remove</a></span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!---------------------End View Name Section--------------------->
+
+    <div class="modal-footer">
+      <div class="cta-button-group">
+        <button class="btn btn-warning btn-sm text-white" data-dismiss="modal" type="button"
+          (click)="Export()">Export</button>    
+        <button class="btn btn-clear btn-small" (click)="activeModal.close(false)" data-dismiss="modal"
+          type="button">Cancel</button></div>
+    </div>
+  </div>
+</section>

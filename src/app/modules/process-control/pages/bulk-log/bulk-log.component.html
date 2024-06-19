@@ -1,0 +1,13 @@
+
+        <div class="display-name">{{ProcessDispName}} Bulk Upload Log</div>
+
+<div class="grid">
+    <generic-grid
+      [dataSource]="dataSource"
+      [headerMap]="HeaderMap"
+      [itemsCount]="itemsCount"
+      [sNo]="true"
+      (pageChange)="pageChange($event)"
+      (actionClick)="actionClick($event)"
+    ></generic-grid>
+  </div>

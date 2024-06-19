@@ -1,0 +1,37 @@
+.vendor-terms {
+    &-header {
+
+        span {
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 0.42px;
+            line-height: 10px;
+        }
+        .update-btn {
+            border-radius: 10px;
+            color: #FFFFFF;
+            font-size: 11px;
+            letter-spacing: 0.3px;
+            line-height: 4px;
+            text-align: center;
+            width: 100px;
+            height: 20px;
+            background-color: #226398;
+        }
+    }
+
+    &-grid {
+        margin-top: 24px;
+    }
+}
+.remove-filter {
+    color: #fff;
+    background-color: #a6a6a6;
+    padding: 4px 8px;
+    text-decoration: none !important;
+    font-size: 12px;
+    left: 164px;
+    top: 16px;
+    float: right;
+}

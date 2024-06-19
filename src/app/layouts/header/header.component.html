@@ -1,0 +1,59 @@
+<header>
+	<div id="cms-header">
+    	<div class="logoWrap">
+            <a [hidden]="hideGlobalLogo" title="Nutrien" aria-label="Nutrien"><img src="assets/styles/images/Nutrien-Ag-Solutions-white.svg" alt="Nutrien Logo"></a>
+        </div>
+        <div class="headRightBar" [hidden]="!isUserLoggedIn">
+            <div>
+                <a href="javascript:void(0)" *ngIf="isQuickMind === false" (click)="gotoQuickmind()"><i class="far fa-lightbulb"></i></a>
+            </div>
+     
+            <div [ngClass]="{ chatOn: isOpen }">
+                <a (click)="toggle('unread')" [ngClass]="{ notify: headerService.CountValue > 0 }"><i class="fas fa-volume-down"></i></a>
+                <div class="chatWidget">
+                    <div class="headerChat">
+                        <a style="color:#4C9E00;" href="javascript:void(0)" (click)="show($event)">Show all</a>
+                        <a style="color:#4C9E00;" [hidden]="!isMarkAsRead" href="javascript:void(0)" (click)="markAllAsRead()">Mark all as read</a>
+                    </div>
+                    <ul
+                        infinite-scroll
+                        [infiniteScrollDistance]="modalScrollDistance"
+                        [infiniteScrollThrottle]="modalScrollThrottle"
+                        [scrollWindow]="false"
+                        (scrolled)="onModalScrollDown()"
+                    >
+                        <li *ngFor="let item of notificationList ; let index = index">
+                            <div *ngIf="item.ReadStatus==0" class="corner-button">
+                                <button type="button" class="close my-custom-close" data-dismiss="modal" aria-label="Close" (click)="markRead(item.ID, index)"></button>
+                            </div>
+                            <a>
+                                <strong>{{item.Name}}</strong>
+                                <div *ngIf="item.Description.length>400; else other_content" innerHTML="{{item.Description.substring(0,400)}} ... "></div><a *ngIf='item.Description.length>400;' href='javascript:void(0)' (click)="openDetailPage(item.ID)">Show More</a>
+                                <ng-template #other_content>{{item.Description | striphtml}}</ng-template>
+                            </a>
+                        </li>
+                        <li [hidden]="showItemLoading" class="dropdown-item text-center">
+                            <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <!-- <a class="widgetsBarLogin" target="_blank"  [routerLink]="['/users/user-profile/myprofile=user']" href="javascript:void(0)" title="{{userFullName}}">
+                    <i class="fas fa-user-circle"></i><span class="d-none d-sm-inline-block">{{userFullName}}</span>
+                </a> -->
+                <a class="widgetsBarLogin"  href="javascript:void(0)" title="{{userFullName}}">
+                    <i class="fas fa-user-circle"></i><span class="d-none d-sm-inline-block">{{userFullName}}</span>
+                </a>
+            </div>
+
+            <div class="logout">
+                <a (click)="logout()" title="Logout">
+                    LOGOUT
+                </a>
+            </div>
+
+        </div>
+    </div>
+</header>

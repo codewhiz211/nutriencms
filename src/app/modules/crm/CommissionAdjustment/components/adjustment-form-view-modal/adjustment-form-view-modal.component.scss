@@ -1,0 +1,160 @@
+.modal-header {
+    border-bottom: none !important;
+    padding: 24px 42px 0;
+  
+    .modal-title {
+      color: black;
+      font-size: 24px;
+      font-weight: 300;
+      letter-spacing: 0.72px;
+      line-height: 33px;
+    }
+  
+    .close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0;
+    }
+  }
+  
+  .modal-body {
+    padding: 24px 42px;
+  
+    .drow {
+      clear: both;
+      padding: 16px 2px 4px;
+    }
+  
+    .dcolumns {
+        display: inline-block;
+        padding-right: 5px;
+        padding-left: 5px;
+        vertical-align: top;
+        box-sizing: border-box;
+        width: 50%;
+    }
+  
+    .form-group {
+      margin-bottom: 20px;
+    }
+  
+    .form-control {
+      height: 24px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+  
+    .input-label {
+      color: #4D4D51;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+  
+  
+    .ng-select {
+  
+      &.form-control {
+          padding: 0;
+          height: 100%;
+      }
+  
+      &::ng-deep .ng-select-container  {      
+          min-height: 22px;
+          min-width: 100px;
+          height: 22px;
+          border-radius: 3px;
+          font-size: 12px;
+          border: none;
+      }
+    
+      &::ng-deep .ng-select-container .ng-input {
+          top: 0 !important;
+      }
+    
+      &::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+          height: 24px;
+          font-size: 12px;
+          padding: 2px 12px;
+      }
+    }
+  
+    .input-group {
+      .input-group-prepend {
+          .btn {
+              height: 26px;
+              display: flex;
+          }
+      }
+      .form-control {
+        height: 26px;
+      }
+  
+      &.is-invalid {
+          .input-group-prepend {
+              button {
+                  border: 1px solid red;
+              }
+          }
+  
+          input.form-control {
+              border: 1px solid red;
+          }
+  
+          & ~ .invalid-feedback {
+              display: block;
+          }
+      }
+      
+    }
+  
+    .invalid-feedback {
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.3px;
+    }
+  
+    .download-file-icon {
+      i {
+        font-size: 20px;
+        margin-right: 10px;
+      }
+      span {
+        color: #36424F;
+        font-size: 12px;
+        letter-spacing: 0.46px;
+        line-height: 17px;
+      }
+      a{
+        cursor: pointer;
+      }
+    }
+ 
+  
+    .submit-btn {
+      font-size: 12px;
+      letter-spacing: 0.35px;
+      line-height: 17px;
+      text-align: center;
+      width: 150px;
+      height: 35px;
+    }
+  
+    .cancel-btn {
+      color: #36424F;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.35px;
+      line-height: 17px;
+      text-align: center;
+      margin-right: 32px;
+    }
+
+  }
+ 
+  
+  .txt12{font-size:12px;}
+    
+    

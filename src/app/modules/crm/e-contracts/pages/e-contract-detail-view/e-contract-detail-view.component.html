@@ -1,0 +1,106 @@
+<div class="sub-header">
+
+  <div class="breadcrumbs">
+    <a href="javascript:void(0);" (click)="go_back()"><i class="fas fa-home"></i></a>
+    <i class="fas fa-chevron-right arrow"></i>
+    <span>Contract # {{topCornerDetails['Record ID']}}</span>
+  </div>
+  <!-- Trigger Buttons -->
+  <div class="triggers">
+    <a class="delete-record-btn" *ngIf="isClosed" (click)="show_close_msg()" title="Close record"><i
+        class="fas fa-times"></i> <span>Close record</span></a>
+    <a [hidden]="currentState === 'Draft Contract' ||
+     currentState === 'Review & Agent Sign' ||
+     currentState === 'Pending Forward Supply Approval'"  class="invoice-sale-btn" *ngIf="isClosed" (click)="Create_New_Sale()" title="Create New Sale"><i class="fas fa-paper-plane"></i>
+      <span>Create New Sale</span></a>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <!-- Stages -->
+      <div class="row stages">
+        <div *ngFor="let stage of stages" class="col stage" [class.active]="stage.active">
+          <a><span>{{stage.DisplayName}}</span></a>
+        </div>
+      </div>
+      <!-- Header Informations -->
+      <div class="row header-info">
+        <div class="header-info-item col">
+          <span class="header-info-item-label">E-Contract ID</span>
+          <span class="header-info-item-value">{{topCornerDetails['Record ID']}}</span>
+        </div>
+        <div class="header-info-item col">
+          <span class="header-info-item-label">Contract Date</span>
+          <ng-container *ngIf="!isDate(topCornerDetails['Contract Date']); else showContractDate">
+              <span class="header-info-item-value">{{topCornerDetails['Contract Date']}}</span>
+            </ng-container>
+            <ng-template #showContractDate>
+              <span class="header-info-item-value">{{topCornerDetails['Contract Date'] | date:dateFormat}}</span>
+            </ng-template>
+        </div>
+        <div class="header-info-item col">
+          <span class="header-info-item-label">E-Contract State</span>
+          <span class="header-info-item-value">{{topCornerDetails['State']}}</span>
+        </div>
+        <div class="header-info-item col">
+          <span class="header-info-item-label">Transaction Type</span>
+          <span class="header-info-item-value">{{topCornerDetails['Transaction Type']}}</span>
+        </div>
+        <div class="header-info-item col">
+          <span class="header-info-item-label">Sale Type</span>
+          <span class="header-info-item-value">{{topCornerDetails['Sale Type']}}</span>
+        </div>
+        <div class="header-info-item col">
+          <span class="header-info-item-label">Est. Delivery Date</span>
+          <ng-container *ngIf="!isDate(topCornerDetails['Est. Final Delivery Date']); else showDate">
+              <span class="header-info-item-value">{{topCornerDetails['Est. Final Delivery Date']}}</span>
+            </ng-container>
+            <ng-template #showDate><span class="header-info-item-value">{{topCornerDetails['Est. Final Delivery Date'] | date:dateFormat}}</span></ng-template>
+        </div>
+        <div class="header-info-item col">
+          <span class="header-info-item-label">Description</span>
+          <span class="header-info-item-value textOver" title="{{topCornerDetails['Description']}}">{{topCornerDetails['Description']}}</span>
+        </div>
+        <div class="header-info-item col">
+          <span class="header-info-item-label">Agent</span>
+          <span class="header-info-item-value">{{topCornerDetails['Agent Name']}}</span>
+        </div>
+        <!-- <ng-container *ngFor="let item of topCornerDetails">
+            <div class="header-info-item col">
+              <span class="header-info-item-label">{{item.DisplayName}}</span>
+              <span class="header-info-item-value">
+                <ng-container *ngIf="!isDate(item.Value); else showDate">
+                  {{item.Value}}
+                </ng-container>
+                <ng-template #showDate>{{item.Value | date:dateFormat}}</ng-template>
+              </span>
+            </div>
+          </ng-container> -->
+      </div>
+      <!-- BMO Tabs -->
+      <div class="bmo-tabs">
+        <app-tabs>
+          <!-- <app-tab [title]="'Sale Summary'" [bmodisplay]="true">
+              <app-sales-summary></app-sales-summary>
+            </app-tab> -->
+          <app-tab [title]="'Lot Summary'" [bmodisplay]="true" [active]="true">
+            <app-lot-summary></app-lot-summary>
+          </app-tab>
+          <!-- <app-tab [title]="'Vendor Terms'" [bmodisplay]="true">
+              <app-sales-vendor-terms></app-sales-vendor-terms>
+            </app-tab> -->
+          <app-tab [title]="'Attachments'" [bmodisplay]="true">
+            <app-document-view [IsAllowDirectSave]="true"></app-document-view>
+          </app-tab>
+          <!-- <app-tab [title]="'Documents'" [bmodisplay]="true">
+              <app-sales-documents></app-sales-documents>
+            </app-tab> -->
+          <app-tab [title]="'Notes'" [bmodisplay]="true">
+            <app-notes [IsShowSendMessage]="false"></app-notes>
+          </app-tab>
+        </app-tabs>
+      </div>
+    </div>
+  </div>
+</div>

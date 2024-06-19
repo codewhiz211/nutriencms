@@ -1,0 +1,342 @@
+<div id="wool-search">
+    <div *ngIf="!isEmptyObject(filters)" class="pt-2 px-3">
+        <div class="tags-list">
+            <div class="tags-list-label">Selected Filter(s) :</div>
+            <ul>
+                <ng-container *ngFor="let item of filters | keyvalue">
+                    <li *ngIf="item.key.indexOf('Advnaced_Filter') === -1">
+                        <span>{{this.FilterList(item.value.GridConditions)}}</span>
+                        <a href="javascript:void(0);" class="icon-close" (click)="onFilterClear(item.value.DataField, item.value.FilterType)"><i class="fas fa-times"></i></a>
+                    </li>
+                    <li *ngIf="item.key.indexOf('Advnaced_Filter') > -1">
+                        <span>{{this.FilterList(item.value.GridConditions)}}</span>
+                        <a href="javascript:void(0);" class="icon-close" (click)="onAdvancedFilterClear(item.key)"><i class="fas fa-times"></i></a>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+        <a href="javascript:void(0)" title="Clear All" style="font-size: 14px;" (click)="clear_all()">Clear All</a>
+    </div>
+    <div class="container pt-5">
+        <div class="row">
+            <div class="col-12 sales-search" [ngClass]="{'margin-top-20': !isSearched}">
+                <div class="sales-search-box">
+                    <div class="selectListing">
+                        <div ngbDropdown>
+                            <button class="btn btn-outline-primary" ngbDropdownToggle>Wool Sales</button>
+                            <ul ngbDropdownMenu aria-labelledby="dropdownCustomFilter">
+                                <li ngbDropdownItem>
+                                    Wool Sales
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control sales-search-box-input shadow-none" [(ngModel)]="globalSearchValue">
+                    <button class="btn btn-warning sales-search-box-btn" (click)="search()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div> 
+                <div class="toggle-search-inputs">
+                    <a href="javascript:void(0)" title="Hide Advanced Search" (click)="toggle_search_form_show()">{{showSearchForm ? 'Hide' : ''}} Advanced Search</a>
+                </div>
+            </div>
+            <div class="col-12">
+                <form [formGroup]="searchForm" class="search-input-form" *ngIf="showSearchForm">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="input-label">Trading Name</label>
+                                <input
+                                    type="text"
+                                    id="TextBox_tradingname"
+                                    class="form-control"
+                                    formControlName="TradingName"
+                                    [ngbTypeahead]="tradingNameSearch"
+                                    [inputFormatter]="formatter"
+                                    [resultFormatter]="formatter"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">AWH Number</label>
+                                <input
+                                    type="text"
+                                    id="TextBox_woolnumber"
+                                    class="form-control"
+                                    formControlName="WoolNumber"
+                                    maxlength="6"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Brand</label>
+                                <input
+                                    type="text"
+                                    id="TextBox_brand"
+                                    class="form-control"
+                                    formControlName="Brand"
+                                    maxlength="40"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Season</label>
+                                <input
+                                    type="text"
+                                    id="TextBox_season"
+                                    class="form-control"
+                                    formControlName="SaleSeason"
+                                    maxlength="3"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Sale Center</label>
+                                <input
+                                    type="text"
+                                    id="TextBox_salecenter"
+                                    class="form-control"
+                                    formControlName="SaleNbrSellingCntr"
+                                    maxlength="3"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Sale #</label>
+                                <input
+                                    type="text"
+                                    id="TextBox_sale"
+                                    class="form-control"
+                                    formControlName="SaleNumberId"
+                                    maxlength="3"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Storage Center</label>
+                                <ng-select
+                                    [items]="storageCenterOptions"
+                                    bindValue="dmowoolstrwoolstrcode"
+                                    bindLabel="dmowoolstrwoolstrdscr"
+                                    class="form-control"
+                                    id="DropDownList_storageCenter"
+                                    formControlName="SaleNbrStorageCntr"
+                                    [searchFn]="StrogeCentreFn"
+                                >
+                                <ng-template ng-label-tmp let-item="item">
+                                    {{item.dmowoolstrwoolstrdscr}} ({{item.dmowoolstrwoolstrcode}})
+                                </ng-template>
+                                <ng-template ng-option-tmp let-item="item" >
+                                    {{item.dmowoolstrwoolstrdscr}} ({{item.dmowoolstrwoolstrcode}})
+                                </ng-template>
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Branch</label>
+                                <ng-select
+                                    [items]="branchNameOptions"
+                                    bindValue="dmobranchbrcode"
+                                    bindLabel="dmobranchbrname"
+                                    class="form-control"
+                                    id="DropDownList_landmarkbranchname"
+                                    formControlName="BranchCode"
+                                    [searchFn]="BranchFn"
+                                >
+                                <ng-template ng-label-tmp let-item="item">
+                                    {{item.dmobranchbrname}} ({{item.dmobranchbrcode}})
+                                </ng-template>
+                                <ng-template ng-option-tmp let-item="item" >
+                                    {{item.dmobranchbrname}} ({{item.dmobranchbrcode}})
+                                </ng-template>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Region</label>
+                                <ng-select
+                                    [items]="regionOptions"
+                                    bindValue="dmoregionregioncode"
+                                    bindLabel="dmoregionregiondscr"
+                                    class="form-control"
+                                    id="DropDownList_region"
+                                    formControlName="Region"
+                                >
+                                <ng-template ng-label-tmp let-item="item">
+                                    {{item.dmoregionregiondscr}} ({{item.dmoregionregioncode}})
+                                </ng-template>
+                                <ng-template ng-option-tmp let-item="item" >
+                                    {{item.dmoregionregiondscr}} ({{item.dmoregionregioncode}})
+                                </ng-template>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Division</label>
+                                <ng-select
+                                    [items]="divisionOptions"
+                                    bindValue="dmodivisondivisoncode"
+                                    bindLabel="dmodivisondivisondscr"
+                                    class="form-control"
+                                    id="DropDownList_division"
+                                    formControlName="Division"
+                                >
+                                <ng-template ng-label-tmp let-item="item">
+                                    {{item.dmodivisondivisondscr}} ({{item.dmodivisondivisoncode}})
+                                </ng-template>
+                                <ng-template ng-option-tmp let-item="item" >
+                                    {{item.dmodivisondivisondscr}} ({{item.dmodivisondivisoncode}})
+                                </ng-template>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="input-label">Agent</label>
+                                    <ng-select
+                                        [items]="agentOptions"
+                                        bindValue="dmoagentagntid"
+                                        bindLabel="dmoagentagntname"
+                                        class="form-control"
+                                        id="DropDownList_agent"
+                                        formControlName="AgentCode"
+                                        [searchFn]="AgentFn"
+                                    >
+                                    <ng-template ng-label-tmp let-item="item">
+                                        {{item.dmoagentagntname}} ({{item.dmoagentagntid}})
+                                    </ng-template>
+                                    <ng-template ng-option-tmp let-item="item" >
+                                        {{item.dmoagentagntname}} ({{item.dmoagentagntid}})
+                                    </ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">WAM</label>
+                                <ng-select
+                                    [items]="wamOptions"
+                                    bindValue="dmowamwamcode"
+                                    bindLabel="dmowamwamfname"
+                                    class="form-control"
+                                    id="DropDownList_wam"
+                                    formControlName="WAMCODE"
+                                    [searchFn]="WAMFn"
+                                >
+                                <ng-template ng-label-tmp let-item="item">
+                                    {{item.dmowamwamfname}} {{item.dmowamwamlname}} ({{item.dmowamwamcode}})
+                                </ng-template>
+                                <ng-template ng-option-tmp let-item="item" >
+                                    {{item.dmowamwamfname}} {{item.dmowamwamlname}} ({{item.dmowamwamcode}})
+                                </ng-template>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">From Date</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-sm btn-outline-secondary" (click)="d1.toggle()" type="button">
+                                            <i class="far fa-calendar-alt" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        id="TextBox_fromdate"
+                                        class="form-control"
+                                        ngbDatepicker
+                                        #d1="ngbDatepicker"
+                                        formControlName="fromDate"
+                                        placeholder="dd/mm/yyyy"
+                                        (keyup)="dateMasks($event)"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">To Date</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-sm btn-outline-secondary" (click)="d2.toggle()" type="button">
+                                            <i class="far fa-calendar-alt" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        id="TextBox_todate"
+                                        class="form-control"
+                                        ngbDatepicker
+                                        #d2="ngbDatepicker"
+                                        formControlName="toDate"
+                                        placeholder="dd/mm/yyyy"
+                                        (keyup)="dateMasks($event)"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="search-results" *ngIf="isSearched">
+                    <app-tabs (tabSelected)="tabSelected($event)">
+                        <app-tab [title]="'Receivals'" [bmodisplay]="true" [active]="true">
+                            <app-receivals></app-receivals>
+                        </app-tab>
+                        <app-tab [title]="'Unsold Wool'" [bmodisplay]="true">
+                            <app-unsold-wool (openBaleDetailModal)="openBaleDetailModal($event)"></app-unsold-wool>
+                        </app-tab>
+                        <app-tab [title]="'Unsold Test Result'" [bmodisplay]="true">
+                            <app-test-result (openBaleDetailModal)="openBaleDetailModal($event)"></app-test-result>
+                        </app-tab>
+                        <app-tab [title]="'Unsold Appraisal'" [bmodisplay]="true">
+                            <app-appraisal (openBaleDetailModal)="openBaleDetailModal($event)"></app-appraisal>
+                        </app-tab>
+                        <app-tab [title]="'Interim Sale Price Advice'" [bmodisplay]="true">
+                            <app-interim-sale-price-advice (openBaleDetailModal)="openBaleDetailModal($event)"></app-interim-sale-price-advice>
+                        </app-tab>
+                        <app-tab [title]="'Sold Wool'" [bmodisplay]="true">
+                            <app-sold-wool (openBaleDetailModal)="openBaleDetailModal($event)"></app-sold-wool>
+                        </app-tab>
+                        <app-tab [title]="'Sold Test Result'" [bmodisplay]="true">
+                            <app-sold-test-result (openBaleDetailModal)="openBaleDetailModal($event)"></app-sold-test-result>
+                        </app-tab>
+                        <app-tab [title]="'Sold Appraisal'" [bmodisplay]="true">
+                            <app-sold-appraisal (openBaleDetailModal)="openBaleDetailModal($event)"></app-sold-appraisal>
+                        </app-tab>
+                        <app-tab [title]="'Sale Summary'" [bmodisplay]="true">
+                            <app-sale-summary (openBaleDetailModal)="openBaleDetailModal($event)"></app-sale-summary>
+                        </app-tab>
+                        <app-tab [title]="'Sold Rehandle Wool'" [bmodisplay]="true">
+                            <app-sold-rehandle-wool (openBaleDetailModal)="openBaleDetailModal($event)"></app-sold-rehandle-wool>
+                        </app-tab>
+                    </app-tabs>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

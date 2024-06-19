@@ -1,0 +1,667 @@
+<div id='{{"MyTr_"+dmoGUID}}' class="form-group" [formGroup]="parentForm" style="min-width: 200px;">
+  <label id='{{"FriendlyNameLabel_"+dmoGUID}}' class="input-label" *ngIf = "dmo.Type !== 'RoleTypeHidden'"> {{dmo.DisplayName }}<span *ngIf="show_mandatory_field()">*</span></label>
+  <ng-template #dmoTipContent><div [innerHTML]="dmo.LongDescription"></div></ng-template>
+  <a *ngIf="dmo.IsTooltip" class="dmo-tooltip" placement="bottom" [ngbTooltip]="dmoTipContent" tooltipClass="tooltip-class">
+    <i class="far fa-question-circle"></i>
+  </a>
+  <ng-template #dmoTipContent1><div>{{errorMessage}}</div></ng-template>
+  <a *ngIf="errorMessage!=''"  class="dmo-tooltip" placement="bottom" [ngbTooltip]="dmoTipContent1" tooltipClass="tooltip-class">
+    <i class="fas fa-exclamation cstmBrdr"></i>
+  </a>
+
+  <ng-container [ngSwitch]="dmo.Type">
+
+    <ng-container *ngSwitchCase="'TextBox'">
+      <!-- <ng-container  [ngSwitch]="dmoGUID"> -->
+        <ng-container *ngIf="dmoGUID === 'lmkopesdmohdnlotage'; then ageField;"></ng-container>
+        <ng-container *ngIf="dmoGUID === 'lmkesaledmosapacctnumber' || dmoGUID === 'lmkesaledmotradingname'; then vendorDetails;"></ng-container>
+        <ng-container *ngIf="dmoGUID === 'lmkopesdmopostcode' || dmoGUID === 'lmkopesdmotown'; then postalDetails;"></ng-container>
+        <ng-container 
+          *ngIf="dmoGUID !== 'lmkopesdmopostcode' && 
+                 dmoGUID !== 'lmkopesdmotown' &&
+                 dmoGUID !== 'lmkesaledmosapacctnumber' && 
+                 dmoGUID !== 'lmkopesdmohdnlotage' && 
+                 dmoGUID !== 'lmkesaledmotradingname'; then defaultTextBox;"></ng-container>
+        
+        <ng-template #vendorDetails>
+          <input     
+            type="text"	
+            id='{{"TextBox_"+dmoGUID}}'
+            class="form-control"
+            formControlName="{{dmo.Name}}"
+            [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+            placeholder="{{dmo.Placeholder}}"
+            [maxlength]="dmo.Length==null || dmo.Length === 0 ? null : dmo.Length"
+            (keypress)="ValidateDmo($event,dmo)"
+            (keyup)="validateSearchBoxOnKeyUpAndKeyPress(dmo,$event)"
+            (keydown)="validateSearchBoxOnKeyUpAndKeyPress(dmo,$event)"
+            (paste)="validateSearchBox(dmo,$event.clipboardData.getData('text/plain'))"
+            matInput [matAutocomplete]="textboxSearch">
+          <mat-autocomplete #textboxSearch="matAutocomplete">
+            <mat-option  
+              *ngFor="let item of (textBoxSearch$ | async)?.Data" 
+              [value]="dmoGUID === 'lmkesaledmosapacctnumber' ? item.dmocustmstrsapno : displayTradingName(item)"
+              (click)="populateVendorDetails(item)"
+              >
+              {{dmoGUID === 'lmkesaledmosapacctnumber' ? item.dmocustmstrsapno : displayTradingName(item) }}
+            </mat-option>
+           
+          </mat-autocomplete>
+        </ng-template>
+
+        <ng-template #postalDetails>
+          <input     
+            type="text"	
+            id='{{"TextBox_"+dmoGUID}}'
+            class="form-control"
+            formControlName="{{dmo.Name}}"
+            [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+            placeholder="{{dmo.Placeholder}}"
+            [maxlength]="dmo.Length==null || dmo.Length === 0 ? null : dmo.Length"
+            (keypress)="ValidateDmo($event,dmo)"
+            matInput [matAutocomplete]="textboxSearch">
+          <mat-autocomplete #textboxSearch="matAutocomplete">
+            <mat-option  
+              *ngFor="let item of (textBoxSearch$ | async)?.Data" 
+              [value]="dmoGUID === 'lmkopesdmopostcode' ? item.dmolcnlcnpcode : (item.dmolcnlcncity + ' ' + item.dmolcnlcnstate)"
+              (click)="populatePostalDetails(item)"
+              >
+              {{ item.dmolcnlcncity }} {{item.dmolcnlcnstate}}, {{item.dmolcnlcnpcode}}
+            </mat-option>
+           
+          </mat-autocomplete>
+          
+        </ng-template>
+        
+        <ng-template #ageField>
+          <input
+          type="text"	
+          id='{{"TextBox_"+dmoGUID}}'
+          class="form-control"
+          formControlName="{{dmo.Name}}"
+          [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+          [maxlength]="dmo.Length==null || dmo.Length === 0 ? null : dmo.Length"
+          (focusout)="ValidateDmo($event,dmo)"
+        />
+        </ng-template>
+
+        <ng-template #defaultTextBox>
+          <input
+          type="text"	
+          id='{{"TextBox_"+dmoGUID}}'
+          class="form-control"
+          formControlName="{{dmo.Name}}"
+          [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+          placeholder="{{dmo.Placeholder}}"
+          [maxlength]="dmo.Length==null || dmo.Length === 0 ? null : dmo.Length"
+          (keypress)="ValidateDmo($event,dmo)"
+          (paste)="ValidateDmoPaste($event.clipboardData.getData('text/plain'),dmo)"
+        />
+        </ng-template>
+        
+        
+      <!-- </ng-container> -->
+      
+    </ng-container>
+    <ng-container *ngSwitchCase="'RangeBox'">
+      <div id="{{'RangeBox_' + dmoGUID}}">
+          <span class="range-control">
+            <input 
+              type="text" 
+              id="{{'RangeBox_' + dmoGUID}}" 
+              class="form-control range-control__input" 
+              [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && f[dmo.Name].errors.invalidRange === true}"
+              placeholder="{{dmo.Placeholder}}"
+              formControlName="{{dmo.Name}}" 
+              appRange
+              (input)="validateRangeDmo($event,dmo)">
+          </span>
+          <div class="invalid-feedback1" *ngIf="submitted && (f[dmo.Name].errors?.required || f[dmo.Name].errors?.invalidRange)">This field is required</div>
+          <!-- <span class="range-control">
+            <label class="input-label range-control__label">From</label>
+            <input 
+              type="text" 
+              id="{{'RangeBoxFrom_' + dmoGUID}}" 
+              class="form-control range-control__input" 
+              [ngClass]="{'is-invalid': submitted && ranges[dmo.Name + 'From'].errors || triggered && ranges[dmo.Name + 'From'].errors && !ranges[dmo.Name + 'From'].errors.required}"
+              placeholder="{{dmo.Placeholder}}"
+              formControlName="{{dmo.Name + 'From'}}"
+              (input)="validateRangeDmo($event,dmo)">
+          </span>
+          <span class="range-control">
+            <label class="input-label range-control__label">To</label>
+            <input 
+              type="text" 
+              id="{{'RangeBoxTo_' + dmoGUID}}" 
+              class="form-control range-control__input" 
+              [ngClass]="{'is-invalid': submitted && ranges[dmo.Name + 'To'].errors || triggered && ranges[dmo.Name + 'To'].errors && !ranges[dmo.Name + 'To'].errors.required}"
+              placeholder="{{dmo.Placeholder}}"
+              formControlName="{{dmo.Name + 'To'}}"
+              (input)="validateRangeDmo($event,dmo)">
+          </span> -->
+      </div>
+    </ng-container>
+    
+    <ng-container *ngSwitchCase="'PhoneTextBox'">
+      <input type="tel"
+        [textMask]="{mask: mask}"
+        id='{{"TextBox_"+dmoGUID}}'
+        class="form-control"
+        formControlName="{{dmo.Name}}"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+        placeholder="{{dmo.Placeholder}}"    
+        [maxlength]="dmo.Length==null?null:dmo.Length"  
+        (keypress)="ValidateDmo($event,dmo)" 
+      />
+    </ng-container>
+    <ng-container *ngSwitchCase="'EmailEditBox'">
+      <input
+        type="email"
+        id='{{"TextBox_"+dmoGUID}}'
+        class="form-control"
+        formControlName="{{dmo.Name}}"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+        placeholder="{{dmo.Placeholder}}"
+        [maxlength]="dmo.Length==null?null:dmo.Length"
+        (keypress)="ValidateDmo($event,dmo)"
+      />
+    </ng-container>
+    <ng-container *ngSwitchCase="'UrlTextBox'">
+      <input
+        type="text"
+        id='{{"TextBox_"+dmoGUID}}'
+        class="form-control"
+        formControlName="{{dmo.Name}}"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+        placeholder="{{dmo.Placeholder}}"
+        [maxlength]="dmo.Length==null?null:dmo.Length"
+        (keypress)="ValidateDmo($event,dmo)"
+      />
+    </ng-container>
+    <ng-container *ngSwitchCase="'TextArea'">
+        <textarea
+        id='{{"TextArea_"+dmoGUID}}'
+        class="form-control textareaHeight"
+        formControlName="{{dmo.Name}}"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"        
+        placeholder="{{dmo.Placeholder}}"
+        [maxlength]="dmo.Length==null || dmo.Length === 0 ? null : dmo.Length"       
+      ></TextArea>     
+    </ng-container>    
+    <ng-container *ngSwitchCase="'ID'">
+      <input
+        type="text"
+        id='{{"TextBox_"+dmoGUID}}'
+        class="form-control"
+        readonly
+        formControlName="{{dmo.Name}}"
+        [maxLength]="dmo.Length==null?null:dmo.Length"
+        (keypress)="ValidateDmo($event,dmo)"
+      />
+    </ng-container>
+    <ng-container *ngSwitchCase="'CheckBox'">
+      <label class="form-checkbox mr-2">
+        <input
+          type="checkbox"
+          id='{{"CheckBox_"+dmoGUID}}'
+          formControlName="{{dmo.Name}}"
+        />
+        <i class="skin"></i>
+        <span>{{dmo.DisplayName}}</span> 
+      </label>
+    </ng-container>
+    <ng-container *ngSwitchCase="'DropDownList'">
+      <ng-select
+        [searchable]="true"
+        [virtualScroll]="true"
+        class="form-control"
+        id='{{"DropDownList_"+dmoGUID}}'
+        formControlName="{{dmo.Name}}"
+        (change)="fun_click(dmo)"
+        (scroll)="onScrollDropdown($event, dmo)"
+        (search)="onSearchDropdown($event, dmo)"
+        (open)="onOpenDropdown(dmo)"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+      >
+        <ng-container [ngSwitch]="dmoGUID">
+          <!-- <ng-container *ngSwitchCase="'lmkesaledmovendorpic'">
+            <ng-option *ngFor="let number of PICList$ | async" [value]="number">{{number}}</ng-option>
+          </ng-container> -->
+          <ng-container *ngSwitchCase="'lmkopesdmohdnlotprodcat'">
+            <ng-option *ngFor="let data of productCategories$ | async" [value]="data.code">{{data.value}}</ng-option>
+          </ng-container>
+          <ng-container *ngSwitchCase="'lmkopesdmohdnlotproduct'">
+            <ng-option *ngFor="let data of products$ | async" [value]="data.code">{{data.value}}</ng-option>
+          </ng-container>
+          <ng-container *ngSwitchCase="'lmkopesdmohdnlotbreed'">
+            <ng-option *ngFor="let data of productBreeds$ | async" [value]="data.code">{{data.value}}</ng-option>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <ng-option *ngFor="let op of ddlOption" [value]="op.ValueField">{{op.TextField}}</ng-option>
+          </ng-container>
+        </ng-container>
+      </ng-select>
+    </ng-container>
+    <ng-container *ngSwitchCase="'RoleType'">
+      <ng-select
+          [items]="OptionList"
+          [multiple]="!singleSelect"
+          [closeOnSelect]="false"
+          bindLabel="TextField"
+          bindValue="ValueField"
+          placeholder="Select..."
+          id='{{"DropDownList_"+dmoGUID}}'
+          formControlName="{{dmo.Name}}"
+          class="form-control"
+          [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}">
+      </ng-select>
+    </ng-container>
+    <ng-container *ngSwitchCase="'MultiSelectDropDownList'">
+      <ng-select
+          [items]="OptionList"
+          [multiple]="!singleSelect"
+          [closeOnSelect]="false"
+          bindLabel="TextField"
+          bindValue="ValueField"
+          placeholder="Select..."
+          id='{{"DropDownList_"+dmoGUID}}'
+          formControlName="{{dmo.Name}}"
+          class="form-control"
+          [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}">
+      </ng-select>    
+    </ng-container>
+    <ng-container *ngSwitchCase="'ColorCodeStatus'">
+      <ng-select
+        [items]="colorOptions"
+        [searchable]="true"
+        class="form-control"
+        id='{{"ColorCodeStatus_"+dmoGUID}}'
+        formControlName="{{dmo.Name}}"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+      >
+        <ng-template ng-label-tmp let-item="item" let-label="label">
+          <span class="color-code-option" [style.background-color]="getColor(item)"></span>
+          <span class="ml-1">{{label}}</span>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-index="index">
+          <span class="color-code-option" [style.background-color]="getColor(item)"></span>
+          <span class="ml-1">{{item}}</span>
+        </ng-template>
+      </ng-select>
+    </ng-container>
+    <ng-container *ngSwitchCase="'USAStateList'">
+      <ng-select
+        [searchable]="true"
+        [placeholder]="'Select...'"
+        id='{{"DropDownList_"+dmoGUID}}'
+        class="form-control"
+        formControlName="{{dmo.Name}}"
+        (click)="getSelectOptions('USAStateList')"
+        (change)="fun_click(dmo)"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+      >
+        <ng-option *ngFor="let op of dynamicOptions" [value]="op.label">{{op.label}}</ng-option>
+      </ng-select>
+    </ng-container>
+    <ng-container *ngSwitchCase="'CountryList'">
+      <ng-select
+        [searchable]="true"
+        [placeholder]="'Select...'"
+        id='{{"DropDownList_"+dmoGUID}}'
+        class="form-control"
+        formControlName="{{dmo.Name}}"
+        (change)="fun_click(dmo)"
+        (click)="getSelectOptions('CountryList')"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+      >
+        <ng-option *ngFor="let op of dynamicOptions" [value]="op.label">{{op.label}}</ng-option>
+      </ng-select>
+    </ng-container>
+    <ng-container *ngSwitchCase="'RadioButtonList'">
+      <div class="d-flex input-group" [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}">
+        <ng-container *ngFor="let op1 of getDmoOption(dmo); let i = index;">
+          <label class="radio-container">{{op1}}
+            <input type="radio" [value]="op1.trim()" id='{{"RadioButtonList_"+dmoGUID+"_"+i}}' formControlName="{{dmo.Name}}" (change)="fun_click(dmo)" />
+            <span class="checkmark"></span>
+          </label>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'CheckBoxList'">
+      <div class="d-flex input-group" formArrayName="{{dmo.Name}}" [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.invalidSelection}"> 
+        <ng-container  *ngFor="let control of f[dmo.Name].controls; let i = index"> 
+            <label class="form-checkbox mr-2">
+              <input type="checkbox" [value]="getDmoOption(dmo)[i]" id='{{"CheckBoxList_"+dmoGUID+"_"+i}}' [formControl]="control" (change)="fun_click(dmo)" />
+              <i class="skin"></i>
+              <span>{{getDmoOption(dmo)[i]}}</span> 
+            </label>              
+        </ng-container>
+      </div>
+    </ng-container>
+
+
+    <ng-container *ngSwitchCase="'DateTimeZone'">
+      <div id='{{"divDTZone_"+dmoGUID}}' class="d-flex date-tz-picker">
+        <div class="input-group flex-nowrap">
+          <div class="input-group-prepend">
+            <button class="btn btn-sm btn-outline-secondary" (click)="d.toggle()" type="button">
+                <i class="far fa-calendar-alt" aria-hidden="true"></i>
+            </button>
+          </div>
+          <input
+            [formControl]="f[dmo.Name].controls.date"
+            type="text"
+            id='{{"DateTimeZoneDate_"+dmoGUID}}'
+            class="form-control date-picker"
+            ngbDatepicker
+            #d="ngbDatepicker"
+            rInputMask="99/99/9999"
+          />
+        </div>
+        <ng-select
+          [items]="timeOptions"
+          class="form-control"
+          id='{{"DateTimeZoneTime_"+dmoGUID}}'
+          [formControl]="f[dmo.Name].controls.time"
+        >
+        </ng-select>
+        <!-- <ng-select
+          class="form-control"
+          id='{{"DateTimeZoneTZ_"+dmoGUID}}'
+          [formControl]="f[dmo.Name].controls.timezone"
+        >
+          <ng-option>India</ng-option>
+        </ng-select> -->
+      </div>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'DateWithCalendar'">
+      <div class="input-group" [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}">
+        <div class="input-group-prepend">
+          <button class="btn btn-sm btn-outline-secondary" (click)="d.toggle()" type="button">
+              <i class="far fa-calendar-alt" aria-hidden="true"></i>
+          </button>
+        </div>
+        <input
+          type="text"
+          placeholder="dd/mm/yyyy"
+          id='{{"TextBox_"+dmoGUID}}'
+          class="form-control"
+          ngbDatepicker
+          #d="ngbDatepicker" [minDate]="minDate" [maxDate]="maxDate"
+          formControlName="{{dmo.Name}}" 
+          (keyup)="dateMasks($event)"         
+        />
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'StaticDateBox'">
+      <div class="input-group" [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}">
+        <div class="input-group-prepend">
+          <button class="btn btn-sm btn-outline-secondary" (click)="d.toggle()" type="button">
+              <i class="far fa-calendar-alt" aria-hidden="true"></i>
+          </button>
+        </div>
+        <input
+          type="text"
+          placeholder="dd/mm/yyyy"
+          id='{{"TextBox_"+dmoGUID}}'
+          class="form-control"
+          ngbDatepicker
+          #d="ngbDatepicker" [minDate]="minDate" [maxDate]="maxDate"
+          formControlName="{{dmo.Name}}"
+          (keyup)="dateMasks($event)"          
+        />
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'DateEditBox'">
+      <input
+        type="text"
+        [textMask]="{mask: dateMask, keepCharPositions: true, pipe: autoCorrectedDatePipe}"
+        pattern="\d{2}/\d{2}/\d{4}"
+        id='{{"TextBox_"+dmoGUID}}'
+        class="form-control"
+        formControlName="{{dmo.Name}}"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+      />
+    </ng-container>
+    <ng-container *ngSwitchCase="'DateTimeBox'">
+      <div class="input-group" [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}">
+        <div class="input-group-prepend">
+          <button class="btn btn-sm btn-outline-secondary" [disabled]="f[dmo.Name].disabled" (click)="dayPicker.api.open()" type="button">
+              <i class="far fa-calendar-alt" aria-hidden="true"></i>
+          </button>
+        </div>
+        <dp-date-picker
+          id='{{"TextBox_"+dmoGUID}}'
+          [formControl]="f[dmo.Name]"
+          class="form-control"
+          [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+          mode="daytime"
+          theme="dp-material"
+          [config]="dateTimePickerConfig"
+          #dayPicker
+        >
+        </dp-date-picker>
+      </div>
+    </ng-container>
+
+
+    <ng-container *ngSwitchCase="'ProgressBar'">
+      <!-- <div id='{{"ProgressBar_"+dmoGUID}}'>
+        <span id='{{"ProgressResult_"+dmoGUID}}'  class="progressBarCore_perc"
+          data-value="0">0%</span>
+        <div id='{{"ProgressDiv_"+dmoGUID}}'  class="progressBarCore progressBarCore-success"
+          role="progressbar" aria-valuenow="20% usage" aria-valuetext="20% usage">
+          <div id='{{"Progress_"+dmoGUID}}'  style="width:0%;text-align:left" class="barCore">
+          </div>
+        </div>
+      </div> -->
+      <p>
+        <ngb-progressbar id='{{"ProgressBar_"+dmoGUID}}' showValue="true" type="success"></ngb-progressbar>
+      </p>
+    </ng-container>
+
+
+    <ng-container *ngSwitchCase="'UploadDocument'">
+      <div class="custom-file">
+        <input type="file" (change)="upload($event,dmoGUID,dmo.Name)" class="custom-file-input">
+          <input type="hidden" name="fileHidden" id='{{"TextBox_"+dmoGUID}}' formControlName="{{dmo.Name}}"/>
+        <label class="custom-file-label" for='{{"TextBox_"+dmoGUID}}'></label>
+      </div>
+      <div class="uploadList" *ngIf="fileList.length > 0">
+        <ul>
+          <li *ngFor="let file of getFileList"><span (click)="DownloadFile(file)"
+              title="{{file.OldFileName}}">{{file.OldFileName}}</span><a href="javascript:void(0)"
+              (click)="DeleteFile(file)" title="Delete"><i class="fas fa-trash-alt"></i></a></li>
+        </ul>
+      </div>
+      <div class="uploadList" *ngIf="fileList.length === 0">
+        <ul>
+          <li *ngFor="let file of fileInfoList"><span (click)="DownloadFile(file)"
+              title="{{file.OldFileName}}">{{file.OldFileName}}</span><a href="javascript:void(0)"
+              (click)="DeleteFile(file)" title="Delete"><i class="fas fa-trash-alt"></i></a></li>
+        </ul>
+      </div>
+    </ng-container>
+       <!-- Start Changes for entity ticket to check conditions -->
+    <ng-container *ngSwitchCase="'UploadImage'">
+      <div class="custom-file">
+        <input 
+        type="file" 
+        #fileInput (click)="fileInput.value = null" 
+        class="custom-file-input"   
+        [disabled]="f[dmo.Name].disabled"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+        (change)="fileChangeEvent($event, content)">
+
+        <input type="text" id='{{"liUploadDiv_"+dmoGUID}}'
+        style="display: none;"
+        formControlName="{{dmo.Name}}"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+        />
+        <label class="custom-file-label"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+        for='{{"liUploadDiv_"+dmoGUID}}'></label>
+        
+        <div *ngIf="(submitted || triggered) && f[dmo.Name].errors" class="invalid-feedback">
+          <div *ngIf="submitted && (f[dmo.Name].errors.required)">This field is required</div>
+        </div>
+      </div>
+   
+      <div class="uploadList">
+        <ul>
+          <li *ngFor="let file of fileList"><span (click)="DownloadFile(file)"
+              title="{{file.OldFileName}}">{{file.OldFileName}}</span><a href="javascript:void(0)" *ngIf = "!f[dmo.Name].disabled"
+              (click)="DeleteFile(file)" title="Delete"><i class="fas fa-trash-alt"></i></a></li>
+        </ul>
+      </div>
+      <div class="uploadList" *ngIf="fileList.length === 0">
+        <ul>
+          <li *ngFor="let file of fileInfoList"><span (click)="DownloadFile(file)"
+              title="{{file.OldFileName}}">{{file.OldFileName}}</span><a href="javascript:void(0)" *ngIf = "!f[dmo.Name].disabled"
+              (click)="DeleteFile(file)" title="Delete"><i class="fas fa-trash-alt"></i></a></li>
+        </ul>
+      </div>
+        <!-- Changes for entity ticket to check conditions End -->
+        <ng-template #content let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Crop Image</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+              <div class="modal-body" role="document" aria-label="Modal heading text content">
+                  <div class="videoWrap">
+                      <image-cropper
+                        [imageChangedEvent]="imageChangedEvent"
+                        [maintainAspectRatio]="true"
+                        [aspectRatio]="4 / 3"
+                        [resizeToWidth]="128"
+                        [onlyScaleDown]="true" 
+                        [transform]="transform"
+                        format="png"
+                        (imageCropped)="imageCropped($event)"
+                        >
+                      </image-cropper>
+                      <div class="input-range" style="float: right;">
+                        <!-- <label for="">Zoom</label> -->
+                        <div class="zoom">
+                          <button class="btn btn-secondary btn-sm" (click)="onZoomOut()"><i class="fas fa-search-minus"></i></button>
+                          <!-- <input type="range" (input)="onZoomChange($event)"> -->
+                          <button class="btn btn-secondary btn-sm" (click)="onZoomIn()"><i class="fas fa-search-plus"></i></button>
+                        </div>
+                      </div>
+        <img [src]="croppedImage.base64"/>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <div class="cta-button-group">
+                    <button class="btn btn-clear btn-small" (click)="modal.dismiss('Cross click')" type="button" data-dismiss="modal">Close</button>    
+                    <button class="btn btn-primary btn-small" (click)="Cropped(dmoGUID,modal);" type="button" data-dismiss="modal">Crop & Close</button> 
+                  </div>
+              </div>
+        </ng-template>
+    </ng-container>
+
+
+    <ng-container *ngSwitchCase="'ListBox'">
+      <select
+        id='{{"ListBox_"+dmoGUID}}'
+        class="form-control"
+        multiple="multiple"
+        formControlName="{{dmo.Name}}"
+        (change)="fun_click(dmo)"
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+      >
+        <option *ngFor="let op of getDmoOption(dmo)">{{op}}</option>
+      </select>
+    </ng-container>
+    <ng-container *ngSwitchCase="'CreatedBy'">
+      <input type="text" id='{{"TextBox_"+dmoGUID}}' class="form-control" disabled formControlName="{{dmo.Name}}"
+        placeholder="{{dmo.Placeholder}}" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'CreatedDate'">
+      <input type="text" id='{{"TextBox_"+dmoGUID}}' class="form-control" disabled formControlName="{{dmo.Name}}"
+       
+        placeholder="{{dmo.Placeholder}}" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'CreatedDateTime'">
+      <input type="text" id='{{"TextBox_"+dmoGUID}}' class="form-control" disabled formControlName="{{dmo.Name}}"
+        
+        placeholder="{{dmo.Placeholder}}" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'LastUpdatedBy'">
+      <input type="text" id='{{"TextBox_"+dmoGUID}}' class="form-control" disabled formControlName="{{dmo.Name}}"
+        
+        placeholder="{{dmo.Placeholder}}" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'LastUpdatedDate'">
+      <input type="text" id='{{"TextBox_"+dmoGUID}}' class="form-control" disabled formControlName="{{dmo.Name}}"
+       
+        placeholder="{{dmo.Placeholder}}" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'LastUpdatedDateTime'">
+      <input type="text" id='{{"TextBox_"+dmoGUID}}' class="form-control" disabled formControlName="{{dmo.Name}}"
+      
+        placeholder="{{dmo.Placeholder}}" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'CurrentStage'">
+      <input type="text" id='{{"TextBox_"+dmoGUID}}' class="form-control" disabled formControlName="{{dmo.Name}}"
+      
+        placeholder="{{dmo.Placeholder}}" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'CurrentState'">
+        <input type="text" id='{{"TextBox_"+dmoGUID}}' class="form-control" disabled formControlName="{{dmo.Name}}"
+        
+          placeholder="{{dmo.Placeholder}}" />
+      </ng-container>
+    <ng-container *ngSwitchCase="'KeyValueSearchBox'">
+      <input type="text" id='{{"TextBox_"+dmoGUID}}' 
+        class="form-control" 
+        [ngClass]="{'is-invalid': submitted && f[dmo.Name].errors || triggered && f[dmo.Name].errors && !f[dmo.Name].errors.required}"
+        formControlName="{{dmo.Name}}"
+        placeholder="{{dmo.Placeholder}}" matInput [matAutocomplete]="autoSearch"
+        (paste)="AutoSearchTextBoxBind($event)"
+        (keypress) = "AutoSearchTextBoxBind($event)"
+        (blur)="checkKeyValueSearchBoxItem(dmo.Name)">
+      <mat-autocomplete #autoSearch="matAutocomplete" 
+        [displayWith]="displayWith" showPanel="true"
+        (optionsScroll)="onScroll()"        
+        >
+        <mat-option *ngFor="let option of filteredLookups$ | async" [value]="option">
+          {{option.ddOptionValue.trim()}} ({{option.ddOptionKey.trim()}})
+        </mat-option>
+      </mat-autocomplete>
+    </ng-container>
+    <ng-container *ngSwitchCase="'KeyValueDropdownList'">
+      <mat-select class="form-control input-group"
+        id='{{"DropDownList_"+dmoGUID}}'
+        formControlName="{{dmo.Name}}"
+        msInfiniteScroll (infiniteScroll)="BindAdvancSearchDropDown(dmo)" 
+        [complete]="offset === ddDataLength"
+        (click)="BindAdvancSearchDropDown(dmo)"
+        >
+      <mat-option *ngFor="let option of advddOptionsData$ | async" [value]="option.ddOptionKey">
+        {{option.ddOptionValue.trim()}} ({{option.ddOptionKey.trim()}})</mat-option>
+    </mat-select>
+ 
+    </ng-container>
+    <ng-container *ngSwitchDefault></ng-container>
+  </ng-container>
+
+  <div *ngIf="(submitted || triggered) && f[dmo.Name].errors" class="invalid-feedback">
+      <div *ngIf="submitted && (f[dmo.Name].errors.required || f[dmo.Name].errors.invalidSelection)">This field is required</div>
+      <div *ngIf="f[dmo.Name].errors.email">Email must be a valid email address</div>
+      <div *ngIf="f[dmo.Name].value && f[dmo.Name].errors.invalidUrl">Invalid url</div>
+      <div *ngIf="f[dmo.Name].value && f[dmo.Name].errors.invalidPhoneNumber">Invalid phone number</div>
+      <div *ngIf="dmo.Type === 'DateEditBox' && f[dmo.Name].value && f[dmo.Name].errors.pattern">The date format should be: dd/mm/yyyy</div>
+      <div *ngIf="f[dmo.Name].errors.ngbDate?.invalid">
+        Invalid date,The date format should be: dd/mm/yyyy
+      </div>
+      <!-- Date massage change from & TO comparison -->
+      <div *ngIf="f[dmo.Name].errors.ngbDate?.minDate?.minDate">
+        {{dmo.DisplayName}} should be greater than or equal to  {{ngbDateParserFormatter.format(f[dmo.Name].errors.ngbDate.minDate.minDate)}}
+      </div>
+      <div *ngIf="(f[dmo.Name].errors?.required || f[dmo.Name].errors?.notExists)">{{f[dmo.Name].errors?.message}}</div>
+  </div>
+</div>

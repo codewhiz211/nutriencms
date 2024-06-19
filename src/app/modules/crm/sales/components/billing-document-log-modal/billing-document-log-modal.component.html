@@ -1,0 +1,25 @@
+<!-- Modals -->
+<div class="modal-header">
+    <h4 class="modal-title">
+       Documents Log
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false)">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <app-customized-grid
+        [dataSource]="dataSource"
+        [headerMap]="headerMap"
+        [itemsCount]="itemsCount"
+        [sNo]="false"
+        (pageChange)="pageChange($event)"
+        (actionClick)="actionClick($event)"
+    ></app-customized-grid>
+
+    <div class="d-flex align-items-center justify-content-end mt-5 mb-3">
+        <button type="button" class="btn btn-primary cancel-btn" (click)="activeModal.close(false)">Cancel</button>
+    </div>
+</div>
+  
+  <!-- End Modals -->

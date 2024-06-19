@@ -1,0 +1,152 @@
+<div class="p-3">
+  <div class="section-header">
+    <span>Agency Commission</span>
+    <button class="btn add-btn" type="button" (click)="add_new_agent('agencyCommission')" [disabled]="isDisabled">Add New</button>
+  </div>
+  <div class="p-2" >
+    <div class="mt-3 mb-3" *ngIf="isVendorAssociationExists">
+      <span class="association">Vendor</span>
+    </div>
+   
+    <div *ngFor="let agent of commissionData | filterCustom : 'Association' : 'Vendor'">
+      <div class="form-row">
+        <div class="form-group mr-3">
+          <label class="input-label">Agency</label>
+          <input type="text" class="form-control agency-control" placeholder="Agency Name" value="{{agent.AgencyName}}" readonly />
+        </div>
+        <div class="form-group mr-3">
+            <label class="input-label">Agent</label>
+            <input type="text" class="form-control agent-control" placeholder="Agent Name" value="{{agent.AgentName}}" readonly />
+        </div>
+
+        <div class="rightdiv">
+          <div *ngFor="let item of agent.SharedAgents; let i = index">
+          
+            <div class="form-row">
+              <div class="form-group mr-3">
+                <label class="input-label">Shared Agency</label>
+                <input type="text" class="form-control agency-control" placeholder="Agency Name" value="{{item.AgencyName}}" readonly />
+              </div>
+              <div class="form-group mr-3">
+                  <label class="input-label">Shared Agent</label>
+                  <input type="text" class="form-control agent-control" placeholder="Agent Name" value="{{item.AgentName}}" readonly />
+              </div>
+              <div class="form-group mr-3">
+                <label class="input-label">Agent Commission Rate(%)</label>
+                <input type="text" class="form-control" placeholder="Commission Rate" value="{{item.Rate}}" readonly />
+              </div>
+              <div class="form-group mr-3" *ngIf="i==agent.SharedAgents.length-1">
+                  <button class="btn share-btn mr-3'" (click)="shareAgent(agent)" [disabled]="isDisabled">Share</button>
+                  <button class="btn btn-primary remove-btn mr-3" (click)="openremoveAgentConfirmation(agent.ID)" [disabled]="isDisabled">Remove</button>
+              </div>
+            </div>
+          
+          </div>
+          <div class="form-group mr-3" *ngIf="0==agent.SharedAgents.length">
+            <button class="btn share-btn mr-3'" (click)="shareAgent(agent)" [disabled]="isDisabled">Share</button>
+            <button class="btn btn-primary remove-btn mr-3" (click)="openremoveAgentConfirmation(agent.ID)" [disabled]="isDisabled">Remove</button>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 mb-3" *ngIf="isBuyerAssociationExists">
+      <span class="association">Buyer</span>
+    </div>
+   
+    <div *ngFor="let agent of commissionData | filterCustom : 'Association' : 'Buyer'">
+      <div class="form-row">
+        <div class="form-group mr-3">
+          <label class="input-label">Agency</label>
+          <input type="text" class="form-control agency-control" placeholder="Agency Name" value="{{agent.AgencyName}}" readonly />
+        </div>
+        <div class="form-group mr-3">
+            <label class="input-label">Agent</label>
+            <input type="text" class="form-control agent-control" placeholder="Agent Name" value="{{agent.AgentName}}" readonly />
+        </div>
+
+        <div class="rightdiv">
+          <div *ngFor="let item of agent.SharedAgents; let i = index">
+          
+            <div class="form-row">
+              <div class="form-group mr-3">
+                <label class="input-label">Shared Agency</label>
+                <input type="text" class="form-control" placeholder="Agency Name" value="{{item.AgencyName}}" readonly />
+              </div>
+              <div class="form-group mr-3">
+                  <label class="input-label">Shared Agent</label>
+                  <input type="text" class="form-control agent-control" placeholder="Agent Name" value="{{item.AgentName}}" readonly />
+              </div>
+              <div class="form-group mr-3">
+                <label class="input-label">Agent Commission Rate(%)</label>
+                <input type="text" class="form-control" placeholder="Commission Rate" value="{{item.Rate}}" readonly />
+              </div>
+              <div class="form-group mr-3" *ngIf="i==agent.SharedAgents.length-1">
+                  <button class="btn share-btn mr-3'" (click)="shareAgent(agent)" [disabled]="isDisabled">Share</button>
+                  <button class="btn btn-primary remove-btn mr-3" (click)="openremoveAgentConfirmation(agent.ID)" [disabled]="isDisabled">Remove</button>
+              </div>
+            </div>
+          
+          </div>
+          <div class="form-group mr-3" *ngIf="0==agent.SharedAgents.length">
+            <button class="btn share-btn mr-3'" (click)="shareAgent(agent)" [disabled]="isDisabled">Share</button>
+            <button class="btn btn-primary remove-btn mr-3" (click)="openremoveAgentConfirmation(agent.ID)" [disabled]="isDisabled">Remove</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="p-3">
+  <div class="section-header">
+    <span>Buyer Branch Rebate</span>
+    <button class="btn add-btn" type="button" (click)="add_new_agent('buyerBranchRebate')" [disabled]="isDisabled">Add New</button>
+  </div>
+  <div class="p-2">
+    <div class="p-2">
+      <div *ngFor="let agent of buyerRebateCommissionData">
+        <div class="form-row">
+          <div class="form-group mr-3">
+            <label class="input-label">Agency</label>
+            <input type="text" class="form-control" placeholder="Agency Name" value="{{agent.AgencyName}}" readonly />
+          </div>
+          <div class="form-group mr-3">
+              <label class="input-label">Agent</label>
+              <input type="text" class="form-control agent-control" placeholder="Agent Name" value="{{agent.AgentName}}" readonly />
+          </div>
+
+          <div class="rightdiv">
+            <div *ngFor="let item of agent.SharedAgents; let i = index">
+            
+              <div class="form-row">
+                <div class="form-group mr-3">
+                  <label class="input-label">Shared Agency</label>
+                  <input type="text" class="form-control" placeholder="Agency Name" value="{{item.AgencyName}}" readonly />
+                </div>
+                <div class="form-group mr-3">
+                    <label class="input-label">Shared Agent</label>
+                    <input type="text" class="form-control agent-control" placeholder="Agent Name" value="{{item.AgentName}}" readonly />
+                </div>
+                <div class="form-group mr-3">
+                  <label class="input-label">Agent Commission Rate(%)</label>
+                  <input type="text" class="form-control" placeholder="Commission Rate" value="{{item.Rate}}" readonly />
+                </div>
+                <div class="form-group mr-3" *ngIf="i==agent.SharedAgents.length-1">
+                    <button class="btn share-btn mr-3'" (click)="shareAgent(agent)" [disabled]="isDisabled">Share</button>
+                    <button class="btn btn-primary remove-btn mr-3" (click)="openremoveAgentConfirmation(agent.ID)" [disabled]="isDisabled">Remove</button>
+                </div>
+              </div>
+            
+            </div>
+            <div class="form-group mr-3" *ngIf="0==agent.SharedAgents.length">
+              <button class="btn share-btn mr-3'" (click)="shareAgent(agent)" [disabled]="isDisabled">Share</button>
+              <button class="btn btn-primary remove-btn mr-3" (click)="openremoveAgentConfirmation(agent.ID)" [disabled]="isDisabled">Remove</button>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>    
+  

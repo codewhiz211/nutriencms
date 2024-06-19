@@ -1,0 +1,48 @@
+<div class="dmog-grid-view">
+    <div class="table-action-group"  *ngIf="parentForm.enabled">
+        <div class="btns-group">
+            <a href="javascript:void(0)" (click)="addNewRecord()" title="Add"><i class="fas fa-plus"></i>Add</a>
+            <a href="javascript:void(0)" (click)="showDeleteMessage()" title="Delete"><i class="fas fa-trash-alt"></i>Delete</a>
+        </div>
+    </div>
+    <div class="p-2"></div>
+    <table class="basicTable stripped">
+        <thead cdkDropListGroup>
+            <tr>
+                <th style="width: 40px" *ngIf="parentForm.enabled">
+                    <label class="inline-checkbox ml-2 mt-1" [style.width.%]="'1%'">
+                        <input type="checkbox" [(ngModel)]="selectedAll" (ngModelChange)="selectAllCheckBox($event)">
+                        <i class="skin"></i>
+                    </label>
+                </th>
+                <th style="width: 60px" *ngIf="parentForm.enabled"><span class="">Action</span></th>
+                <th *ngFor="let item of headerMap; let i = index">
+                    <span class="colHead">{{item.displayName}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody *ngIf="dmogData.length == 0">
+            <tr>
+                <td [colSpan]="headerMap.length+2" class="text-center">No Data Found</td>
+            </tr>
+        </tbody>
+        <tbody *ngIf="dmogData.length>0">
+            <tr *ngFor="let item of dmogData; let i = index" [class.active]="item.checked">
+                <td *ngIf="parentForm.enabled">
+                    <label class="inline-checkbox ml-2 mt-1">
+                        <input type="checkbox" [(ngModel)]="item.checked" (ngModelChange)="checkIfAllSelected(item)">
+                        <i class="skin"></i>
+                    </label>
+                </td>
+                <td class="action-btns" *ngIf="parentForm.enabled">
+                    <a href="javascript:void(0)" (click)="editRecord(i)" title="Edit">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
+                </td>
+                <td *ngFor="let key of headerMap">
+                    <span>{{item[key.dmoGUID]}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,70 @@
+label[for='accountStatus']:before,
+label[for='firstName']:before,
+label[for='lastName']:before,
+label[for='email']:before,
+label[for='phone']:before,
+label[for='password']:before,
+label[for='confirmPassword']:before {
+  content: '*';
+  color: #007E48;
+  ;
+}
+
+.landmark-acc {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.landmark-acc>button {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.landmark-acc>input {
+  margin-right: -32px;
+}
+
+.contents {
+  width: 70%;
+  margin: auto
+}
+
+.contents-title {
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 32px;
+}
+
+.contents-title>h4 {
+  margin: 1px;
+}
+
+h3,
+h4 {
+  color: grey;
+}
+
+
+.form-control {
+  height: 24px;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 2px 12px;
+}
+
+label {
+  color: #4D4D51;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+table {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+td {
+  vertical-align: middle;
+}

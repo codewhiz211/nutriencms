@@ -1,0 +1,648 @@
+<section class="user_profile_wrapper">
+  <!-- <a (click)="openchangepassword()" href="javascript:void(0);">Change Password</a> -->
+  <div class="headerTopStrip cf gback">
+    <ul>
+        <li class="ng-binding">My Profile</li>
+    
+       
+       
+    </ul>
+    <ul>
+      <li *ngIf="isDisabled"><a id="chPwd"  (click)="openchangepassword()" href="javascript:void(0);" style="visibility: hidden;">Change Password</a> </li>
+    </ul>
+</div>
+  <div class="profile_container">
+    <div class="profile_heading">
+      <h2>My Profile</h2>
+    </div>
+    <div class="from_section">
+      <form [formGroup]="UserDetails" (ngSubmit)="submit()">
+        <div class="row">
+          <div class="col col_left">
+            <div class="form-group">
+              <label>Access Permission<span class="red">*</span><i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Choose Access Permission" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <div [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Access_Permission').errors}"
+                class="radio-btn-padding">
+                <label class="radio-container"> Direct Access
+                  <input type="radio" formControlName="Access_Permission" value="Direct_Access" name="Access_Permission"
+                    id="exampleRadios3" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="radio-container"> Nutrien SSO
+                  <input type="radio" formControlName="Access_Permission" value="Landmark_SSO" name="Access_Permission"
+                    id="exampleRadios4" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div *ngIf="IsSubmit && UserDetails.get('Access_Permission').errors" style="display: block;"
+                class="invalid-feedback">
+                <div *ngIf="IsSubmit && UserDetails.get('Access_Permission').errors.required">Access Permission is
+                  required</div>
+              </div>
+
+            </div>
+
+
+            <div class="form-group">
+              <label>User Name<span class="red">*</span>
+                <i mat-raised-button #tooltip="matTooltip" matTooltip="Enter User Name" matTooltipPosition="right"
+                  matTooltipClass="example-tooltip-red" class="far fa-question-circle"></i>
+              </label>
+              <input [attr.disabled]="UID != '' ? true : null" type="text" maxlength="50" (keypress)="restricateChar($event)"
+                [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('User_Name').errors}" class="form-control"
+                formControlName="User_Name" id="User_Name" placeholder="">
+              <div *ngIf="IsSubmit && f.User_Name.errors" class="invalid-feedback">
+                <div *ngIf="f.User_Name.errors.required">User Name is required</div>
+                <div *ngIf="f.User_Name.errors.pattern">Only alphanumeric,hyphen and underscore allowed!</div>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="UID==''&& showpwd">
+              <label>Password<span class="red">*</span>
+                <i mat-raised-button #tooltip="matTooltip" matTooltip="Enter Password" matTooltipPosition="right"
+                  matTooltipClass="example-tooltip-red" class="far fa-question-circle"></i>
+              </label>
+              <input type="password" maxlength="50" autocomplete="new-password"
+                [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Password').errors}" class="form-control"
+                formControlName="Password" id="Password" placeholder="">
+              <div *ngIf="IsSubmit && f.Password.errors" class="invalid-feedback">
+                <div *ngIf="f.Password.errors.required">Password is required</div>
+                <!-- <div *ngIf="f.Password.errors.minlength">Password must be at least 8 characters</div> -->
+                <div *ngIf="f.Password.errors.passwordStrength">
+                  Minimun length of password should be 8, must contains at least one alphanumeric & special characters.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" *ngIf="UID==''&& showpwd">
+              <label>Confirm Password<span class="red">*</span>
+                <i mat-raised-button #tooltip="matTooltip" matTooltip="Enter Confirm Password"
+                  matTooltipPosition="right" matTooltipClass="example-tooltip-red" class="far fa-question-circle"></i>
+              </label>
+              <input type="password" maxlength="50"
+                [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Confirm_Password').errors}" class="form-control"
+                formControlName="Confirm_Password" id="Confirm_Password" placeholder="">
+              <div *ngIf="IsSubmit && f.Confirm_Password.errors" class="invalid-feedback">
+                <div *ngIf="f.Confirm_Password.errors.required">Confirm Password is required</div>
+                <div *ngIf="f.Confirm_Password.errors.mustMatch">Confirm Password must match</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>First Name<span class="red">*</span> <i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Enter First Name" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <input type="text" maxlength="50"
+                [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('First_Name').errors}" class="form-control"
+                formControlName="First_Name" id="First_Name" placeholder="">
+              <div *ngIf="IsSubmit && f.First_Name.errors" class="invalid-feedback">
+                <div *ngIf="f.First_Name.errors.required">First Name is required</div>
+                <div *ngIf="f.First_Name.errors.pattern">Only alphanumeric,hyphen and space allowed!</div>
+
+              </div>
+
+            </div>
+            <div class="form-group">
+              <label>Middle Initial <i mat-raised-button #tooltip="matTooltip" matTooltip="Enter Middle Initial"
+                  matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <input type="text" maxlength="50"
+                [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Middle_Initial').errors}" class="form-control"
+                formControlName="Middle_Initial" id="Middle_Initial" placeholder="">
+              <div *ngIf="IsSubmit && UserDetails.get('Middle_Initial').errors" class="invalid-feedback">
+                <div *ngIf="UserDetails.get('Middle_Initial').errors.pattern">Only alphanumeric and space allowed!
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Last Name<span class="red">*</span> <i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Enter Last Name" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <input type="text" maxlength="50" class="form-control"
+                [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Last_Name').errors}" formControlName="Last_Name"
+                id="Last_Name" placeholder="">
+              <div *ngIf="IsSubmit && f.Last_Name.errors" class="invalid-feedback">
+                <div *ngIf="f.Last_Name.errors.required">Last Name is required</div>
+                <div *ngIf="f.Last_Name.errors.pattern">Only alphanumeric,hyphen and space allowed!</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Title of the Employee<span class="red">*</span> <i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Enter Title of the Employee" matTooltipPosition="right"
+                  matTooltipClass="example-tooltip-red" class="far fa-question-circle"></i></label>
+              <input type="text" maxlength="50" class="form-control"
+                [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Title_of_the_Employee').errors}"
+                formControlName="Title_of_the_Employee" id="Title_of_the_Employee" placeholder="">
+              <div *ngIf="IsSubmit && f.Title_of_the_Employee.errors" class="invalid-feedback">
+                <div *ngIf="f.Title_of_the_Employee.errors.required">Title of the Employee is required</div>
+                <div *ngIf="f.Title_of_the_Employee.errors.pattern">Only alphanumeric and space allowed!</div>
+              </div>
+            </div>
+
+                <div #trvCompanyDropdwon *ngIf="UID!='myprofile=user'" class="form-group">
+                    <label>Company<span class="red">*</span> <i mat-raised-button #tooltip="matTooltip" matTooltip="Select Company"
+                                          matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                                          class="far fa-question-circle"></i></label>
+
+                    <ng-multiselect-dropdown formControlName="Company" [placeholder]="'Company'" [settings]="dropdownCompanySettings" [data]="CompanyDropdownList"
+                                             (onSelect)="onItemSelect('Company',$event)"
+                                             (onDeSelect)="onItemDeSelect('Company',$event)" (onSelectAll)="onSelectAll('Company',$event)"
+                                             (onDeSelectAll)="onDeSelectAll('Company',$event)" [ngClass]='setClass()' name='Company'>
+                    </ng-multiselect-dropdown>
+
+                    <div style="display: block;" *ngIf="IsSubmit && UserDetails.get('Company').errors" class="invalid-feedback">
+                        <div *ngIf="UserDetails.get('Company').errors.required">Company is required </div>
+                    </div>
+                </div>
+
+            <div #trvRoleDropdwon *ngIf="UID!='myprofile=user'" class="form-group">
+              <label>Role<span class="red">*</span> <i mat-raised-button #tooltip="matTooltip" matTooltip="Select Role"
+                  matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+
+              <ng-multiselect-dropdown formControlName="Role" [placeholder]="'Role'" [settings]="dropdownSettings" [data]="RoleDropdownList"
+                (onSelect)="onItemSelect('Role',$event)"
+                (onDeSelect)="onItemDeSelect('Role',$event)" (onSelectAll)="onSelectAll('Role',$event)"
+                (onDeSelectAll)="onDeSelectAll('Role',$event)" [ngClass]='setClass()' name='Role'>
+              </ng-multiselect-dropdown>
+
+              <div style="display: block;" *ngIf="IsSubmit && UserDetails.get('Role').errors" class="invalid-feedback">
+                <div *ngIf="UserDetails.get('Role').errors.required">Role is required </div>
+              </div>
+            </div>
+
+                <div #trvAddCompanyDropdwon *ngIf="UID!='myprofile=user'" [hidden]="isShowSpecialRoles" class="form-group">
+                    <label>Additional Company<span>*</span><i mat-raised-button #tooltip="matTooltip" matTooltip="Select Additional Company"
+                                          matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                                          class="far fa-question-circle"></i></label>
+
+                    <ng-multiselect-dropdown formControlName="AddCompany" [placeholder]="'Additional Company'" [settings]="dropdownSettings" [data]="AddCompanyDropdownList"
+                                             (onSelect)="onItemSelect('AddCompany',$event)"
+                                             (onDeSelect)="onItemDeSelect('AddCompany',$event)" (onSelectAll)="onSelectAll('AddCompany',$event)"
+                                             (onDeSelectAll)="onDeSelectAll('AddCompany',$event)" [ngClass]='setClass()' name='AddCompany'>
+                    </ng-multiselect-dropdown>
+
+                    <div style="display: block;" *ngIf="IsSubmit && UserDetails.get('AddCompany').errors" class="invalid-feedback">
+                        <div *ngIf="UserDetails.get('AddCompany').errors.required">Additional Company is required </div>
+                    </div>
+                </div>
+
+            <div class="form-group">
+              <label>Name of the Reporting Manager<span class="red">*</span> <i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Enter Name of the Reporting Manager" matTooltipPosition="right"
+                  matTooltipClass="example-tooltip-red" class="far fa-question-circle"></i></label>
+              <div class="AutoSearchBox">
+                <input datavalue="" #trvReportingManger [matAutocomplete]="auto" type="text" maxlength="50"
+                  class="form-control"
+                  [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Name_of_the_Reporting_Manager').errors}"
+                  formControlName="Name_of_the_Reporting_Manager" id="Name_of_the_Reporting_Manager" placeholder="">
+                <a href="JavaScript:void(0)" class="search-icon">
+                  <i class="fa fa-search" id="myimage" (click)="GetUserByGroupID(trvReportingManger.value)"></i>
+                </a>
+              </div>
+
+              <mat-autocomplete (optionSelected)='getPosts($event.option.value)' #auto="matAutocomplete">
+                <mat-option *ngFor="let item of getManagerByGroupId" [attr.dataID]="item.UserID"
+                  [value]="item.UserName">
+                  <span>{{ item.UserName }}</span>
+                </mat-option>
+                <mat-option *ngIf="getManagerByGroupId.length==0">No data found</mat-option>
+              </mat-autocomplete>
+
+              <div *ngIf="IsSubmit && f.Name_of_the_Reporting_Manager.errors" style="display: block;"
+                class="invalid-feedback">
+                <div *ngIf="f.Name_of_the_Reporting_Manager.errors.required">Name of the reporting manager is required
+                </div>
+                <div *ngIf="f.Name_of_the_Reporting_Manager.errors.notValid">Name of the reporting manager is invalid
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="form-group" *ngIf="isLSARoles">
+              <label>Record Creation<span class="red">*</span> <i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Record Creation" matTooltipPosition="right"
+                  matTooltipClass="example-tooltip-red" class="far fa-question-circle"></i></label>
+                  <div class="form-row" style="margin-top: 14px;margin-left: 11px">
+                  <label class="inline-checkbox form-check form-check-inline">
+                    <input name="chkboxlist" type="checkbox" formControlName="Classified">
+                    <i class="skin"></i>
+                    <span>Classified</span> 
+                   </label>
+
+                  
+
+                  <label class="inline-checkbox form-check form-check-inline">
+                    <input name="chkboxlist"  type="checkbox" formControlName="BidAndOffer">
+                    <i class="skin"></i>
+                    <span>Bid & Offer</span> 
+                   </label>
+                  </div>
+                   
+
+              
+            </div>
+
+            <!-- <div class="form-group">
+              <label>Wool Store <span class="red">*</span> <i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Select Wool Store" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <ng-select [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Wool_Store').errors}"
+                formControlName="Wool_Store" id="Wool_Store" placeholder="Select Wool Store" required>
+                <ng-option aria-selected="true" value="">Select</ng-option>
+                <ng-option *ngFor="let item of WoolStoreData" aria-selected="true" value="{{item.item_id}}">
+                  {{item.item_text}}</ng-option>
+              </ng-select>
+              <div *ngIf="IsSubmit && UserDetails.get('Wool_Store').errors" style="display: block;"
+                class="invalid-feedback">
+                <div *ngIf="IsSubmit && UserDetails.get('Wool_Store').errors.required">Wool Store is required</div>
+              </div>
+            </div> -->
+
+            <!-- <div class="form-group">
+              <label>SAP Number <span class="red">*</span> <i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Select SAP Number" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <ng-select [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('SAP_Number').errors}"
+                formControlName="SAP_Number" id="SAP_Number" placeholder="Select SAP Number" required>
+                <ng-option aria-selected="true" value="">Select</ng-option>
+                <ng-option *ngFor="let item of SAPData" aria-selected="true" value="{{item.item_id}}">{{item.item_text}}
+                </ng-option>
+              </ng-select>
+              <div *ngIf="IsSubmit && UserDetails.get('SAP_Number').errors" style="display: block;"
+                class="invalid-feedback">
+                <div *ngIf="IsSubmit && UserDetails.get('SAP_Number').errors.required">SAP Number is required</div>
+              </div>
+            </div> -->
+
+          </div>
+          <div class="col col_right">
+            <div class="form-group" style="margin-top: -15px;">
+              <label>Email<span class="red">*</span><i mat-raised-button #tooltip="matTooltip" matTooltip="Enter Email"
+                  matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <input type="email" maxlength="50" (keypress)="restricateChar($event)" class="form-control"
+                [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Email').errors}" formControlName="Email"
+                id="Email" placeholder="">
+              <div *ngIf="IsSubmit && f.Email.errors" class="invalid-feedback">
+                <div *ngIf="f.Email.errors.required">Email is required</div>
+                <div *ngIf="f.Email.errors.email">Email must be a valid</div>
+              </div>
+            </div>
+            <div class="form-row" formGroupName="Mobile">
+              <div class="form-group col-md-3">
+                <label>Mobile<span class="red"></span> <i mat-raised-button #tooltip="matTooltip"
+                    matTooltip="Enter Country code and Mobile" matTooltipPosition="right"
+                    matTooltipClass="example-tooltip-red" class="far fa-question-circle"></i></label>
+                <input type="text" maxlength="3" (keypress)="numberOnly($event)"
+                  [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Mobile.Mobile_1')?.errors}"
+                  formControlName="Mobile_1" id="Mobile_1" class="form-control">
+                <div *ngIf="IsSubmit && UserDetails.get('Mobile.Mobile_1').errors" class="invalid-feedback">
+                  <span class="red" *ngIf="IsSubmit && UserDetails.get('Mobile.Mobile_1').errors.required">Country code
+                    is required</span>
+                  <span class="red" *ngIf="IsSubmit && UserDetails.get('Mobile.Mobile_1').errors.pattern">Country code
+                    is invalid</span>
+                </div>
+              </div>
+              <div class="form-group col-md-9">
+                <label>&nbsp;</label>
+                <input type="text" maxlength="10" (keypress)="numberOnly($event)"
+                  [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Mobile.Mobile_2')?.errors}"
+                  formControlName="Mobile_2" id="Mobile_2" class="form-control">
+                <div *ngIf="IsSubmit && UserDetails.get('Mobile.Mobile_2')?.errors" class="invalid-feedback">
+                  <div *ngIf="IsSubmit && UserDetails.get('Mobile.Mobile_2')?.errors.required">Mobile is required</div>
+                  <div *ngIf="IsSubmit && UserDetails.get('Mobile.Mobile_2')?.errors.invalidPhoneNumber">Mobile is invalid</div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row" formGroupName="Phone">
+              <div class="form-group col-md-3">
+                <label>Phone<i mat-raised-button #tooltip="matTooltip" matTooltip="Enter Country code and Phone"
+                    matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                    class="far fa-question-circle"></i></label>
+                <input type="text" maxlength="3"
+                  [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Phone.Phone_1').errors}"
+                  (keypress)="numberOnly($event)" formControlName="Phone_1" id="Phone_1" class="form-control">
+                <div *ngIf="IsSubmit && UserDetails.get('Phone.Phone_1').errors" class="invalid-feedback">
+                  <span class="red" *ngIf="IsSubmit && UserDetails.get('Phone.Phone_1').errors">Country code
+                    is required</span>
+                </div>
+              </div>
+              <div class="form-group col-md-9">
+                <label>&nbsp;</label>
+                <input type="text" maxlength="10" (keypress)="numberOnly($event)"
+                  [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Phone.Phone_2').errors}"
+                  formControlName="Phone_2" id="Phone_2" class="form-control">
+                <div *ngIf="IsSubmit && UserDetails.get('Phone.Phone_2').errors" class="invalid-feedback">
+                  <span class="red" *ngIf="IsSubmit && UserDetails.get('Phone.Phone_2').errors">Phone is
+                    invalid</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Designation<span class="red">*</span><i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Choose Designation" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <div style="margin-top: 11px;" class="radio-btn-padding"
+                [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Employee_type').errors}">
+                <label class="radio-container"> Nutrien Employee
+                  <input type="radio" formControlName="Employee_type" value="Landmark_Employee" name="Employee_type"
+                    id="exampleRadios5" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="radio-container"> Agent
+                  <input type="radio" formControlName="Employee_type" value="Agent" name="Employee_type"
+                    id="exampleRadios6" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div style="display: block;" *ngIf="IsSubmit && f.Employee_type.errors" class="invalid-feedback">
+                <div *ngIf="f.Employee_type.errors.required">Designation is required</div>
+              </div>
+            </div>
+            <div #trvRegionDropdown [ngClass]="{'disableDiv': isdisableDiv}" class="form-group" *ngIf="isToplineReportingRoles">
+              <label>Region<span class="red">*</span> <i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Select Region" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <ng-multiselect-dropdown  [disabled]="isDisabled"  formControlName="Region" [placeholder]="'Region'" [settings]="dropdownSettings" [data]="RegionData"
+                (onSelect)="onItemSelect('Region',$event)"
+                (onDeSelect)="onItemDeSelect('Region',$event)" (onSelectAll)="onSelectAll('Region',$event)"
+                (onDeSelectAll)="onDeSelectAll('Region',$event)" [ngClass]='setClass()' name='Region'>
+              </ng-multiselect-dropdown>
+
+              <div *ngIf="IsSubmit && UserDetails.get('Region').errors" style="display: block;"
+                class="invalid-feedback">
+                <div *ngIf="IsSubmit && UserDetails.get('Region').errors.required">Region is required</div>
+              </div>
+            </div>
+
+
+            <div #trvDivisionDropdown [ngClass]="{'disableDiv': isdisableDiv}" class="form-group" *ngIf="isToplineReportingRoles">
+              <label>Division<span class="red">*</span><i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Select Division" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+
+              <ng-multiselect-dropdown id="Division"  [disabled]="isDisabled"  formControlName="Division" [placeholder]="'Division'" [settings]="dropdownSettings" [data]="DivisionData"
+                (onSelect)="onItemSelect('Division',$event)"
+                (onDeSelect)="onItemDeSelect('Division',$event)" (onSelectAll)="onSelectAll('Division',$event)"
+                (onDeSelectAll)="onDeSelectAll('Division',$event)" [ngClass]='setClass()' name='Division'>
+              </ng-multiselect-dropdown>
+
+
+              <div *ngIf="IsSubmit && UserDetails.get('Division').errors" style="display: block;"
+                class="invalid-feedback">
+                <div *ngIf="IsSubmit && UserDetails.get('Division').errors.required">Division is required</div>
+              </div>
+            </div>
+
+            <div #trvBranchDropdown *ngIf="isToplineReportingRoles" [ngClass]="{'disableDiv': isdisableDiv}" class="form-group">
+              <label>Branch<span class="red">*</span><i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Select Branch" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+
+              <ng-multiselect-dropdown  [disabled]="isDisabled" formControlName="Branch" [placeholder]="'Branch'" [settings]="dropdownSettings" [data]="BranchData"
+                (onSelect)="onItemSelect('Branch',$event)"
+                (onDeSelect)="onItemDeSelect('Branch',$event)" (onSelectAll)="onSelectAll('Branch',$event)"
+                (onDeSelectAll)="onDeSelectAll('Branch',$event)" [ngClass]='setClass()' name='Branch'>
+              </ng-multiselect-dropdown>
+
+
+              <div *ngIf="IsSubmit && UserDetails.get('Branch').errors" style="display: block;"
+                class="invalid-feedback">
+                <div *ngIf="IsSubmit && UserDetails.get('Branch').errors.required">Branch is required</div>
+              </div>
+            </div>
+
+            <div #trvAgencyDropdown *ngIf="isToplineReportingRoles" [ngClass]="{'disableDiv': isdisableDiv}" class="form-group">
+              <label>Agency<i mat-raised-button #tooltip="matTooltip"
+                  matTooltip="Select Agency" matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+                <!-- <ng-select [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('Agency')?.errors}"
+                formControlName="Agency" id="Agency" placeholder="Select Agency" required>
+                <ng-option aria-selected="true" value="">Select</ng-option>
+                <ng-option *ngFor="let item of AgencyData" aria-selected="true" value="{{item.item_id}}">
+                  {{item.item_text}}</ng-option>
+              </ng-select>   -->
+
+               <ng-multiselect-dropdown id="Agency" [disabled]="isDisabled"   formControlName="Agency" [placeholder]="'Agency'" [settings]="dropdownSettings" [data]="AgencyData"
+                [ngClass]='setClass()' name='Agency'>
+              </ng-multiselect-dropdown>  
+
+              <div *ngIf="IsSubmit && UserDetails.get('Agency').errors" style="display: block;"
+                class="invalid-feedback">
+                <div *ngIf="IsSubmit && UserDetails.get('Agency').errors.required">Agency is required</div>
+              </div>
+            </div>
+
+
+            <div [hidden]="isBtnHide" class="form-group">
+              <label>Add Photo <i mat-raised-button #tooltip="matTooltip" matTooltip="Add Photo"
+                  matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <div class="view_photo">
+                <span>Min W:146px; Min H:146px</span>
+                <div class="photo_frame">
+                  <img *ngIf="afterCroped" [src]="afterCroped.base64" />
+                  <img *ngIf="!afterCroped && UserDetails.get('Pic_Name').value!=''"
+                    src="{{ProfileLocation}}{{UserDetails.get('Pic_Name').value}}" />
+                </div>
+                <!-- <a href="#">+ Upload</a> -->
+                <div class="upload_link">
+                  <input type="file" (change)="fileChangeEvent($event, content)" id="fileupload"
+                    class="custom-file-input">
+                  <label class="custom-file-label" for='fileupload'>+ Upload</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 preference" *ngIf="UserDetails.get('Role').value.length!=0">
+            <div [ngClass]="{'disableDiv': isdisableDiv}" class="form-group">
+              <label>Email Preferences <i mat-raised-button #tooltip="matTooltip" matTooltip="Enter email preferences"
+                  matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Process Name</th>
+                    <th scope="col">Role Name</th>
+                    <th scope="col">Process Email</th>
+                    <th scope="col">OBE Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr formArrayName="Email_Prefer" *ngFor="let item of f.Email_Prefer?.controls; let i = index">
+                    <ng-container [formGroupName]="i">
+                      <td style="width:20%;">
+                        {{item.value.Process_Name}}
+                      </td>
+                      <td style="width:50%;">{{item.value.Role_Name}}</td>
+                      <td>
+                        <label class="inline-checkbox ml-5 mt-1">
+                          <input name="chkboxlist" type="checkbox" formControlName="Process_Email"
+                            value="{{item.value.Process_Email}}">
+                          <i class="skin"></i>
+                        </label>
+                      </td>
+                      <td >
+                        <label class="inline-checkbox ml-5 mt-1">
+                          <input name="chkboxlist" type="checkbox" formControlName="OBE_Email"
+                            value="{{item.value.OBE_Email}}">
+                          <i class="skin"></i>
+                        </label>
+                      </td>
+                    </ng-container>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+            <div class="form-group" *ngIf="UID!=''">
+              <label>Out of Office <i mat-raised-button #tooltip="matTooltip" matTooltip="Out of office"
+                  matTooltipPosition="right" matTooltipClass="example-tooltip-red"
+                  class="far fa-question-circle"></i></label>
+              <div>
+                <label class="radio-container"> I am in the office
+                  <input type="radio" formControlName="Out_of_Office" value="op1" name="Out_of_Office"
+                    id="exampleRadios1" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="radio-container"> I am out of the office
+                  <input type="radio" formControlName="Out_of_Office" value="op2" name="Out_of_Office"
+                    id="exampleRadios2" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="row" *ngIf="f.Out_of_Office.value=='op2'">
+            <div class="col">
+              <div class="form-group">
+                <label>Out From <span class="red">*</span></label>
+
+                <div class="input-group">
+
+                  <input readonly [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('OutFrom').errors}"
+                    class="form-control" id="filterValue1" (click)="d.toggle()" placeholder="{{dateFormatType}}" name="dp"
+                    ngbDatepicker [minDate]="MinDate" formControlName="OutFrom" (dateSelect)="getStartDate($event)"
+                    #d="ngbDatepicker">
+                  <div class="input-group-append">
+                    <button class="btn btn-sm btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i
+                        _ngcontent-lcu-c9="" aria-hidden="true" class="far fa-calendar-alt"></i></button>
+                  </div>
+                  <div *ngIf="IsSubmit && UserDetails.get('OutFrom').errors" class="invalid-feedback">
+                    <div *ngIf="UserDetails.get('OutFrom').errors.required">Out From is required</div>
+                    <div *ngIf="UserDetails.get('OutFrom').errors.notValid">Out From is invalid
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col" *ngIf="f.Out_of_Office.value=='op2'">
+              <div class="form-group">
+                <label>Out Until <span class="red">*</span></label>
+                <div class="input-group">
+                  <input [ngClass]="{'is-invalid':IsSubmit && UserDetails.get('OutUntil').errors}"
+                    formControlName="OutUntil" [minDate]="MaxDate" formControlName="OutUntil"
+                    (dateSelect)="getendDate($event)" readonly class="form-control" id="filterValue1"
+                    (click)="dd.toggle()" placeholder="{{dateFormatType}}" name="dr" ngbDatepicker #dd="ngbDatepicker" required>
+                  <div class="input-group-append">
+                    <button class="btn btn-sm btn-outline-secondary calendar" (click)="dd.toggle()" type="button"><i
+                        _ngcontent-lcu-c9="" aria-hidden="true" class="far fa-calendar-alt"></i></button>
+                  </div>
+                  <div *ngIf="IsSubmit && UserDetails.get('OutUntil').errors" class="invalid-feedback">
+                    <div *ngIf="UserDetails.get('OutUntil').errors.required">Out Until is required</div>
+                    <div *ngIf="UserDetails.get('OutUntil').errors.notValid">Out Until must be greater than Out From
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div [ngClass]="{'disableDiv': isdisableDiv}" class="form-group preference"
+            *ngIf="f.Out_of_Office.value=='op2' && UserDetails.get('Role').value.length!=0">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">My Role(s)</th>
+                  <th scope="col">User Who will Approve for me(User Name)</th>
+                  <th scope="col">Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr formArrayName="Role_List" *ngFor="let item of f.Role_List?.controls; let i = index">
+                  <ng-container [formGroupName]="i">
+                    <td style="width:20%;">
+                      {{item.value.MyRole}}
+                    </td>
+                    <td style="width:50%;">
+                      <input #Alternateusertext maxlength="50" *ngIf="item.value.Edit" type="text" id="User_Name{{i}}"
+                        formControlName="User_Name" value="{{item.value.User_Name.trim()}}" style="width:90%;" />
+                      <span *ngIf="!item.value.Edit">{{item.value.User_Name}}</span>
+                    </td>
+                    <td>
+                      <span (click)="EditRole(item.value.Role_Id,item.value.Edit==false?'Edit':'Update')" class="BtnSpan">{{item.value.Edit==false?"Edit":"Update"}}</span>
+                       &nbsp;
+                      &nbsp;
+                      <span class="BtnSpan" *ngIf="item.value.Edit" (click)="CancelRow(item.value.Role_Id)">Cancel</span>
+                    </td>
+                  </ng-container>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="form-group profile_btn">
+            <button class="btn" (click)="ResetForm()" [hidden]="isBtnHide" type="button">Cancel</button>
+            <button class="btn-success" [hidden]="isBtnHide" type="submit">{{UID==''?'Save':'Update'}}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Crop Image</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" role="document" aria-label="Modal heading text content">
+    <div class="videoWrap">
+      <image-cropper 
+        [imageChangedEvent]="imageChangedEvent" 
+        [maintainAspectRatio]="true" 
+        [aspectRatio]="1"
+        [onlyScaleDown]="true"
+        [cropperMinWidth]="146"
+        [cropperMinHeight]="146"
+        [transform]="transform"
+        [resizeToWidth]="146" 
+        format="png" 
+        (imageCropped)="imageCropped($event)" 
+        (imageLoaded)="imageLoaded()"
+        (cropperReady)="cropperReady()" 
+        (loadImageFailed)="loadImageFailed()">
+      </image-cropper>
+      <div class="input-range" style="float: right;">
+        <!-- <label for="">Zoom</label> -->
+        <div class="zoom">
+          <button class="btn btn-secondary btn-sm" (click)="onZoomOut()"><i class="fas fa-search-minus"></i></button>
+          <!-- <input type="range" (input)="onZoomChange($event)"> -->
+          <button class="btn btn-secondary btn-sm" (click)="onZoomIn()"><i class="fas fa-search-plus"></i></button>
+        </div>
+      </div>
+      <img [src]="croppedImage.base64" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="cta-button-group">
+      <button class="btn btn-clear btn-small" (click)="modal.dismiss('Cross click')" type="button"
+        data-dismiss="modal">Close</button>
+      <button class="btn btn-primary btn-small" (click)="Cropped()" type="button" data-dismiss="modal">Crop &
+        Close</button>
+    </div>
+  </div>
+</ng-template>

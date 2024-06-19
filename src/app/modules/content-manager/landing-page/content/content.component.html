@@ -1,0 +1,215 @@
+<div class="breadcrumbs">
+  <i class="fas fa-home"></i> <span><i class="fas fa-chevron-right"></i></span> Landing Page
+  <span><i class="fas fa-chevron-right"></i></span> Content
+</div>
+<div class="container-fluid">
+    <form #userForm="ngForm" novalidate autocomplete="off" (ngSubmit)="onSubmit(userForm.valid,userForm);false">
+  <div class="padding-xs"></div>
+  <div>
+    <div><strong>Listing Navigation Tiles</strong></div>
+    <hr class="lite" style="margin-top:8px;">
+    <div class="form-group">
+      <span class="filemessage">Tile images must be .jpg or .png, and under 100GB. Ideal proportions are 472px by
+        285px.</span>
+      <div class="padding-xs"> </div>
+    </div>
+    <div class="grid grid-m break-grid-2">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-4">
+            <label>Classified Tile Image</label>
+            <div class="custom-file">
+              <input type="file" (change)="fileChangeEvent($event, content, 1, 'ClassifiedTile', 472, 285)" id="fileupload"
+                class="custom-file-input">
+              <label class="custom-file-label" for='fileupload'>{{fileName['ClassifiedTile']}}</label>
+            </div>
+            <span class="err_message">{{errorMsg}}</span>
+            <a class="filemessage" *ngIf="(fileId['ClassifiedTile'] !== '')" href="javascript:void(0)" (click)="downloadFile('ClassifiedTile')">Click to download file</a>
+          </div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-4">
+            <label>Bid & Offer Tile Image</label>
+            <div class="custom-file">
+              <input type="file" (change)="fileChangeEvent($event, content, 2, 'BidAndOfferType', 472, 285)" id="fileupload"
+                class="custom-file-input">
+              <label class="custom-file-label" for='fileupload'>{{fileName['BidAndOfferType']}}</label>
+            </div>
+            <span class="err_message">{{errorMsg}}</span>
+            <a class="filemessage" *ngIf="(fileId['BidAndOfferType'] !== '')" href="javascript:void(0)" (click)="downloadFile('BidAndOfferType')">Click to download file</a>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-4">
+            <label>Past Sales Tile Image</label>
+            <div class="custom-file">
+              <input type="file" (change)="fileChangeEvent($event, content, 3, 'PastSalesTile', 472, 285)" id="fileupload"
+                class="custom-file-input">
+              <label class="custom-file-label" for='fileupload'>{{fileName['PastSalesTile']}}</label>
+            </div>
+            <span class="err_message">{{errorMsg}}</span>
+            <a class="filemessage" *ngIf="(fileId['PastSalesTile'] !== '')" href="javascript:void(0)" (click)="downloadFile('PastSalesTile')">Click to download file</a>
+          </div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-4">
+            <label>Livestock Calendar Tile Image</label>
+            <div class="custom-file">
+              <input type="file" (change)="fileChangeEvent($event, content, 3, 'LiveStock', 472, 285)" id="fileupload"
+                class="custom-file-input">
+              <label class="custom-file-label" for='fileupload'>{{fileName['LiveStock']}}</label>
+            </div>
+            <span class="err_message">{{errorMsg}}</span>
+            <a class="filemessage" *ngIf="(fileId['LiveStock'] !== '')" href="javascript:void(0)" (click)="downloadFile('LiveStock')">Click to download file</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="padding-xs"></div>
+  <div>
+    <div><strong>Site Navigation Tiles</strong></div>
+    <hr class="lite" style="margin-top:8px;">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-6">
+          <span class="filemessage">Tile images must be .jpg or .png, and under 100GB. Ideal proportions are 300px by
+            225px.</span>
+        </div>
+        <div class="col-sm-6">
+          <span class="filemessage">Text must be under 170 characters (with spaces).</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid break-grid-2">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-4">
+            <label>Login to Bid Image</label>
+            <div class="custom-file">
+              <input type="file" (change)="fileChangeEvent($event, content, 4, 'LoginToBid', 300, 225)" id="fileupload"
+                class="custom-file-input">
+              <label class="custom-file-label" for='fileupload'>{{fileName['LoginToBid']}}</label>
+            </div>
+            <span class="err_message">{{errorMsg}}</span>
+            <a class="filemessage" *ngIf="(fileId['LoginToBid'] !== '')" href="javascript:void(0)" (click)="downloadFile('LoginToBid')">Click to download file</a>
+          </div>
+          <div class="col-sm-2"></div>
+          <div class="col-sm-6">
+            <label>Login to Bid Text</label>
+            <div class="err_message" *ngIf="addEditData.Name.match(textAreaRegex)">Allowed special characters: & " ? ! * , .</div>
+            <textarea
+              [ngClass]="{'invalid': addEditData.Name.match(textAreaRegex)}" 
+              class="form-control" 
+              rows="3" 
+              cols="10" 
+              placeholder="" 
+              name="Name" 
+              maxlength="170"
+              [(ngModel)]="addEditData.Name" #Name="ngModel">
+            </textarea>
+            <!-- <span class="err_message" *ngIf="Name.errors?.maxlength">Bid Text can be max 25 characters long.</span> -->
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-4">
+            <label>Find a Branch Image</label>
+            <div class="custom-file">
+              <input type="file" (change)="fileChangeEvent($event, content, 5, 'FindAndAgent',300, 225)" id="fileupload"
+                class="custom-file-input">
+              <label class="custom-file-label" for='fileupload'>{{fileName['FindAndAgent']}}</label>
+            </div>
+            <span class="err_message">{{errorMsg}}</span>
+            <a class="filemessage" *ngIf="(fileId['FindAndAgent'] !== '')" href="javascript:void(0)" (click)="downloadFile('FindAndAgent')">Click to download file</a>
+          </div>
+          <div class="col-sm-2"></div>
+          <div class="col-sm-6">
+            <label>Find a Branch Text</label>
+            <div class="err_message" *ngIf="addEditData.Document.match(textAreaRegex)">Allowed special characters: & " ? ! * , .</div>
+            <textarea 
+              [ngClass]="{'invalid': addEditData.Document.match(textAreaRegex)}" 
+              class="form-control" 
+              rows="3" cols="10" 
+              placeholder="" 
+              name="Document" 
+              maxlength="170"
+              [(ngModel)]="addEditData.Document" #Document="ngModel" >
+            </textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="padding-m"></div>
+  <div>
+    <div><strong>Welcome Text</strong></div>
+    <hr class="lite" style="margin-top:8px;">
+
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-12">
+          <label>Header</label>
+          <textarea class="form-control" rows="2" cols="10" placeholder="" name="Category"
+            [(ngModel)]="addEditData.Category" #Category="ngModel" >
+            </textarea>
+        </div>
+      </div>
+    </div>
+    <label>Body</label>
+    <!-- <ckeditor [editor]="Editor" data="<h1><strong>Welcome to Landmark’s Online Saleyard</strong></h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam non quam eros. Suspendisse vel massa placerat, vulputate enim sit amet, pulvinar odio. In hac habitasse platea dictumst. Maecenas eget dui vestibulum, mattis Lorem ipsum dolor sit amet, consectetur adipiscing elit. vulputate enim sit amet, pulvinar odio. In hac habitasse platea dictumst. Maecenas eget dui vestibulum, mattis magna ac, placerat diam..magna ac, placerat diam..</p>"></ckeditor> -->
+    <ckeditor [(ngModel)]='addEditData.Description' #Document='ngModel' name="Description"  [config]="{ removeButtons : 'Image' }"></ckeditor>
+  </div>
+  <div class="update_detail">
+      <button type="submit"  *ngIf="isBuyerAccess" class="btn btn-primary">{{addEditData.DataID == '' ? 'Save & Publish' : 'Save & Publish'}} </button>
+    </div>
+  <div class="padding-l"></div>
+</form>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Crop Image</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+        <div class="modal-body" role="document" aria-label="Modal heading text content">
+          <div class="filemessage">Max image size will be Height : {{height}}px and Width : {{width}}px</div>
+            <div class="videoWrap">
+              <image-cropper
+                [imageChangedEvent]="imageChangedEvent"
+                [maintainAspectRatio]="true"
+                [onlyScaleDown]="true"          
+                [aspectRatio]="width / height"
+                [cropperMinWidth]="width"
+                [cropperMinHeight]="height"
+                [resizeToWidth]="width"
+                [transform]="transform"
+                format="png"
+                (imageCropped)="imageCropped($event)">
+            </image-cropper>
+  
+            <div class="input-range" style="float: right;">
+              <!-- <label for="">Zoom</label> -->
+              <div class="zoom">
+                <button class="btn btn-secondary btn-sm" (click)="onZoomOut()"><i class="fas fa-search-minus"></i></button>
+                <!-- <input type="range" (input)="onZoomChange($event)"> -->
+                <button class="btn btn-secondary btn-sm" (click)="onZoomIn()"><i class="fas fa-search-plus"></i></button>
+              </div>
+            </div>
+<img height="200px" width="200px" [src]="croppedImage.base64"/>
+<!-- <div>Image Size Height : {{Croppedheight}}px, Width : {{Croppedwidth}}px</div> -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="cta-button-group">
+              <button class="btn btn-clear btn-small" (click)="modal.dismiss('Cross click')" type="button" data-dismiss="modal">Close</button>    
+              <button class="btn btn-primary btn-small" (click)="Cropped()" type="button" data-dismiss="modal">Crop & Close</button> 
+            </div>
+        </div>
+  </ng-template>

@@ -1,0 +1,22 @@
+<div>
+    <div class="row">
+        <div class="col-12">
+            <div class="search-results">
+                <div class="table-filters-group">
+                    <div class="export-btns-group">
+                        <a href="javascript:void(0)" title="Excel" (click)="getExcelData()"><i class="far fa-file-excel"></i>Excel</a>
+                    </div>
+                </div>
+                <app-customized-grid
+                    [dataSource]="dataSource"
+                    [headerMap]="headerMap"
+                    [itemsCount]="itemsCount"
+                    [pageIndex]="pageIndex"
+                    [sNo]="false"
+                    (pageChange)="pageChange($event)"
+                    (actionClick)="actionClick($event)"
+                ></app-customized-grid>
+            </div>
+        </div>
+    </div>
+</div>

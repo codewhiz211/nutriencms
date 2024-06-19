@@ -1,0 +1,16 @@
+<div class="tabs">
+  <ng-container *ngIf="tabs.length > 1">
+    <ul class="nav nav-tabs tab-link">
+        <li
+          *ngFor="let tab of tabs"
+          (click)="selectTab(tab)"
+          [hidden]="!tab.bmodisplay"
+          [class.active]="tab.active"
+          [class.form-invalid]="tab.hasInvalidForm"
+        >
+            <a>{{tab.title}}</a>
+        </li>
+    </ul>
+  </ng-container>
+  <ng-content></ng-content>
+</div>

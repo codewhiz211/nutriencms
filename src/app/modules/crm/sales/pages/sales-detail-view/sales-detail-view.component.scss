@@ -1,0 +1,194 @@
+.sub-header {
+    height: 33px;
+    background-color: #F1F0F2;
+    display: flex;
+    align-items: center;
+    padding-left: 28px;
+    padding-right: 28px;
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: 575.98px) {
+        height: 64px;
+    }
+
+    .breadcrumbs {
+        a {
+            font-size: 12px;
+            cursor: pointer;
+        }
+    
+        .arrow {
+            font-size: 10px;
+            color: #C3BBB1;
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+    
+        span {
+            color: #6F6F71;
+            font-size: 12px;
+            letter-spacing: 0.54px;
+            line-height: 9px;
+        }
+    }
+
+    .triggers {
+        a {
+            cursor: pointer;
+            margin-right: 20px;
+
+            &.disabled {
+                color: gray;
+                cursor: not-allowed;
+            }
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            i {
+                color: #4c9d01;
+                font-size: 12px;
+                letter-spacing: 0.54px;
+                line-height: 9px;
+            }
+    
+            span {
+                color: #4D4D51;
+                font-size: 12px;
+                font-weight: bold;
+                letter-spacing: 0.46px;
+                line-height: 17px;
+                margin-left: 4px;
+
+                @media (max-width: 767.99px) {
+                    display: none;
+                }
+            }
+        }
+
+        .delete-record-btn i{
+            color: #D0021B;
+        }
+    }
+}
+
+.stages {
+    .stage {
+        border-bottom: 5px solid #828587;
+        margin: 8px 20px;
+        padding-bottom: 2px;
+        text-align: center;
+
+        &.active {
+            border-bottom-color: #71ad1a;
+            a {
+                span {
+                    color: #71ad1a;
+                }   
+            }
+        }
+
+        a {
+            span {
+                color: #828587;
+                font-size: 16px;
+                line-height: 22px;
+                text-align: center;
+            }
+        }
+        
+    }
+}
+
+.header-info {
+    margin: 0 16px;
+
+    &-item {
+        display: flex;
+        flex-direction: column;
+        padding: 40px 20px 46px;
+
+        &-label {
+            color: #36424F;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.43px;
+        }
+
+        &-value {
+            color: #000000;
+            font-size: 13px;
+            font-weight: 100;
+            letter-spacing: 0.92px;
+        }
+    }
+}
+
+.bmo-tabs {
+    border-top: 0.5px solid #C3BBB1;
+    padding-top: 16px;
+}
+.disable {
+    opacity: 35%;
+}
+
+.modal-header {
+    border-bottom: none !important;
+    padding: 24px 42px 0;
+  
+    .modal-title {
+      color: black;
+      font-size: 24px;
+      font-weight: 300;
+      letter-spacing: 0.72px;
+      line-height: 33px;
+    }
+  
+    .close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0;
+    }
+}
+
+.modal-body {
+
+    .submit-btn {
+        font-size: 12px;
+        letter-spacing: 0.35px;
+        line-height: 17px;
+        text-align: center;
+        width: 150px;
+        height: 35px;
+    }
+
+    .cancel-btn {
+        color: #36424F;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.35px;
+        line-height: 17px;
+        text-align: center;
+        margin-right: 32px;
+    }
+}
+
+.reverse-sale-form {
+    .radio-container {
+        font-size: 16px;
+
+        .checkmark {
+            width: 16px;
+            height: 16px;
+            border-radius: 8px;
+
+            &::after {
+                width: 12px;
+                height: 12px;
+            }
+        }
+    }
+}

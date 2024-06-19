@@ -1,0 +1,29 @@
+<div class="navbar-default navbar-side" role="navigation">
+  <div class="sidebar-collapse">
+    <ul class="nav" id="main-menu">
+      <li><a><i class="fas fa-tv"></i> Landing Page</a>
+        <ul class="nav nav-second-level">
+          <li routerLinkActive="active">
+            <a [routerLink]="['/content_manager/banner']" ng-reflect-router-link="/Banner" href="#/Banner">Banner</a>
+          </li>
+          <li routerLinkActive="active">
+            <a [routerLink]="['/content_manager/content']" ng-reflect-router-link="/content" href="#/content">Content</a>
+          </li>
+        </ul>
+      </li>
+      <li><a><i class="far fa-file"></i> Help Centre</a>
+        <ul class="nav nav-second-level">
+          <li routerLinkActive="active">
+            <a [routerLink]="['/content_manager/video']" ng-reflect-router-link="/Videos" href="#/Videos">Videos</a>
+          </li>
+          <li routerLinkActive="active">
+            <a [routerLink]="['/content_manager/assets']" ng-reflect-router-link="/Assets" href="#/Assets">Assets</a>
+          </li>
+          <li routerLinkActive="active">
+            <a [routerLink]="['/content_manager/faq']" ng-reflect-router-link="/Faqs" href="#/Faqs">FAQs</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

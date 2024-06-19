@@ -1,0 +1,68 @@
+<form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+    <div class="p-3">
+        <div class="form-row py-0 vendor-buyer-section">
+            <div class="col-12">
+                <div class="form-row">
+                    <div class="col-md-5">
+                        <div class="form-group mr-3">
+                            <label class="input-label">Agency</label>
+                            <input
+                                type="text"
+                                class="form-control" 
+                                [ngClass]="{'is-invalid': submitted && f.agencyName.errors}" 
+                                placeholder="Agency Name" 
+                                formControlName="agencyName"
+                                [ngbTypeahead]="agencySearch" 
+                                [editable]='false'
+                                [inputFormatter]="formatter"
+                                [resultFormatter]="formatter" />
+                            <div *ngIf="submitted && f.agencyName.errors?.required" class="invalid-feedback">Agency Name is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group mr-3">
+                            <label class="input-label">Agent</label>
+                            <input type="text" class="form-control" 
+                                [ngClass]="{'is-invalid': submitted && f.agentName.errors}" 
+                                placeholder="Agent Name" 
+                                formControlName="agentName"
+                                [ngbTypeahead]="agentSearch"
+                                [editable]='false'
+                                [inputFormatter]="formatter"
+                                [resultFormatter]="formatter" />
+                            <div *ngIf="submitted && f.agentName.errors?.required" class="invalid-feedback">Agent Name is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn add-btn" (click)="addAgent()">Add New</button>
+                    </div>
+                </div>
+                <div *ngFor="let item of commissionData" class="form-row">
+                    <div class="col-md-4">
+                        <div class="form-group mr-3">
+                            <label class="input-label">Agency</label>
+                            <input type="text" class="form-control" placeholder="Agency Name" [value]="item.agency.NAME" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mr-3">
+                            <label class="input-label">Agent</label>
+                            <input type="text" class="form-control agent-control" placeholder="Agent Name" [value]="item.agent.NAME" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-row">
+                    <div class="d-flex align-items-center justify-content-end my-5">
+                        <button type="button" class="btn btn-primary cancel-btn" (click)="removeAgents()">Remove Agency Association</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-end my-3">
+        <button type="button" class="btn btn-primary cancel-btn" style="width: 150px;" (click)="activeModal.dismiss('Close')">Cancel</button>
+        <button type="submit"  class="btn btn-primary mr-2 submit-btn">Update</button>
+    </div>
+</form>

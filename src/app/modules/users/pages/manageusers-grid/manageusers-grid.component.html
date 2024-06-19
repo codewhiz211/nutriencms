@@ -1,0 +1,53 @@
+
+<!--Header-->
+
+<div class="p-1"></div>
+<!--Gloabl Search-->
+<form class="position-relative text-center"
+  (ngSubmit)="globalSearch(txtGlobal.value)">
+  <div class="p-2">
+    <div class="wfMainGSearch">
+      <div class="globalSearchWrap">
+        <div class="position-relative">
+          <input id="globalSearch"  [formControl]="SearchText" #txtGlobal placeholder="Search" type="search">
+          <button aria-label="Search" class="btn-search" routerlink="" style="z-index: 1;" tabindex="0" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div></div>
+<div class="p-1"></div>
+<div class="table-filters-group">
+    <div class="button-group" style="padding: 3px 5px;">
+      <button class="btn btn-primary-special btn-small" type="button" [routerLink]="['/users/user-profile']">Add Users</button>
+      <button class="btn btn-primary-special btn-small" type="button" (click)="openStatus()">Change Status</button>
+    </div>
+  <div class="export-btns-group">
+    <a href="javascript:void(0)" (click)="openNewExportPopup('excel')" title="Excel"><i class="far fa-file-excel"
+        role="img" aria-label="Excel"></i>Excel</a>
+    <a href="javascript:void(0)" (click)="openNewExportPopup('pdf')" title="PDF"><i class="far fa-file-pdf" role="img"
+        aria-label="PDF"></i>PDF</a>
+    <a href="javascript:void(0)" onclick="window.print();return false;" title="Print"><i class="fas fa-print" role="img"
+        aria-label="Print"></i>Print</a>
+  </div>
+</div>
+<div class="p-1"></div>
+<div class="grid">
+  <generic-grid 
+    [FromDateobj]="FromDateobj"
+    [ToDateobj]="ToDateobj"
+    [filterValue1]="filterValue1" [filterValue2]="filterValue2" [ConditionOpt1]="ConditionOpt1"
+    [ConditionOpt2]="ConditionOpt2" [logicalOpt]="logicalOpt" [dataSource]="dataSource" [headerMap]="HeaderMap"
+    [itemsCount]="itemsCount" [sNo]="false" [pageNum]="pageNum" (pageChange)="pageChange($event)"
+    (actionClick)="actionClick($event)"></generic-grid>
+  <a class="btnFltr" href="javascript:void(0);" title="Remove Filter" (click)="removeFilter(txtGlobal)">Remove
+    Filter</a>
+<!-- 	
+	  <generic-grid [dataSource]="dataSource" [headerMap]="HeaderMap"  [itemsCount]="itemsCount" [sNo]="false" [pageNum]="pageNum"
+    (pageChange)="pageChange($event)" (actionClick)="actionClick($event)"></generic-grid>
+    <a class="btnFltr" href="javascript:void(0);" title="Remove Filter" (click)="removeFilter(txtGlobal)">Remove Filter</a> -->
+	
+</div>

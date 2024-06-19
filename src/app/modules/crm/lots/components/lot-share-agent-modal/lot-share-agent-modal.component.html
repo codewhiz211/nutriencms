@@ -1,0 +1,68 @@
+<!-- Modals -->
+<div class="modal-header">
+  <h4 class="modal-title">
+    <span>Add Shared Agent</span>
+  </h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="px-3 pt-1 pb-3">
+    <form *ngIf="addForm" [formGroup]="addForm" (ngSubmit)="onSubmit()">
+      <div class="section-header">
+        Add Shared With Agent
+      </div>
+      <div class="row p-3">
+        <div class="col-4">
+            <div class="form-group mr-3">
+              <label class="input-label">Shared With Agency</label>
+              <input type="text" class="form-control" 
+              [ngClass]="{'is-invalid': submitted && f.agencyName.errors}" 
+              placeholder="Agency Name" 
+              formControlName="agencyName"
+              [ngbTypeahead]="searchAgency" 
+              [inputFormatter]="formatter"
+              [resultFormatter]="formatter"
+              [editable]='false'/>
+              <div *ngIf="submitted && f.agencyName.errors?.required" class="invalid-feedback">Agency Name is required</div>
+            </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group mr-3">
+            <label class="input-label">Shared With Agent</label>
+            <input type="text" class="form-control" 
+            [ngClass]="{'is-invalid': submitted && f.agentName.errors}" 
+            placeholder="Agent Name" 
+            formControlName="agentName"
+            [ngbTypeahead]="searchAgent"
+            [inputFormatter]="formatter"
+            [resultFormatter]="formatter"
+            [editable]='false' />
+            <div *ngIf="submitted && f.agentName.errors?.required" class="invalid-feedback">Agent Name is required</div>
+          </div>
+      </div>
+        <div class="col-4">
+            <div class="form-group">
+              <label class="input-label">Sharing Rate %</label>
+              <input type="number" class="form-control" 
+              [ngClass]="{'is-invalid': submitted && f.sharingRate.errors}" 
+              placeholder="Sharing Rate" 
+              formControlName="sharingRate"
+              [(ngModel)]="Sap.Rate"
+               />
+              <div *ngIf="submitted && f.sharingRate.errors?.min" class="invalid-feedback">Rating must be larger than 0</div>
+              <div *ngIf="submitted && f.sharingRate.errors?.max" class="invalid-feedback">Rating must be less than 100</div>
+              <div *ngIf="submitted && f.sharingRate.errors?.required" class="invalid-feedback">Rating is required</div>
+            </div>
+        </div> 
+      </div>
+      <div class="d-flex align-items-center justify-content-end my-3">
+        <button type="button" class="btn btn-primary cancel-btn" (click)="activeModal.close()">Cancel</button>
+        <button type="submit" class="btn btn-primary mr-2 submit-btn">Save & Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- End Modals -->

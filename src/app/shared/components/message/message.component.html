@@ -1,0 +1,64 @@
+<!-- <div *ngIf="IsDelete == false">
+
+
+    <div class="modal-header" >
+      <h3 *ngIf="IsConfirmation" class="FR22 padding-0">{{MessageHeader}}</h3>
+      <h3 *ngIf="!IsConfirmation" class="FR22 padding-0">{{MessageHeader}}</h3>
+      <button type="button" class="close" aria-label="Close" (click)="CloseErrorMsg()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body"><p class="p-large">{{Message}}</p>
+    </div>
+    <div class="modal-footer">
+      <div *ngIf="IsConfirmation" class="cta-button-group" >
+        <button class="btn btn-warning btn-sm text-white" (click)="Continue();" type="button"
+          data-dismiss="modal">{{ButtonText}}</button>
+        <button *ngIf="isCancelabel" class="btn btn-clear btn-sm" (click)="CloseErrorMsg();" type="button"
+          data-dismiss="modal">Cancel</button>
+      </div>
+      <div *ngIf="!IsConfirmation" class="cta-button-group">
+          <button class="btn btn-warning btn-sm text-white" (click)="CloseErrorMsg();" type="button"
+            data-dismiss="modal">OK</button>
+        </div>
+    </div>
+  </div> -->
+    <div>
+          <div class="modal-header" >
+              <!-- <h3 *ngIf="IsConfirmation" class="FR22 padding-0">{{MessageHeader}}</h3>
+              <h3 *ngIf="!IsConfirmation" class="FR22 padding-0">{{MessageHeader}}</h3> -->
+              <button type="button" class="close" aria-label="Close" *ngIf="!IsVersion"  (click)="CloseFromTop()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h3 class="p-large"><i *ngIf = "IsDelete" class="fa fa-exclamation-triangle"></i> {{MessageHeader}}</h3>
+              <p [innerHtml]="Message"></p> 
+              <p *ngIf = "IsDelete">This action cannot be undone.</p>
+              <div class="checkfordelete" *ngIf = "IsDelete">
+                  <label class="checkbox" for="defaultView" style="margin-top:5px">
+                      <input id="defaultView" type="checkbox" value="" [checked]="IsDefaultView" (click)="setIsDefaultView()">
+                      <i class="skin"></i>
+                      <span>{{ConfirmationText}}</span>
+                    </label>
+                <!-- <input type="checkbox">  -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div *ngIf="IsConfirmation" class="cta-button-group" >
+                <button *ngIf="isCancelabel" class="btn btn-clear btn-sm" (click)="CloseErrorMsg();" type="button"
+                  data-dismiss="modal">{{CancelButtonText}}</button>
+                  <button class="btn btn-warning btn-sm text-white" [disabled] ='!IsDefaultView' (click)="Continue();" type="button" [attr.ngbAutofocus]="AutoFocusOnConfirm"
+                  data-dismiss="modal">{{ButtonText}}</button>
+              </div>
+              <div *ngIf="IsVersion" class="cta-button-group" >
+                  <button class="btn btn-warning btn-sm text-white" [disabled] ='!IsDefaultView' (click)="Continue();" type="button" [attr.ngbAutofocus]="AutoFocusOnConfirm"
+                  data-dismiss="modal">{{ButtonText}}<span>( {{counter}} )</span></button>
+              </div>
+              <div *ngIf="!IsConfirmation && !IsVersion" class="cta-button-group">
+                  <button class="btn btn-warning btn-sm text-white" (click)="CloseErrorMsg();" type="button"
+                    data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+    </div>
+  

@@ -1,0 +1,94 @@
+<div class="modal-header">
+  <h5>Export</h5>
+  <button type="button" class="close" aria-label="Close" (click)="CloseExport()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" role="document" aria-label="Modal heading text content">
+  <div class="p-3" style="max-height:400px;overflow:auto;">   
+    <div class="form-row">
+      <label for="export_All" class="form-checkbox">
+        <input [class]="!IsAllChecked && CheckedCount>0 ? 'indeterminate':''" type="checkbox" id="export_All"
+          (click)="CheckUncheckALL()" [checked]="IsAllChecked">
+        <i class="skin"></i>
+        <span>ALL</span>
+      </label>
+    </div>
+    <div class="pl-3">
+      <div class="form-row">
+        <ul class="checkFilter" *ngFor="let item of dist_ExportColumnList_DMOG; let i = index">
+          <li [ngClass]="item.IsHidden ? 'hideFilter' : ''">
+            <i class="fas fa-plus" (click)="hideFilter($event, item)"></i>
+            <label for='{{"export_" + item.DataModelObjectGroup.GUID}}' class="form-checkbox">
+              <input type="checkbox" id='{{"export_" + item.DataModelObjectGroup.GUID}}'
+                (click)="CheckUncheckDMOG(item)" [checked]="item.IsChecked">
+              <i class="skin"></i>
+              <span>
+                {{item.Name + '>'}}
+                {{item.DataModelObjectGroup === undefined ? '': item.DataModelObjectGroup.Name}}
+              </span>
+            </label>
+            <ul>
+              <li *ngFor="let column of ExportColumnList | myfilter:item.DataModelObjectGroup.GUID:'DMOGGUID':'';">
+                <label for='{{"export_" + column.GUID}}' class="form-checkbox">
+                  <input type="checkbox" id='{{"export_" + column.GUID}}' (click)="CheckUncheck(column)"
+                    [checked]="column.IsChecked">
+                  <i class="skin"></i>
+                  <span>
+                    {{column.DisplayName}}
+                  </span>
+                </label>
+              </li>
+            </ul>
+          </li>
+
+        </ul>
+        <ul *ngIf = "dist_ExportColumnList_DMOG.length > 0" class="checkFilter" >
+          <li [ngClass]="IsMisHidden ? 'hideFilter' : ''">
+            <i class="fas fa-plus" (click)="hideMisFilter()"></i>
+            <label for='export_miscellaneous' class="form-checkbox">
+              <input [class]="!IsMiscChecked && CheckedCount>0 ? 'indeterminate':''" type="checkbox"
+                id='export_miscellaneous' (click)="CheckUncheckMisc()" [checked]="IsMiscChecked">
+              <i class="skin"></i>
+              <span>
+                Miscellaneous
+              </span>
+            </label>
+            <ul>
+              <li *ngFor="let option of ExportColumnList | myfilter:'':'DMOGGUID':'';">
+                <label for='{{"export_" + option.GUID}}' class="form-checkbox">
+                  <input type="checkbox" id='{{"export_" + option.GUID}}' (click)="CheckUncheck(option)"
+                    [checked]="option.IsChecked">
+                  <i class="skin"></i>
+                  <span>
+                    {{option.DisplayName}}
+                  </span>
+                </label>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul *ngIf = "dist_ExportColumnList_DMOG.length == 0" class="checkFilter" >    
+              <li *ngFor="let option of ExportColumnList">
+                <label for='{{"export_" + option.Name}}' class="form-checkbox">
+                  <input type="checkbox" id='{{"export_" + option.Name}}' (click)="CheckUncheck(option)"
+                    [checked]="option.IsChecked">
+                  <i class="skin"></i>
+                  <span>
+                    {{option.DisplayName}}
+                  </span>
+                </label>
+              </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <div class="cta-button-group">
+    <button class="btn btn-sm btn-primary text-white" (click)="Export();" type="submit" data-dismiss="modal">Export</button>
+    <button class="btn btn-clear btn-sm" (click)="CloseExport();" type="button"
+      data-dismiss="modal">Cancel</button>
+  </div>
+</div>
+    

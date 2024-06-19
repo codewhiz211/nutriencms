@@ -1,0 +1,148 @@
+.modal-header {
+    border-bottom: none !important;
+    padding: 24px 16px 0 34px;
+  
+    .modal-title {
+      color: black;
+      font-size: 24px;
+      font-weight: 300;
+      letter-spacing: 0.72px;
+      line-height: 33px;
+    }
+}
+
+.modal-body {
+    padding: 30px 42px;
+
+    .form-control {
+        height: 24px;
+        border-radius: 3px;
+        font-size: 14px;
+        font-weight: 300;
+        letter-spacing: 0.99px;
+        line-height: 10px;
+    }
+    
+    .input-label {
+        color: #4D4D51;
+        margin-bottom: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 0.46px;
+        line-height: 17px;
+    }
+
+    .ng-select {
+
+        &.form-control {
+            padding: 0;
+            min-width: 170px;
+        }
+    
+        &::ng-deep .ng-select-container  {      
+            min-height: 22px;
+            min-width: 100px;
+            height: 22px;
+            border-radius: 3px;
+            border: none;
+    
+            .ng-value-container .ng-value {
+                line-height: 19px;
+            }
+        }
+      
+        &::ng-deep .ng-select-container .ng-input {
+            top: 0 !important;
+        }
+      
+        &::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+            height: 22px;
+            padding: 4px 12px;
+        }
+    }
+
+    .primary-btn {
+        font-size: 12px;
+        letter-spacing: 0.35px;
+        line-height: 17px;
+        text-align: center;
+        width: 150px;
+        height: 35px;
+    }
+
+    .cancel-btn {
+        color: #36424F;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.35px;
+        line-height: 17px;
+        text-align: center;
+        margin-right: 32px;
+    }
+
+    .alias-type {
+        margin-bottom: 10px;
+        padding-left: 20px;
+
+        &-lbl {
+            color: #6F6F71;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.46px;
+            line-height: 17px;
+            margin-bottom: 10px;
+        }
+
+        .radio-container {
+            font-weight: bold;
+            letter-spacing: 0.46px;
+            line-height: 17px;
+            padding-left: 30px;
+
+            input {
+                margin-top: 8px;
+            }
+            .checkmark {
+                height: 22px;
+                width: 22px;
+                border-radius: 11px;
+
+                &:after {
+                    top: 2px;
+                    left: 2px;
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 8px;
+                }
+            }
+        }
+    }
+
+    .lookup-alias, .create-alias {
+        &-header {
+            color: #4C9E00;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 0.42px;
+            line-height: 10px;
+            border-bottom: 1px solid #4C9E00;
+            padding: 20px 4px 8px;
+        }
+
+        .primary-btn {
+            margin-top: 18px;
+            margin-left: 24px;
+        }
+
+    }
+}
+.remove-filter {
+    color: #fff;
+    background-color: #a6a6a6;
+    padding: 4px 8px;
+    text-decoration: none !important;
+    font-size: 12px;
+    left: 164px;
+    top: 16px;
+    float: right;
+}

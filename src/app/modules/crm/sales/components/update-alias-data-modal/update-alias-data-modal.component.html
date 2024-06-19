@@ -1,0 +1,96 @@
+<div class="modal-header">
+  <h4 class="modal-title">
+    <span>{{saleservice.currentSaleYardName}}</span>
+  </h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Close')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form *ngIf="aliasForm" [formGroup]="aliasForm">
+    <div class="alias-type">
+      <div class="alias-type-lbl">Alias Type*</div>
+      <div class="d-flex input-group">
+        <label class="radio-container">Customer
+          <input type="radio" [value]="'Customer'" id="RadioButtonList_Customer"
+            formControlName="DMOSYAliases_SYASAliasTyp" (change)="setConfig()" />
+          <span class="checkmark"></span>
+        </label>
+        <label class="radio-container">Breed
+          <input type="radio" [value]="'Breed'" id="RadioButtonList_Breed" formControlName="DMOSYAliases_SYASAliasTyp"
+            (change)="setConfig()" />
+          <span class="checkmark"></span>
+        </label>
+        <label class="radio-container">Product Category
+          <input type="radio" [value]="'Product'" id="RadioButtonList_Product"
+            formControlName="DMOSYAliases_SYASAliasTyp" (change)="setConfig()" />
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="lookup-alias">
+      <div class="lookup-alias-header">Lookup Alias</div>
+      <div class="d-flex p-3">
+        <div class="form-group mr-2">
+          <label class="input-label">Alias</label>
+          <input type="text" id="TextBox_lookup_alias_alias" class="form-control"
+            formControlName="lookup_alias_alias" />
+        </div>
+        <div class="form-group mr-2">
+          <label class="input-label">
+            {{capitalize(f.DMOSYAliases_SYASAliasTyp.value)}}
+          </label>
+          <input *ngIf="f.DMOSYAliases_SYASAliasTyp.value ==='Customer'" type="text" id="TextBox_lookup_alias_customer"
+            class="form-control" formControlName="lookup_alias_customer" />
+          <input *ngIf="f.DMOSYAliases_SYASAliasTyp.value ==='Breed'" type="text" id="TextBox_lookup_alias_breed"
+            class="form-control" formControlName="lookup_alias_breed" />
+          <input *ngIf="f.DMOSYAliases_SYASAliasTyp.value ==='Product'" type="text" id="TextBox_lookup_alias_product"
+            class="form-control" formControlName="lookup_alias_product" />
+        </div>
+        <button type="button" class="btn btn-primary primary-btn"
+          (click)="search()">Lookup</button>
+
+      </div>
+      <div class="lookup-alias-grid">
+        <a *ngIf="hasFilter" class="remove-filter" href="javascript:void(0);" title="Remove Filter" (click)="genericgridcomponent.OnRemoveFilterClick();removeFilter()">Remove Filter</a>
+        <generic-grid [dataSource]="aliasDataSource" [headerMap]="aliasHeaderMap" [itemsCount]="aliasItemsCount"
+          [sNo]="false" [pageNum]="pageNum" (actionClick)="actionClick($event)"  (pageChange)="pageChange($event)" #genericgridcomponent></generic-grid>
+         
+      </div>
+    </div>
+
+    <div class="create-alias">
+      <div class="create-alias-header">Create New Alias</div>
+      <div class="d-flex p-3">
+        <div class="form-group mr-2">
+          <label class="input-label">Alias</label>
+          <input type="text" id="TextBox_DMOSYAliases_SYAAliasNo" class="form-control"
+            formControlName="DMOSYAliases_SYAAliasNo" 
+            [ngClass]="{'is-invalid': submitted && aliasForm.controls.DMOSYAliases_SYAAliasNo.errors}"/>
+        </div>
+        <div class="form-group mr-2">
+          <label class="input-label">
+            {{capitalize(f.DMOSYAliases_SYASAliasTyp.value)}}
+          </label>
+          <input *ngIf="f.DMOSYAliases_SYASAliasTyp.value ==='Customer'" type="text"
+            id="TextBox_DMOSYAliases_SYAAliasRef" class="form-control" formControlName="DMOSYAliases_SYAAliasRef"
+            [ngbTypeahead]="customerSearch" [editable]="false"
+            (selectItem)="selectcustomer($event, 'dmocustmstrcustname1')" 
+            [ngClass]="{'is-invalid': Invalid == 'Partner' || (submitted && aliasForm.controls.DMOSYAliases_SYAAliasRef.errors)}"/>
+          <input *ngIf="f.DMOSYAliases_SYASAliasTyp.value ==='Breed'" type="text" id="TextBox_DMOSYAliases_SYAAliasRef"
+            class="form-control" formControlName="DMOSYAliases_SYAAliasRef" [ngbTypeahead]="breadSearch"
+            [editable]="false" (selectItem)="selectBread($event, 'dmoprodbrdprodbrddscr')" 
+            [ngClass]="{'is-invalid': Invalid == 'Breed' || (submitted && aliasForm.controls.DMOSYAliases_SYAAliasRef.errors)}"/>
+          <input *ngIf="f.DMOSYAliases_SYASAliasTyp.value ==='Product'" type="text"
+            id="TextBox_DMOSYAliases_SYAAliasRef" class="form-control" formControlName="DMOSYAliases_SYAAliasRef"
+            [ngbTypeahead]="productSearch" [editable]="false"
+            (selectItem)="selectProduct($event, 'dmoproductproddscr')" 
+            [ngClass]="{'is-invalid': Invalid == 'Product' || (submitted && aliasForm.controls.DMOSYAliases_SYAAliasRef.errors)}"/>
+
+        </div>
+        <button type="button" class="btn btn-primary primary-btn" (click)="CreateNewAlias()">Add</button>
+      </div>
+    </div>
+  </form>
+</div>

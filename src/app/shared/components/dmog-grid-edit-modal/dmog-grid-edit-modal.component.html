@@ -1,0 +1,44 @@
+<!-- Modals -->
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span>{{title}}</span>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="px-3 pt-1 pb-3">
+        <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div id='{{dmogGuid}}' class="drow">
+                <ng-container *ngFor="let rowID of data.List">
+                    <ng-container *ngIf="data.Rows[rowID] as objROW">
+                        <ng-container *ngFor="let objCOLUMN of objROW.Columns">
+                            <ng-container *ngFor="let dmoGUID of objCOLUMN.List">
+                                <div class="dcolumns">
+                                    <ng-container *ngIf="objCOLUMN.DataModelObjects[dmoGUID] as objectDMO">
+                                        <app-dmo
+                                            *ngIf="objectDMO"
+                                            [dmo]="objectDMO"
+                                            [dmoGUID]="dmoGUID"
+                                            [dmogGUID]="dmogGuid"
+                                            [parentForm]="form"
+                                            [submitted]="submitted"
+                                        >
+                                        </app-dmo>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="d-flex align-items-center justify-content-end my-3">
+                <button type="button" class="btn btn-primary cancel-btn" (click)="activeModal.close(false)">Cancel</button>
+                <button type="submit" class="btn btn-primary mr-2 submit-btn">Save & Update</button>
+            </div>
+    
+        </form>
+    </div>
+</div>
+<!-- End Modals -->

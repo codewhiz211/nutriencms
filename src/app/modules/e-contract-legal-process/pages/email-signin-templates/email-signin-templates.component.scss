@@ -1,0 +1,158 @@
+#email-signin-template {
+   padding: 1rem;
+
+   &.sticky {
+      margin-top: 100px;
+   }
+
+   @media (max-width: 575.98px) {
+      padding: .5rem;
+   }
+
+   .copy-type {
+      color: #4c9e00;
+      font-size: 18px;
+   }
+
+   .signed-notification {
+      text-align: center;
+
+      label {
+         color:red;
+         font-size:14px;
+         margin-bottom: 0;
+      }
+   }
+
+   #maindivtemplates {
+      margin: auto;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      position: relative;
+      line-height: 1.4;
+      max-width: 1200px;
+      padding: 20px;
+      margin-top: 20px;
+   }
+}
+
+
+#signature-header {
+   height: 50px;
+   width: 100%;
+   z-index: 100;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: white;
+   box-shadow: 0 1px 3px 0 rgba(0,0,0,0.55);
+   position: relative;
+   padding:0 10px;
+   @media (max-width: 768px){justify-content: start;}
+   &.sticky {
+      top: 50px;
+      position: fixed;
+      animation: slow-top-to-bottom 0.5s ease-in;
+   }
+
+   span {
+      font-size: 16px;
+      font-weight: 500;
+      color: #000000;
+   }
+
+   #submit-btn {
+      position: absolute;
+      width: 90px;
+      height: 34px;
+      right: 20px;
+      top: 8px;
+   }
+}
+
+@keyframes slow-top-to-bottom {
+   0% {
+     transform: translateY(-100%);
+   }
+
+   60% {
+     transform: translateY(-100%);
+   }
+
+   100% {
+     transform: translateY(0%);
+   }
+ }
+
+
+
+/* Preview Modal (background) */
+#previewModal {
+   display: none; /* Hidden by default */
+   position: fixed; /* Stay in place */
+   z-index: 1; /* Sit on top */
+   padding-top: 100px; /* Location of the box */
+   left: 0;
+   top: 0;
+   width: 100%; /* Full width */
+   height: 100%; /* Full height */
+   overflow: auto; /* Enable scroll if needed */
+   background-color: rgb(0,0,0); /* Fallback color */
+   background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+
+   /* The Close Button */
+   .close {
+      position: absolute;
+      top: 15%;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+
+      &:hover, &:focus {
+         color: #bbb;
+         text-decoration: none;
+         cursor: pointer;
+      }
+   }
+
+   /* Modal Content (Image) */
+   .modal-content {
+      margin: auto;
+      display: block;
+      top: 15%;
+      width: 80%;
+      max-width: 700px;
+   }
+
+   /* Caption of Modal Image (Image Text) - Same Width as the Image */
+   #caption {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 700px;
+      text-align: center;
+      color: #ccc;
+      padding: 10px 0;
+      height: 150px;
+   }
+ 
+   /* Add Animation - Zoom in the Modal */
+   .modal-content, #caption {
+      animation-name: zoom;
+      animation-duration: 0.6s;
+   }
+   
+   /* 100% Image Width on Smaller Screens */
+   @media only screen and (max-width: 700px){
+      .modal-content {
+         width: 100%;
+      }
+   }
+}
+ 
+@keyframes zoom {
+   from {transform:scale(0)}
+   to {transform:scale(1)}
+}

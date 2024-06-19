@@ -1,0 +1,112 @@
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+                ID="_58082311-c868-466e-bba7-928112ecd66e"
+                Version="2.0"
+                IssueInstant="2020-07-17T00:26:41.808Z"
+                Destination="https://lmkstaging2-wf.c2m.net/auth/gateway"
+                InResponseTo="_37979564-13cd-42e1-bdf9-a99285dfd4aa"
+                >
+    <Issuer xmlns="urn:oasis:names:tc:SAML:2.0:assertion">https://sts.windows.net/5e0b361b-59ed-466e-8759-030448046197/</Issuer>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+            <Reference URI="#_58082311-c868-466e-bba7-928112ecd66e">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                    <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                <DigestValue>rjRu4pQZV9y6X33wbq0c9KTzaJicsOrbTtIUhvTgtY0=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>TPUDeZsWB3C2Se3jVTSfk+wGFTr9H2NXWTonkO2i5FuFShXD7lwHK4bYCPsb4vLjecv0wJIGEBktC+XcJg6/08122Isw5W3wAhjP2tGkM1BUkIOChTuIRwT5kMCBbhD4/MiLHBQ3XpZg1gtixmUUfRcyrFqEX8SFsEA8szndQp3WqLVpTp8n/Ts9I2vMYwzLbvzIh3S3Ih9g11kU0NYrlZtgZMhNntR3tCrqj7s0wY0Q1/8XjjX409o3D5Ljy2o9lwsU2aza4wgt443HCjq+fO1zq6/oH/ziwLhTkSFJ0rZLPZhKi3NzxSSdHUC/IGbAeRBuDu0lLmklnPQEGeqeRg==</SignatureValue>
+        <KeyInfo>
+            <ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:X509Certificate>MIIC8DCCAdigAwIBAgIQFhWgePW/AJRBr8EGgs5k9zANBgkqhkiG9w0BAQsFADA0MTIwMAYDVQQDEylNaWNyb3NvZnQgQXp1cmUgRmVkZXJhdGVkIFNTTyBDZXJ0aWZpY2F0ZTAeFw0yMDA1MDQyMDEyMzRaFw0yMzA1MDQyMDEyMzRaMDQxMjAwBgNVBAMTKU1pY3Jvc29mdCBBenVyZSBGZWRlcmF0ZWQgU1NPIENlcnRpZmljYXRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAprpYV9N9FwI7kdmi1sTHXA7uswq6jBgzOsUXFqU9IwSGVw7BitUnlLWX1pPyMh0z2F1jL/KZza7/R81ToTCbXnRA9IpFp0wNV2Y3E9Gs/ADPoB18+6DJi/8ejQI6aUxdgGL7gxV8tUKkJicKJ8hlKOr2EDsRCrRpUX/4gZx7Bk2Tl/uAEm/2gi80BON9Ui8QF1Qt0duDOw4biPwflFH5yitxxpPtQPhgx7FJqSC/S+CbLtJarxaCNbRhyDH25z1n4fjRbB7RsxBB+TZ3+k81gok0NACdkmZ9ZYMNUniAf9ZozdoBKuI4xVUQWABp/lVv1inKRoY+8yOkprJQVOckgQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQARRCRPDw5pApkJc4WLn4NLruF00VDcMhHWcq+kN/sJWYtH1WhJdppQIQYYGlEcg1k3I22tHlxekBgG162G31VSvr85ZC+MPmq/a2dVBsci0mFQoVgzCYqdlZWxrl/a0kIc7lIYrZlXeirNC7tjeWwYQlG0Uxjow/GpQ/EfS0QIecBh+rQiyU2xRWB1/W5FV5Xn2co7OIkZQvfa0zSd6k1p52Tp+qR2c77Q7O6jKI91Ze51WKfSQETuYSpoVN2bEuZv033oliqNUtvcSMk+TDqSdYPqKk69A0oQKg2lz0V3gwgHlnxGOcmSBf79bpcms1AFNmgVU36zCIjsT6eULOdc</ds:X509Certificate>
+            </ds:X509Data>
+        </KeyInfo>
+    </Signature>
+    <samlp:Status>
+        <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success" />
+    </samlp:Status>
+    <Assertion xmlns="urn:oasis:names:tc:SAML:2.0:assertion"
+               ID="_a70befc0-3ffe-4219-aa80-0f3dad900701"
+               IssueInstant="2020-07-17T00:26:41.792Z"
+               Version="2.0"
+               >
+        <Issuer>https://sts.windows.net/5e0b361b-59ed-466e-8759-030448046197/</Issuer>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+                <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+                <Reference URI="#_a70befc0-3ffe-4219-aa80-0f3dad900701">
+                    <Transforms>
+                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                        <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                    </Transforms>
+                    <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                    <DigestValue>K1dgBQ2wgrUPEPBRtpebXI/pvSSgMyVC//jBag2DIPg=</DigestValue>
+                </Reference>
+            </SignedInfo>
+            <SignatureValue>EHQEmEvKZlC3px3SSJWAySmvc2JEnSYb9fpGH0I/FAlveqhhz9updsi3C+EAHxKyE/E8MQgKeo/4y3L0NrSEPjLXdCzkxY9dEW1w9w6KkXdDii+32E7eClNaPB6nrE1wckrxpldWswdpmcON/0HpLgSJSYD1o3aXbcVWc5ygrzQXtK5/feo9BdEjnc2Xnx3Z08NLNy+/3ieA25aL86Q566M04fEAWhqZ2Gl4Hi8Oeya2153I4hVWWceBjba5/mjxipqr4V43aV1hbi+8wPyk1RNF1IXhEsaZq6HVT3mLu8YjtyBush2OBc8W8qEFFYw1u71UpPp+5mbri44HnbmPsg==</SignatureValue>
+            <KeyInfo>
+                <X509Data>
+                    <X509Certificate>MIIC8DCCAdigAwIBAgIQFhWgePW/AJRBr8EGgs5k9zANBgkqhkiG9w0BAQsFADA0MTIwMAYDVQQDEylNaWNyb3NvZnQgQXp1cmUgRmVkZXJhdGVkIFNTTyBDZXJ0aWZpY2F0ZTAeFw0yMDA1MDQyMDEyMzRaFw0yMzA1MDQyMDEyMzRaMDQxMjAwBgNVBAMTKU1pY3Jvc29mdCBBenVyZSBGZWRlcmF0ZWQgU1NPIENlcnRpZmljYXRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAprpYV9N9FwI7kdmi1sTHXA7uswq6jBgzOsUXFqU9IwSGVw7BitUnlLWX1pPyMh0z2F1jL/KZza7/R81ToTCbXnRA9IpFp0wNV2Y3E9Gs/ADPoB18+6DJi/8ejQI6aUxdgGL7gxV8tUKkJicKJ8hlKOr2EDsRCrRpUX/4gZx7Bk2Tl/uAEm/2gi80BON9Ui8QF1Qt0duDOw4biPwflFH5yitxxpPtQPhgx7FJqSC/S+CbLtJarxaCNbRhyDH25z1n4fjRbB7RsxBB+TZ3+k81gok0NACdkmZ9ZYMNUniAf9ZozdoBKuI4xVUQWABp/lVv1inKRoY+8yOkprJQVOckgQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQARRCRPDw5pApkJc4WLn4NLruF00VDcMhHWcq+kN/sJWYtH1WhJdppQIQYYGlEcg1k3I22tHlxekBgG162G31VSvr85ZC+MPmq/a2dVBsci0mFQoVgzCYqdlZWxrl/a0kIc7lIYrZlXeirNC7tjeWwYQlG0Uxjow/GpQ/EfS0QIecBh+rQiyU2xRWB1/W5FV5Xn2co7OIkZQvfa0zSd6k1p52Tp+qR2c77Q7O6jKI91Ze51WKfSQETuYSpoVN2bEuZv033oliqNUtvcSMk+TDqSdYPqKk69A0oQKg2lz0V3gwgHlnxGOcmSBf79bpcms1AFNmgVU36zCIjsT6eULOdc</X509Certificate>
+                </X509Data>
+            </KeyInfo>
+        </Signature>
+        <Subject>
+            <NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">hayden.fitzgerald@nutrien.com.au</NameID>
+            <SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+                <SubjectConfirmationData InResponseTo="_37979564-13cd-42e1-bdf9-a99285dfd4aa"
+                                         NotOnOrAfter="2020-07-17T01:26:41.636Z"
+                                         Recipient="https://lmkstaging2-wf.c2m.net/auth/gateway"
+                                         />
+            </SubjectConfirmation>
+        </Subject>
+        <Conditions NotBefore="2020-07-17T00:21:41.636Z"
+                    NotOnOrAfter="2020-07-17T01:26:41.636Z"
+                    >
+            <AudienceRestriction>
+                <Audience>https://lmkstaging2-wf.c2m.net</Audience>
+            </AudienceRestriction>
+        </Conditions>
+        <AttributeStatement>
+            <Attribute Name="http://schemas.microsoft.com/identity/claims/tenantid">
+                <AttributeValue>5e0b361b-59ed-466e-8759-030448046197</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.microsoft.com/identity/claims/objectidentifier">
+                <AttributeValue>edb903e4-213c-4e03-9281-f8fbb843e467</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.microsoft.com/identity/claims/displayname">
+                <AttributeValue>Hayden Fitzgerald</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.microsoft.com/identity/claims/identityprovider">
+                <AttributeValue>https://sts.windows.net/5e0b361b-59ed-466e-8759-030448046197/</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.microsoft.com/claims/authnmethodsreferences">
+                <AttributeValue>http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/password</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname">
+                <AttributeValue>Hayden</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname">
+                <AttributeValue>Fitzgerald</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress">
+                <AttributeValue>Hayden.Fitzgerald@Nutrien.com.au</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name">
+                <AttributeValue>hayden.fitzgerald@nutrien.com.au</AttributeValue>
+            </Attribute>
+        </AttributeStatement>
+        <AuthnStatement AuthnInstant="2020-07-16T23:03:53.465Z"
+                        SessionIndex="_a70befc0-3ffe-4219-aa80-0f3dad900701"
+                        >
+            <AuthnContext>
+                <AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:Password</AuthnContextClassRef>
+            </AuthnContext>
+        </AuthnStatement>
+    </Assertion>
+</samlp:Response>
+

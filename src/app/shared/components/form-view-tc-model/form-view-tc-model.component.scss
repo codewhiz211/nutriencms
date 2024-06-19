@@ -1,0 +1,35 @@
+.modal-header {
+  border-bottom: none !important;
+  padding: 24px 16px 0 34px;
+
+  .modal-title {
+    color: black;
+    font-size: 24px;
+    font-weight: 300;
+    letter-spacing: 0.72px;
+    line-height: 33px;
+  }
+}
+.modal-body {
+
+  button {
+    font-size: 12px;
+  }
+
+  .dmog-tooltip {
+    margin-left: 8px;
+  }
+}
+
+.drow {
+  clear: both;
+  padding: 1rem!important;
+}
+.dcolumns {
+  display: inline-block;
+  padding-right: 5px;
+  padding-left: 5px;
+  vertical-align: top;
+  box-sizing: border-box;
+  width: 50%;
+}

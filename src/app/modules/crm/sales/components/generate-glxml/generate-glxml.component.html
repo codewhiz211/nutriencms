@@ -1,0 +1,132 @@
+
+  <div class="new_announcement_wrapper">
+    <h3>Generate XML</h3>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="form-group col-md-3">
+              <label for="invoiceType">GL XML Type</label>
+              <select id="invoiceType" class="form-control selectOption" formControlName="invoiceType" (change)="Show()" [ngClass]="{ 'is-invalid': submitted && f.invoiceType.errors }">
+                  
+                <option value="0" selected>LS FT Invoicing</option>
+                <option value="1">LS FT Proceed</option>
+                <option value="12">LS Third Party Proceeds</option>
+                <option value="13">LS Conj Agent Proceeds</option>
+                <option value="2">LS sale GL Idoc File</option> 
+                <option value="16">LS Agency GL Idoc File</option> 
+                <option value="3">LS FT_RVSL Invoicing</option>
+                <option value="4">LS FT RVSL Proceed</option>
+                <option value="14">LS FT RVSL Third Party Proceeds</option>
+                <option value="15">LS FT RVSL Conj Agent Proceeds</option>
+                <option value="5">LS Reversal SaleGLIdocFile</option>
+                <option value="17">LS RVSL Agency GL Idoc</option> 
+                <option value="6">LS Agency Commissions Proceeds</option>
+                <!-- <option value="7">LS_AgencyCommissionsGLIdocFile</option> -->
+                <option value="8">AWH_FT_Proceed</option>    
+                <option value="9">AWH_SaleGLIdocFile</option>  
+                <option value="10">WFI_FT_Invoicing</option>  
+                <option value="11">WFI_GLIdocFile</option>    
+              </select>
+              <div *ngIf="submitted && f.invoiceType.errors" class="invalid-feedback">
+                <div id="invoiceType-error" *ngIf="f.invoiceType.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+          </div>
+        
+          <div class="row" *ngIf="saleNumber">
+            <div class="form-group col-md-5">
+              <label>Sale Number</label>
+              <input id="saleNumber" type="text" formControlName="saleNumber" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.saleNumber.errors }" />
+              <div *ngIf="submitted && f.saleNumber.errors" class="invalid-feedback">
+                <div id="saleNumber-error" *ngIf="f.saleNumber.errors.required">This field is required</div>
+              </div>
+            </div>    
+        </div>
+        <div class="row" *ngIf="documentNumber">
+            <div class="form-group col-md-5">
+              <label>Document Number</label>
+              <input id="documentNumber" type="text" formControlName="documentNumber" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.documentNumber.errors }" />
+              <div *ngIf="submitted && f.documentNumber.errors" class="invalid-feedback">
+                <div id="documentNumber-error" *ngIf="f.documentNumber.errors.required">This field is required</div>
+              </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="processdate">
+          <div class="form-group col-md-5">
+            <label>Processing Date</label>
+            <input id="processdate" type="text" formControlName="processdate"  placeholder="dd/mm/yyyy" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.processdate.errors }" />
+            <div *ngIf="submitted && f.processdate.errors" class="invalid-feedback">
+              <div id="processdate-error" *ngIf="f.processdate.errors.required">This field is required</div>
+            </div>
+          </div>
+      </div>
+      <div class="row" *ngIf="accumulation">
+        <div class="form-group col-md-5">
+          <label>Accumulation Frequency</label>
+          <input id="accumulation" type="text" formControlName="accumulation" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.accumulation.errors }" />
+          <div *ngIf="submitted && f.accumulation.errors" class="invalid-feedback">
+            <div id="accumulation-error" *ngIf="f.accumulation.errors.required">This field is required</div>
+          </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="agencysapnumber">
+      <div class="form-group col-md-5">
+        <label>Agency SAP Number</label>
+        <input id="agencysapnumber" type="text" formControlName="agencysapnumber" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.agencysapnumber.errors }" />
+        <div *ngIf="submitted && f.agencysapnumber.errors" class="invalid-feedback">
+          <div id="agencysapnumber-error" *ngIf="f.agencysapnumber.errors.required">This field is required</div>
+        </div>
+      </div>
+  </div>
+  <div class="row" *ngIf="saleseason">
+    <div class="form-group col-md-5">
+      <label>Sale Season</label>
+      <input id="saleseason" type="text" formControlName="saleseason" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.saleseason.errors }" />
+      <div *ngIf="submitted && f.saleseason.errors" class="invalid-feedback">
+        <div id="saleseason-error" *ngIf="f.saleseason.errors.required">This field is required</div>
+      </div>
+    </div>
+</div>
+<div class="row" *ngIf="salecenter">
+  <div class="form-group col-md-5">
+    <label>SaleCenter</label>
+    <input id="salecenter" type="text" formControlName="salecenter" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.salecenter.errors }" />
+    <div *ngIf="submitted && f.salecenter.errors" class="invalid-feedback">
+      <div id="salecenter-error" *ngIf="f.salecenter.errors.required">This field is required</div>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="storagecenter">
+  <div class="form-group col-md-5">
+    <label>Storage Center</label>
+    <input id="storagecenter" type="text" formControlName="storagecenter" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.storagecenter.errors }" />
+    <div *ngIf="submitted && f.storagecenter.errors" class="invalid-feedback">
+      <div id="storagecenter-error" *ngIf="f.storagecenter.errors.required">This field is required</div>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="wfiinvoiceno">
+  <div class="form-group col-md-5">
+    <label>WFI Invoice Number</label>
+    <input id="wfiinvoiceno" type="text" formControlName="wfiinvoiceno" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.wfiinvoiceno.errors }" />
+    <div *ngIf="submitted && f.wfiinvoiceno.errors" class="invalid-feedback">
+      <div id="wfiinvoiceno-error" *ngIf="f.wfiinvoiceno.errors.required">This field is required</div>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="wfibatchnumber">
+  <div class="form-group col-md-5">
+    <label>WFI Batch Number</label>
+    <input id="wfibatchnumber" type="text" formControlName="wfibatchnumber" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.wfibatchnumber.errors }" />
+    <div *ngIf="submitted && f.wfibatchnumber.errors" class="invalid-feedback">
+      <div id="wfibatchnumber-error" *ngIf="f.wfibatchnumber.errors.required">This field is required</div>
+    </div>
+  </div>
+</div>
+      <div class="update_btn">
+        <button type="submit" class="btn btn-primary">Generate XML</button>
+      </div>
+    </form>
+  </div>

@@ -1,0 +1,27 @@
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: -5px;
+    font-size: 12px;
+}
+ul.checkFilter{
+    width: 100%;
+    display: block;
+    list-style: none;
+    padding-left: 20px;
+    li{
+        ul{
+            width: 100%;
+            list-style: none;
+            padding-left: 20px;
+        }
+    }
+    i.fa-plus{
+        float:right;display: inline-block;font-size:16px;width:16px;height:16px;text-align: center;-ms-transform:rotate(45deg); /* IE 9 */transform:rotate(45deg);
+    }
+}
+li.hideFilter> ul{display: none;}
+li.hideFilter> i.fa-plus{-ms-transform:rotate(0deg); /* IE 9 */transform:rotate(0deg);}
+
+

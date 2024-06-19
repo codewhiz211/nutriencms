@@ -1,0 +1,222 @@
+<div class="docOuterWrap">
+  <div class="actionWrap row">
+    <div class="col-md-8">
+      <button *ngIf="UseAsMedia==false" _ngcontent-ahf-c13="" class="btn btn-primary btn-sm mr-4 ng-star-inserted" type="button"
+        (click)="OpenDialog('folder')"> Upload Folder</button>
+      <button _ngcontent-ahf-c13="" class="btn btn-primary btn-sm mr-4 ng-star-inserted" type="button"
+        (click)="OpenDialog('file')"> Upload File</button>
+      <button  *ngIf="UseAsMedia==false" _ngcontent-ahf-c13="" class="btn btn-primary btn-sm mr-4 ng-star-inserted" type="button"
+        (click)="openCreateFolderPopup()"> Create Folder</button>
+      <!-- <button class="btn btn-primary btn-sm mr-2 ng-star-inserted pull-right" [hidden]="IsCopyMove()" (click)="Paste()"
+        title="Paste"><i class="fas fa-paste"></i></button> -->
+    </div>
+    <div *ngIf="UseAsMedia==true" class="col-md-4 text-right filterBar">
+      <div class="changeView">
+        <a title="List View" class="listBttn" [class.active]="layout === 'list'" (click)="openListView()"></a>
+        <a title="Grid View" class="gridBttn" [class.active]="layout === 'grid'" data-cataloguetype="Grid"
+          (click)="openTileView()"></a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <div class="scrollable-container scrollbar ">
+        <ng-scrollbar #scrollable>
+          <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+            <cdk-nested-tree-node *cdkTreeNodeDef="let node;" class="example-tree-node">
+              <button class=" tree-label" mat-icon-button [attr.aria-label]="'toggle ' + node.name" cdkTreeNodeToggle
+                (click)='selectContent(node)'>
+                <mat-icon class="mat-icon-rtl-mirror folder-open line-hr line-vertical">
+                  <i [ngClass]="treeControl.isExpanded(node)?'fa-folder-open':'fa-folder'" class="fas"></i>
+                </mat-icon> {{node.name}}
+              </button>
+
+              <div [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                <ng-container cdkTreeNodeOutlet></ng-container>
+              </div>
+            </cdk-nested-tree-node>
+          </cdk-tree>
+        </ng-scrollbar>
+      </div>
+    </div>
+    <div class="col-md-10" *ngIf="documentViewService.isAttachmentGridView==false">
+      <div class="breadcrumbWrap">
+        <ng-container #name *ngFor="let item of bredcrum; let i=index">
+          <a href="javascript:void(0)" *ngIf="bredcrum.length-1>i" (click)='breadcrumClick(idBredcrum[i])'>{{item}}</a>
+          <span *ngIf="bredcrum.length-1==i" (click)='breadcrumClick(idBredcrum[i])'>{{item}}</span>
+          <span *ngIf="bredcrum.length-1>i">
+            <i class="fas fa-chevron-right"></i>
+          </span>
+        </ng-container>
+      </div>
+      <form>
+        <input style="display: none;" #folderPicker (change)="fileChangeEvent($event, content, 500, 500)" type="file" id="folderPicker"
+          class="inputfile" multiple="" webkitdirectory="" mozdirectory="true" directory>
+        <input style="display: none;" #filePicker (change)="fileChangeEvent($event, content, 500, 500)" type="file" id="filePicker"
+          class="inputfile">
+          <input style="display: none;" #imagePicker  type="file"  (change)="fileChangeEvent($event, content, 500, 500)" id="imagePicker"
+          *ngIf="isProcess" class="custom-file-input">
+          <div *ngIf="!isProcess" class="progress">
+               <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width.%': processCompleted}" >
+                 {{processCompleted}}%
+               </div>
+             </div>
+
+        <div class="gridWrap">
+          <ng-scrollbar #scrollable>
+            <generic-grid [dataSource]="genericGirdService.data?.Document?.gridData"
+              [headerMap]="gridConfig" [sNo]="false"></generic-grid>
+          </ng-scrollbar>
+        </div>
+      </form>
+
+    </div>
+    <div class="col-md-10" *ngIf="documentViewService.isAttachmentGridView==true">
+      <div class="breadcrumbWrap">
+        <ng-container #name *ngFor="let item of bredcrum; let i=index">
+          <a href="javascript:void(0)" *ngIf="bredcrum.length-1>i" (click)='breadcrumClick(idBredcrum[i])'>{{item}}</a>
+          <span *ngIf="bredcrum.length-1==i" (click)='breadcrumClick(idBredcrum[i])'>{{item}}</span>
+          <span *ngIf="bredcrum.length-1>i">
+            <i class="fas fa-chevron-right"></i>
+          </span>
+        </ng-container>
+      </div>
+      <form>
+        <input style="display: none;" #folderPicker (change)="UploadFolderFiles($event);" type="file" id="folderPicker"
+          class="inputfile" multiple="" webkitdirectory="" mozdirectory="true" directory>
+        <input style="display: none;" #filePicker (change)="UploadFolderFiles($event);" type="file" id="filePicker"
+          class="inputfile">
+          <input style="display: none;" #imagePicker  type="file"  (change)="fileChangeEvent($event, content, 500, 500)" id="imagePicker"
+          *ngIf="isProcess" class="custom-file-input">
+          <div *ngIf="!isProcess" class="progress">
+               <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width.%': processCompleted}" >
+                 {{processCompleted}}%
+               </div>
+             </div>
+
+        <div 
+          class="files"
+          *ngIf="pendingFileLinks$ | async as pendingFileLinks">
+          <div class="tile tile--pending" *ngFor="let entry of pendingFileLinks; index as i">
+            <img [src]="entry.url" style="opacity: 0.5;" class="folderList1 file-image"/>
+            <label class="fileList"  [title]="entry.title">{{ ((entry.title).length>11)? (entry.title | slice:0:11)+'...':(entry.title) }}</label>
+            <div class="pending-delete" (click)="removeFromPendingList(i)" title="Remove from pending list"><i class="fas fa-trash-alt"></i></div>
+          </div>
+        </div>
+
+        <div class="files">
+          <!-- <div class="row"> -->
+           <!-- <div class="empty-folder tile" [hidden]="tileView && tileView.length > 0">
+               <div class="context-menu__button empty" *ngIf="IsCopyMove && !IsCopied">
+                <i class="fas fa-ellipsis-h"></i>
+              </div>
+              <div class="context-menu" *ngIf="IsCopyMove && !IsCopied">
+                <ul class="context-menu__list">
+                  <li class="context-menu__list-item" (click)="pasteTile()">Paste</li>
+                </ul>
+              </div>
+            </div> -->
+            <div class="tile" *ngFor="let item of tileView; index as i">
+              <div 
+                (click)="toggleContextMenu(i)" 
+                class="context-menu__button"
+                [class.active]="contextMenuItems[i] === true"
+                >
+                  <i class="fas fa-ellipsis-h"></i>
+                </div>
+              <div class="context-menu" *ngIf="contextMenuItems[i]">
+                <ul class="context-menu__list" (click)="toggleContextMenu(i)">
+                  <li class="context-menu__list-item" (click)="downloadFile(item, 'DOWNLOAD')">Download</li>
+                  <li class="context-menu__list-item" (click)="openRenamePopup(item)">Edit</li>
+                  <li class="context-menu__list-item" (click)="onTileAction(item, 'MOVE')">Move</li>
+                  <li class="context-menu__list-item" (click)="onTileAction(item, 'COPY')">Copy</li>
+                  <li
+                    class="context-menu__list-item" 
+                    (click)="pasteTile()" 
+                    *ngIf="(IsCopyMove || IsCopied)&& item.Type === '0'">Paste</li>
+                  <li class="context-menu__list-item" (click)="UpdateDocument(item, 'DELETE')">Delete</li>
+                </ul>
+              </div>
+              <ng-container *ngIf="item.Type !== '0'">
+                <i class="fa fa-star featured" *ngIf="item.IsFeatured==1" (click)="setIsFeatured(item)"></i>
+                <i class="fa fa-star" *ngIf="item.IsFeatured==0" (click)="setIsFeatured(item)"></i>
+              </ng-container>
+              
+              <span class="check-box">
+                <label class="inline-checkbox ml-2">
+                  <input name="chkboxlist" type="checkbox" (change)="setIsActive(item,$event)" value="{{item.IsActive}}"
+                    [checked]="item.IsActive==1" />
+                  <i class="skin"></i>
+                </label>
+              </span>
+              <ng-container *ngIf="item.Type==0">
+                <img src='assets/styles/images/FolderIcon.png' class="folderList" (click)="getChildList(item.ID)" /><br>
+                <label class="fileList" (click)="getChildList(item.ID)" title="{{item.Name}}">{{ ((item.Name).length>11)? (item.Name | slice:0:11)+'...':(item.Name) }}</label>
+              </ng-container>
+              
+              <ng-container *ngIf="item.Type==1">
+                <img *ngIf="isImage(item.Name)" [src]="generateThumbnail(item)"  class="folderList1 file-image"/>
+                <img *ngIf="isVideo(item.Name)" src='assets/styles/images/video-thumb-square-no-radius.jpg'  class="folderList1 file-image">                  
+                <img *ngIf="!isImage(item.Name) && !isVideo(item.Name)" src='assets/styles/images/FileIcon.png'  class="folderList1"/>
+                <label class="fileList" (click)="downloadFile(item, 'DOWNLOAD')"  title="{{item.Name}}">{{ ((item.Name).length>11)? (item.Name | slice:0:11)+'...':(item.Name) }}</label>
+              </ng-container>
+              
+              
+            </div>
+          <!-- </div> -->
+
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Crop Image</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" role="document" aria-label="Modal heading text content">
+    <div class="filemessage">Max image size will be Height : {{height}}px and Width : {{width}}px</div>
+    <div class="videoWrap">
+      <image-cropper 
+        [imageChangedEvent]="imageChangedEvent" 
+        [maintainAspectRatio]="true" 
+        [onlyScaleDown]="true"
+        [aspectRatio]="1"
+        [cropperMinWidth]="width"
+        [cropperMinHeight]="height"
+        [resizeToWidth]="width"
+        [transform]="transform"
+        [autoCrop]="true" 
+        format="png" 
+        
+        (imageCropped)="imageCropped($event)">
+      </image-cropper>
+      
+      <div class="input-range" style="float: right;">
+        <!-- <label for="">Zoom</label> -->
+        <div class="zoom">
+          <button class="btn btn-secondary btn-sm" (click)="onZoomOut()"><i class="fas fa-search-minus"></i></button>
+          <!-- <input type="range" (input)="onZoomChange($event)"> -->
+          <button class="btn btn-secondary btn-sm" (click)="onZoomIn()"><i class="fas fa-search-plus"></i></button>
+        </div>
+      </div>
+
+      <img height="200px" width="200px" [src]="croppedImage.base64" id="croppedImageFile" />
+      <div>Image Size Height : {{Croppedheight}}px, Width : {{Croppedwidth}}px</div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="cta-button-group">
+      <button class="btn btn-clear btn-small" (click)="modal.dismiss('Cross click')" type="button"
+      data-dismiss="modal">Close</button>     
+      <button class="btn btn-primary btn-small" (click)="Cropped(); modal.dismiss('Cross click')" type="button" data-dismiss="modal">Crop &
+        Upload</button>
+        <!-- <button class="btn btn-sm btn-small" (click)="UploadFiles();" type="button"
+        data-dismiss="modal">No Crop</button> -->
+    </div>
+  </div>
+</ng-template>

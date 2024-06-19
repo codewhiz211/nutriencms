@@ -1,0 +1,56 @@
+<div class="documents">
+    <div class="section-header">
+        <span> Consolidated Outputs </span>
+    </div>
+    <div class="documents-grid">
+        <table class="basicTable stripped" style="border-top:0;border-right:0;border-left:0;">
+          <thead cdkDropListGroup>
+            <tr>
+              <th *ngFor="let key of reportColumns; let i = index">
+                <span class="colHead">{{key}}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="reportsData == null">
+            <tr>
+              <td [colSpan]="3" class="text-center">No Data Found</td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="reportsData">
+            <tr *ngFor="let item of iterateArray; let i = index;">
+              <td>
+                <a class="report-link" (click)="runReport(reportsData[reportColumns[0]][i])">{{reportsData[reportColumns[0]][i]?.Title}}</a>
+              </td>
+              <td>
+                <a class="report-link" (click)="runReport(reportsData[reportColumns[1]][i])">{{reportsData[reportColumns[1]][i]?.Title}}</a>
+              </td>
+              <td>
+                <a class="report-link" (click)="runReport(reportsData[reportColumns[2]][i])">{{reportsData[reportColumns[2]][i]?.Title}}</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+
+    <div class="section-header">
+        <span>Billing Documents</span>
+        <a *ngIf="hasFilter" class="remove-filter" href="javascript:void(0);" title="Remove Filter" (click)="genericgridcomponent.OnRemoveFilterClick();removeFilter()">Remove Filter</a>
+        <div class="triggers">
+          <a class="review-btn" title="Review" (click)="reviewDoc()"><i class="fas fa-save"></i> <span>Review</span></a>
+          <a class="resend-btn" title="Resend" (click)="resendDoc()"><i class="fas fa-paper-plane"></i> <span>Resend</span></a>
+          <a class="log-btn" title="Log" (click)="openDocumentsLogModal()"><i class="fas fa-edit"></i> <span>Log</span></a>
+        </div>
+    </div>
+    <div class="documents-grid">
+      <generic-grid
+          [dataSource]="documentsData"
+          [headerMap]="documentHeaderMap"
+          [itemsCount]="documentsCount"
+          [sNo]="false"
+          (pageChange)="pageChange($event)"
+          (actionClick)="actionClick($event)"
+          #genericgridcomponent>
+      </generic-grid>
+    </div>
+
+</div>

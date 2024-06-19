@@ -1,0 +1,86 @@
+.color-code-middle {
+    height: 12px;
+    width: 12px;
+    border-radius: 12px;
+    margin: 4px auto;
+    vertical-align: middle;
+    padding-left: 10px;
+    line-height: 30px;
+    
+}
+
+.ng-select {
+
+  &.form-control {
+      padding: 0 !important;
+      margin-left: 4px;
+  }
+
+  &::ng-deep .ng-select-container  {      
+      min-height: 22px;
+      height: 22px;
+      border-radius: 3px;
+      border: none;
+
+      .ng-value-container .ng-value {
+          line-height: 19px;
+      }
+
+      .ng-clear-wrapper {
+        width: 14px;
+      }
+
+      .ng-arrow-wrapper {
+        width: 16px;
+      }
+  }
+
+  &::ng-deep .ng-select-container .ng-input {
+      top: 0 !important;
+      padding-left: 4px !important;
+      padding-right: 34px !important;
+  }
+
+  &::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+      height: 22px;
+      padding: 4px 12px;
+  }
+}
+.doct1{
+  color: rgb(136, 133, 133);
+}
+a.disabled {
+  pointer-events: none;
+  color: gray;
+  cursor: not-allowed;
+  text-decoration: underline;
+  opacity: .3;
+}
+.footer-Add-New-Button {
+  font-size: 11px;
+  display: block;
+  text-align: center;
+}
+.IsBlockCustomer{
+ // background-color:#999 !important;
+ font-weight: bold;
+ opacity: 0.2;
+ font-size: 12px;
+}
+.dmoFilterTextBox {
+  height: 24px;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 10px;
+}
+.dmoFormGroup {
+  margin-left: 10px; 
+  margin-right: 10px;
+}
+.dmoPopup {
+  max-height: 400px; overflow-y: auto;
+}
+.uppercase{
+  text-transform: uppercase;
+}

@@ -1,0 +1,92 @@
+.business-apps {
+	height: 9px;
+  color: #000000;
+  font-family: Foco;
+  font-size: 18px;
+  letter-spacing: 0.54px;
+  line-height: 9px;
+}
+  
+  .rectangle-copy-8 {
+    height: 130px;
+    width: 130px;
+    border: 1px solid #979797;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+  }
+  
+  .livestock-sales {
+    height: 10px;
+    width: 104px;
+    color: #4A4A4A;
+    font-size: 14px;
+    letter-spacing: 0.47px;
+    line-height: 10px; 
+    word-break: break-word;
+  }
+  
+  .fill-5 {
+    height: 60px;
+    width: 59.88px;
+    background-color: #020202;
+  }
+  
+  .smallCenteredContainer {
+    max-width: 1024px;
+    margin: auto;
+  }
+/* Listing CMS Starts */
+.appsWrap {
+    padding: 24px 60px 100px;
+  }
+  
+  ul.appList {
+    margin: 0px -10px;
+    padding: 0;
+    li {
+      width: 130px;
+      display: inline-block;
+      vertical-align: top;
+      margin: 20px 9px 10px;
+    }
+    .icon_wrap {
+      width: 130px;
+      height: 130px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      .image_wrap {
+        width: 130px;
+        height: 130px;
+        display: table-cell;
+        vertical-align: middle;
+        img {
+          display: block;
+          margin: auto;
+        }
+      }
+    }
+    .info_wrap {
+      padding: 5px 0px;
+      font-size: 10px;
+      strong {
+        display: block;
+        padding: 5px 0px;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 15px;
+        word-break: break-all;
+      }
+    }
+    // li:hover {
+    //   a {
+    //     color: #007E48;
+    //     text-decoration: none;
+    //   }
+    //   .icon_wrap {
+    //     border: 1px solid #007E48;
+    //     background-color: #f7f7f7;
+    //   }
+    // }
+  }

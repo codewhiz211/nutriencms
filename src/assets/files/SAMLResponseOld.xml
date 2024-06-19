@@ -1,0 +1,53 @@
+<samlp:Response xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_bfc426c7-899e-452b-8624-a1c68e36be81" Version="2.0" IssueInstant="2020-12-24T14:43:38Z" Destination="https://www.devcentralonboarding.com/devcentrallogin.aspx" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+  <saml:Issuer>www.e-access.att.com</saml:Issuer>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+      <Reference URI="#_bfc426c7-899e-452b-8624-a1c68e36be81">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+          <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <DigestValue>1CP/bjNWHRHTxFauytilo+GSqyo=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>WhwVfBymCZcO7lj6ItSVBFtseFqc+exqGnBS+cNkjvOoLNOxLjsxvORSj/TcmxnWVUvD+MmfxFGKOjO8E6ZuzC5fOlIHVLLElQihRXSzdQY2z01vHpdAaLVj2yND8dk2fO4UtO7EfTCKgyJ/ZAN2Tani5P5kaWQeJE7sw1A2qG6upDjPd3Tso1rcETUncnpP0t28LZd/x09p6pyW6ukAZo5RPFHZIY2rcDyG4tuQk6LDu5LLodyzXsAYAaZNHP/8348yeBlKT3q32T6jEKq9k7CFwshEeU0Ky3jTZE1y6rRY8+XhPBjJ7gEcgZzHTSTLNfMEoEdEiOR+cxAoHxRY+w==</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate>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</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+  <samlp:Status>
+    <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success" />
+  </samlp:Status>
+  <saml:Assertion Version="2.0" ID="_6a1250fe-7f92-462c-86bf-28af96728024" IssueInstant="2020-12-24T14:43:38Z">
+    <saml:Issuer>www.e-access.att.com</saml:Issuer>
+    <saml:Subject>
+      <saml:NameID NameQualifier="www.e-access.att.com">landmarkdashboard</saml:NameID>
+      <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+        <saml:SubjectConfirmationData NotOnOrAfter="2020-12-24T14:48:38Z" Recipient="https://www.devcentralonboarding.com/devcentrallogin.aspx" />
+      </saml:SubjectConfirmation>
+    </saml:Subject>
+    <saml:Conditions NotBefore="2020-12-24T14:38:38Z" NotOnOrAfter="2020-12-24T14:48:38Z">
+      <saml:AudienceRestriction>
+        <saml:Audience>https://www.devcentralonboarding.com/</saml:Audience>
+      </saml:AudienceRestriction>
+    </saml:Conditions>
+    <saml:AuthnStatement AuthnInstant="2020-12-24T14:43:38Z" SessionIndex="1716618311">
+      <saml:AuthnContext>
+        <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified</saml:AuthnContextClassRef>
+      </saml:AuthnContext>
+    </saml:AuthnStatement>
+    <saml:AttributeStatement>
+      <saml:Attribute Name="identifier" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic" FriendlyName="header">
+        <saml:AttributeValue xmlns:q1="http://www.w3.org/2001/XMLSchema" p7:type="q1:string" xmlns:p7="http://www.w3.org/2001/XMLSchema-instance">landmarkdashboard</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="OrganizationCode" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:q2="http://www.w3.org/2001/XMLSchema" p7:type="q2:string" xmlns:p7="http://www.w3.org/2001/XMLSchema-instance">XCMW33000</saml:AttributeValue>
+      </saml:Attribute>
+    </saml:AttributeStatement>
+  </saml:Assertion>
+</samlp:Response>

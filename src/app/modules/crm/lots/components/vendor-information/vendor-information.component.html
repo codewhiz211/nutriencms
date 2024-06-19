@@ -1,0 +1,114 @@
+<form [formGroup]="lotDetailForm" (ngSubmit)="onSubmit()">
+    <div class="p-3">
+        <div class="form-row py-0 vendor-buyer-section">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Vendor ID</label>
+                            <input
+                                type="text"
+                                id="TextBox_dmolotvinfovendorid"
+                                class="form-control"
+                                formControlName="DMOLot_VInfo_VendorId"
+                                [ngbTypeahead]="vendorIdSearch"
+                                [ngClass]="{'is-invalid': (submitted && f.DMOLot_VInfo_VendorId.errors) || ValidateVendorIdMessage === 'Vendor Id is not exist'}"
+                                [editable]="false"
+                                (selectItem)="selectVendor($event, 'dmocustmstrsapno')"
+                                (blur)="checkValue($event, 'dmocustmstrsapno')"
+                            />
+                            <div *ngIf="submitted && f.DMOLot_VInfo_VendorId.errors?.required" class="invalid-feedback">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Vendor Name</label>
+                            <input
+                                type="text"
+                                id="TextBox_dmolotvinfovendorname"
+                                class="form-control"
+                                formControlName="DMOLot_VInfo_VendorNam"
+                                [ngbTypeahead]="vendorNameSearch"
+                                [ngClass]="{'is-invalid': (submitted && f.DMOLot_VInfo_VendorNam.errors) || ValidateVendorNameMessage == 'Vendor name is not exist'}"
+                                [editable]="false"
+                                (selectItem)="selectVendor($event, 'dmocustmstrcustname1')"
+                                (blur)="checkValue($event, 'dmocustmstrcustname1')"
+                            />
+                            <div *ngIf="submitted && f.DMOLot_VInfo_VendorNam.errors?.required" class="invalid-feedback">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Vendor Branch</label>
+                            <input
+                                type="text"
+                                id="TextBox_dmolotvinfovendorbrc"
+                                class="form-control"
+                                formControlName="DMOLot_VInfo_VendorBrc"
+                                [ngbTypeahead]="vendorBranchSearch"
+                                [ngClass]="{'is-invalid': (submitted && f.DMOLot_VInfo_VendorBrc.errors) || ValidateVendorBranchMessage === 'Vendor branch is not exist'}"
+                                [editable]="true"
+                                [inputFormatter]="formatter"
+                                [resultFormatter]="formatter"
+                                (selectItem)="selectBranch($event, 'dmolotvinfovendorbrc')"
+                            />
+                            <div *ngIf="submitted && f.DMOLot_VInfo_VendorBrc.errors?.required" class="invalid-feedback">This field is required</div>
+                        </div>
+                    </div>
+                    <div  class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Vendor PIC</label>
+                            <input
+                                type="text"
+                                *ngIf="!isDdl"
+                                maxlength="8"
+                                id="TextBox_dmolotvinfovendorpic"
+                                class="form-control uppercase"
+                                formControlName="DMOLot_VInfo_VendorPic"
+                                [ngbTypeahead]="vendorPICSearch"
+                                [ngClass]="{'is-invalid': (submitted && f.DMOLot_VInfo_VendorPic.errors)}"
+                                [editable]="true"
+                                (blur)="checkValue($event, 'dmolotvinfovendorpic')"
+                            />
+                            <ng-select 
+                                *ngIf="isDdl"
+                                [items]="vendoPic"
+                                class="form-control uppercase"
+                                [ngClass]="{'is-invalid': (submitted && f.DMOLot_VInfo_VendorPic.errors)}"
+                                [addTag]="addPICTagFn"
+                                bindLabel="dmocuspiccustpic"
+                                bindValue="dmocuspiccustpic"
+                                id="DropDownList_dmolotvinfovendorpic"
+                                formControlName="DMOLot_VInfo_VendorPic"
+                            >
+                            </ng-select>
+                            <div *ngIf="submitted && f.DMOLot_VInfo_VendorPic.errors?.required" class="invalid-feedback">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Account Sale Reference</label>
+                            <input
+                                type="text"
+                                id="TextBox_dmolotvinfoacsaleref"
+                                class="form-control"
+                                formControlName="DMOLot_VInfo_AcSaleRef" />
+                        </div>
+                    </div>                 
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Total Selected Record: {{transactionIds?.length}} </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-end my-3">
+            <button type="button" class="btn btn-primary cancel-btn" (click)="activeModal.close(false)">Cancel</button>
+            <button type="submit" class="btn btn-primary mr-2 submit-btn">Update</button>
+        </div>
+    </div>
+</form>

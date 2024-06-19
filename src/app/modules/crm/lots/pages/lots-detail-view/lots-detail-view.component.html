@@ -1,0 +1,48 @@
+<div class="sub-header">
+  <div class="breadcrumbs">
+    <a (click)="go_back()"><img src="assets/styles/images/back-icon-black.png" width="20px"><span>Back</span></a>
+    <span>{{saleData?.DataInformation?.dmocrmheaderinfsaleid?.DMOVAL}}</span>
+    <i class="fas fa-chevron-right arrow"> </i>
+    <span> "{{SaleDescription}}"</span>
+    <i class="fas fa-chevron-right arrow"> </i><span *ngIf="isNew"> {{lotSearchService.currentLotId}}</span><span *ngIf="!isNew"> {{lotService.lotId}}</span>
+
+  </div>
+  <div class="d-flx align-items-center" *ngIf="!isNew || lotSearchService.isNavigateNew">
+    <span class="gotoLotIDLbl">Go to Lot ID</span>
+    <input
+        type="number"
+        [value]="lotSearchService.currentLotId"
+        (blur)="onChangeLotID($event.target.value)" 
+        (keyup.enter)="$event.target.blur()" 
+        class="gotoLotIDInput" />
+    <a (click)="getLotRecord(lotSearchService.currentLotId, 'prev')" [ngClass]="{'disabled': isFirstLot}">
+      <i class="fas fa-chevron-left"></i> Previous
+    </a> | 
+    <a (click)="getLotRecord(lotSearchService.currentLotId, 'next')" [ngClass]="{'disabled': lotSearchService.isNavigateNew}">
+      Next <i class="fas fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+
+<div class="container-fluid px-0">
+  <div class="row mx-0">
+    <div class="col-12 px-0">
+      <div class="mt-3">
+        <app-tabs *ngIf="isLoaded" (tabSelected)="tabSelected($event)">
+          <app-tab [title]="'Lot Details'" [bmodisplay]="true">
+            <app-lot-detail [processName]="processName" [parentData]="saleData" [stage]="stage"></app-lot-detail>
+          </app-tab>
+          <app-tab [title]="'Agent'" [bmodisplay]="true" *ngIf="!isNew">
+            <app-lot-agent [processName]="processName" [stage]="stage"></app-lot-agent>
+          </app-tab>
+          <app-tab [title]="'Attachments'" [bmodisplay]="true" *ngIf="!isNew">
+            <app-document-view [isSale]="false"></app-document-view>
+          </app-tab>
+          <app-tab [title]="'Notes'" [bmodisplay]="true" *ngIf="!isNew">
+            <app-notes></app-notes>
+          </app-tab>
+        </app-tabs>
+      </div>
+    </div>
+  </div>
+</div>

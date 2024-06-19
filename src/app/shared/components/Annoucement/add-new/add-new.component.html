@@ -1,0 +1,126 @@
+
+<div class="breadcrumbs">
+  <a (click)="go_back()"><img src="assets/styles/images/back-icon-black.png"
+      width="20px"><span>Announcements</span></a>
+</div>
+<div class="new_announcement_wrapper">
+  <h3>Add Announcement</h3>
+  <form #userForm="ngForm" novalidate autocomplete="off" (ngSubmit)="onSubmit(userForm.valid,userForm);false">
+    <div class="form_width">
+      <div class="form-group">
+        <label>Title*</label>
+        <input type="text" class="form-control" name="title" [(ngModel)]="announceData.Title" #title="ngModel"
+          required>
+        <div *ngIf="title.invalid && ((title.dirty || title.touched)||(userForm.submitted && formVal))">
+          <span class="err_message" *ngIf="title.errors.required">Title is required</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description*</label>
+        <ckeditor [editor]="Editor" [(ngModel)]='announceData.Description' #Desc='ngModel' name="description" required></ckeditor>
+        <div *ngIf="Desc.invalid && ((Desc.dirty || Desc.touched)||(userForm.submitted && formVal))">
+          <span class="err_message" *ngIf="Desc.errors.required">Description is required</span>
+        </div>
+      </div>
+      
+      <div class="announce_property">
+        <div class="row">
+          <div class="form-group col">
+            <label>Start Date*</label>
+            <div class="input-group">
+              <input class="form-control" id="datepicker" placeholder="dateFormat" name="dp" ngbDatepicker #d="ngbDatepicker"
+                [(ngModel)]="stratDateobj" (ngModelChange)="getStartDate(stratDateobj)" #startdate1="ngModel" required>
+              <div class="input-group-append">
+                <button class="btn btn-sm btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i
+                    _ngcontent-lcu-c9="" aria-hidden="true" class="far fa-calendar-alt"></i></button>
+              </div>
+              <div
+                *ngIf="startdate1.invalid && ((startdate1.dirty || startdate1.touched)||(userForm.submitted && formVal))">
+                <span class="err_message" *ngIf="startdate1.errors.required">Start Date is required</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col">
+            <label>End Date*</label>
+            <div class="input-group">
+              <input class="form-control" id="enddate" placeholder="dateFormat" name="dp2" ngbDatepicker #dp2="ngbDatepicker"
+                [(ngModel)]="endDateobj" (ngModelChange)="getEndDate(endDateobj)" #enddate="ngModel" required>
+              <div class="input-group-append">
+                <button class="btn btn-sm btn-outline-secondary calendar" (click)="dp2.toggle()" type="button"><i
+                    _ngcontent-lcu-c9="" aria-hidden="true" class="far fa-calendar-alt"></i></button>
+              </div>
+              <div *ngIf="enddate.invalid && ((enddate.dirty || enddate.touched)||(userForm.submitted && formVal))">
+                <span class="err_message" *ngIf="enddate.errors.required">End Date is required</span>
+              </div>
+            </div>
+          </div>
+          <div class="field-group col">
+            <label>Status*</label>
+            <ng-container>
+              <ng-select placeholder="Select..." [searchable]="true" name="status" [(ngModel)]="Statusvalue" (change)="setStatus($event)"
+                #tStatus="ngModel" required>
+                <ng-option aria-selected="true" value="">Select...</ng-option>
+                <ng-option *ngFor="let lStatus of Status" [value]="lStatus.value">{{lStatus.value}}</ng-option>
+              </ng-select>
+              <div *ngIf="tStatus.invalid && ((tStatus.dirty || tStatus.touched)||(userForm.submitted && formVal))">
+                <span class="err_message" *ngIf="tStatus.errors.required">Status is required</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field-group col-4">
+            <label>Process Type*</label>
+            <ng-container>
+              <ng-select placeholder="Select..." [searchable]="true" (change)="processName($event)" name="process"
+                [(ngModel)]="ProcessIds" #processtype="ngModel" required>
+                <ng-option aria-selected="true" value="">Select...</ng-option>
+                <ng-option *ngFor="let processid of processDetail" [value]="processid">{{processid.DisplayName}}
+                </ng-option>
+              </ng-select>
+              <div
+                *ngIf="processtype.invalid && ((processtype.dirty || processtype.touched)||(userForm.submitted && formVal))">
+                <span class="err_message" *ngIf="processtype.errors.required">Process is required</span>
+              </div>
+            </ng-container>
+          </div>
+          <div class="field-group col-8">
+            <label>Visible To*</label>
+            <div class="visible_to">
+ 
+              <input type="hidden" id="internalUser1" [(ngModel)]="ExternalInternal" #ExternalInternal1="ngModel" name="ExternalInternal"
+              >
+              <label class="checkbox">
+                <input id="internalUser" type="checkbox" (change)="AssignValue()"  [(ngModel)]="IsInternalShow" #intrnal="ngModel" name="internal"
+                   >
+                <i class="skin"></i>
+                <span>Internal Users</span>
+              </label>
+              <label class="checkbox">
+                <input id="externalUser" type="checkbox" (change)="AssignValue()" [(ngModel)]="IsExternalShow" #external="ngModel" name="external"
+                  >
+                <i class="skin"></i>
+                <span>External Users</span>
+              </label>
+              <!-- <div *ngIf="intrnal.invalid && ((intrnal.dirty || intrnal.touched)||(userForm.submitted && formVal)) && external.invalid && ((external.dirty || external.touched)||(userForm.submitted && formVal))">
+                <span class="err_message" *ngIf="intrnal.errors.required && external.errors.required ">Select Internal/External user</span>
+              </div> -->
+              <!-- <div *ngIf="ExternalInternal1.invalid && ((userForm.submitted && formVal))">
+                  <span class="err_message" *ngIf="ExternalInternal1.errors.required">Select Internal/External user</span>
+                </div> -->
+
+              <div
+                *ngIf="((ExternalInternal === false) && (userForm.submitted && formVal))">
+                <span class="err_message">Select Internal/External user</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="update_btn">
+      <button type="button"  (click)="canceldata()" class="btn btn-primary">Cancel</button>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+  </form>
+</div>

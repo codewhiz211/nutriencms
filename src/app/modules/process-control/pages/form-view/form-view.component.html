@@ -1,0 +1,166 @@
+<div class="breadcrumbs">
+  <a (click)="go_back()"><img src="assets/styles/images/back-icon-black.png" width="20px"><span>Back</span></a>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="corner-detail row">
+        <ng-container *ngFor="let item of topCornerDetails">
+          <div class="corner-detail-item col">
+            <span class="corner-detail-item-label">{{item.DisplayName}}</span>
+            <span class="corner-detail-item-value">{{item.Value}}</span>
+          </div>
+        </ng-container>
+        <div *ngIf="applicationData.ApplicationInfo" class="corner-detail-item col">
+          <span class="corner-detail-item-label">Stage</span>
+          <span class="corner-detail-item-value">{{applicationData.ApplicationInfo[0]?.StageFriendlyName}}</span>
+        </div>
+        <div *ngIf="applicationData.ApplicationInfo" class="corner-detail-item col">
+          <span class="corner-detail-item-label">State</span>
+          <span class="corner-detail-item-value">{{applicationData.ApplicationInfo[0]?.StateFriendlyName}}</span>
+        </div>
+      </div>
+      <div class="mt-2">
+        <ng-container *ngIf="!isEContractRecords()">
+          <form *ngIf="form" [formGroup]="form">
+            <app-tabs>
+              <app-tab  [trnsctnId]="transactionId" *ngFor="let bmoGuid of BMJSON.List" [title]="BMJSON.BusinessModelObjects[bmoGuid].DisplayName"
+                [bmodisplay]="bmogCondJson[bmoGuid] == null ? true :bmogCondJson[bmoGuid].IsVisible==true?true:false">
+                <ng-container *ngIf="bmogCondJson[bmoGuid].IsVisible">
+                  <div *ngIf="BMJSON.BusinessModelObjects[bmoGuid] as objBMO" id='{{"div"+bmoGuid}}'>
+                    <ng-container *ngIf="objBMO.Type =='Documents' ; then documentView;">
+                    </ng-container>
+                    <ng-container *ngIf="objBMO.Type =='SubProcess' ; then subprocessView;">
+                    </ng-container>
+                    <ng-container *ngIf="objBMO.Type =='ChildProcess' ; then childprocessView;">
+                    </ng-container>
+                    <ng-container *ngIf="objBMO.Type =='Media' ; then mediaView;">
+                    </ng-container>
+                    <ng-container *ngIf="objBMO.Type =='Log' ; then logView; else formView;">
+                    </ng-container>
+                    <ng-template #formView>
+                      <div *ngFor="let dmogGuid of objBMO.List" id='{{"DmgTable"+dmogGuid}}' [hidden]="!bmogCondJson[bmoGuid][dmogGuid].IsVisible" class="p-3">
+                          <app-accordion *ngIf="objBMO.DataModelObjectGroups[dmogGuid] as objDMOG">
+                            <app-accordion-item [isOpen]="objDMOG.DefaultCollapsed == 0" [hidden]="objDMOG.IsHidden == 1">
+                              <div class="accordion-item-header">
+                                {{objDMOG.DisplayName}}
+                                <ng-template #dmogTipContent>
+                                  <div [innerHTML]="objDMOG.LongDescription"></div>
+                                </ng-template>
+                                <a *ngIf="objDMOG.IsTooltip" class="dmog-tooltip" placement="bottom"
+                                  [ngbTooltip]="dmogTipContent" tooltipClass="tooltip-class">
+                                  <i class="far fa-question-circle"></i>
+                                </a>
+                              </div>
+                              <div class="accordion-item-content">
+                                  <div *ngIf="objBMO.DataModelObjectGroups[dmogGuid].Type === 'Media'">
+                                      <app-media-view [dmogGuid]="dmogGuid"></app-media-view>
+                                  </div>
+                                <div id='{{dmogGuid}}' class="p-3" *ngIf="bmogCondJson[bmoGuid][dmogGuid].IsVisible">
+                                  <ng-container *ngFor="let rowID of objDMOG.List ">
+                                    <ng-container *ngIf="objDMOG.Rows[rowID] as objROW">
+                                      <div class="form-row" id='{{"Rows_"+rowID}}'>
+                                        <ng-container *ngFor="let objCOLUMN of objROW.Columns">
+                                            <div  class="col"                                       
+                                            [style.width.%]="objCOLUMN.Width">
+                                          <ng-container *ngFor="let dmoGUID of objCOLUMN.List">
+                                            <ng-container *ngIf="bmogCondJson[bmoGuid][dmogGuid][dmoGUID].IsVisible">
+                                              <ng-container *ngIf="objCOLUMN.DataModelObjects[dmoGUID] as objDMO">
+                                                <app-dmo *ngIf="objDMO" [fileList]="getDMOFileData(dmoGUID)"
+                                                  [dmo]="objDMO" [transactionID]="transactionId"
+                                                  [tempTransactionID]="tempTransactionID" [dmoGUID]="dmoGUID"
+                                                  [bmoGUID]="bmoGuid" [dmogGUID]="dmogGuid" [parentForm]="form"
+                                                  [submitted]="formSubmitted" [triggered]="formTriggered"
+                                                  [bmogCondJson]="bmogCondJson" [currentStageGuid]="currentStageGuid"
+                                                  [currentStateGuid]="currentStateGuid" [BMId]="BMId"></app-dmo>
+                                              </ng-container>
+                                            </ng-container>
+                                          </ng-container>
+                                            </div>
+                                        </ng-container>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </div>
+                              </div>
+                            </app-accordion-item>
+                          </app-accordion>
+                      </div>
+                    </ng-template>
+
+                  </div>
+                </ng-container>
+                <ng-template #subprocessView>
+                    <div class="p-3">
+                      <app-grid-view [Config]="{
+                      ProcessName: BMJSON.BusinessModelObjects[bmoGuid].ProcessName,
+                      GridGuid:'MCompContainer',
+                      PageNumber:'0',
+                      TimeZone:'330',
+                      IsSubProcess:true,
+                      ParentTransactionId:transactionId
+                    }">
+                      </app-grid-view>
+                      </div>
+                  </ng-template>
+                  <ng-template #childprocessView>
+                    <div class="p-3">
+                      <app-grid-view [Config]="{
+                      ProcessName: BMJSON.BusinessModelObjects[bmoGuid].ProcessName,
+                      GridGuid:'MCompContainer',
+                      PageNumber:'0',
+                      TimeZone:'330',
+                      IsSubProcess:true,
+                      ParentDmoValue:ParentDmoValue,
+                      ChildDmoGuid:ChildDmoGuid
+                    }">
+                      </app-grid-view>
+                      </div>
+                  </ng-template>
+                  <ng-template #mediaView>
+                    <div class="p-3">
+                      <!-- <app-grid-view [Config]="{
+                      ProcessName: BMJSON.BusinessModelObjects[bmoGuid].ProcessName,
+                      GridGuid:'MCompContainer',
+                      PageNumber:'0',
+                      TimeZone:'330',
+                      IsSubProcess:true,
+                      ParentTransactionId:transactionId
+                    }">
+                      </app-grid-view> -->
+                     <app-media-view></app-media-view>
+                      </div>
+                  </ng-template>
+                <ng-template #logView>
+                  <ng-container *ngIf='bmoGuid !== "notes"'>
+                    <app-log-view-model [bmoGuid]="bmoGuid" [trnsctnId]="transactionId"></app-log-view-model>
+                  </ng-container>
+                  <ng-container *ngIf='bmoGuid == "notes"'>
+                    <app-notes></app-notes>
+                  </ng-container>
+                </ng-template>
+                <ng-template #documentView>
+                  <app-document-view></app-document-view>
+                </ng-template>
+                
+              </app-tab>
+            </app-tabs>
+            <div class="d-flex align-items-center justify-content-end mb-4 mt-3 mx-3" *ngIf="triggers">
+              <ng-container *ngFor="let objTrig of triggers">
+                <ng-container *ngIf="objTrig.Type=='Action'">
+                  <button type="button" class="btn btn-primary mr-2" [hidden]="!isTriggerVisible(objTrig)"
+                    [disabled]="!isTriggerEnable(objTrig)"
+                    (click)="checkSubProcessRecord(objTrig)">{{objTrig.DisplayName}}</button>
+                </ng-container>
+              </ng-container>
+            </div>
+          </form>
+        </ng-container>
+        
+        <ng-container *ngIf="isEContractRecords()">
+          <app-e-contracts-record-view></app-e-contracts-record-view>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

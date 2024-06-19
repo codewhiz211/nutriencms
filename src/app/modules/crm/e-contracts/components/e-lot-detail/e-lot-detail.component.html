@@ -1,0 +1,296 @@
+<div class="sub-header">
+    <div class="breadcrumbs">
+      <a (click)="location.back()"><img src="assets/styles/images/back-icon-black.png" width="20px"><span>Back</span></a>
+    </div>
+    <div class="d-flx align-items-center">
+      <span class="gotoLotIDLbl">Go to Lot ID</span><input type="text" class="gotoLotIDInput" />
+      <a> <i class="fas fa-chevron-left"></i> Previous</a> | <a>Next <i class="fas fa-chevron-right"></i></a>
+    </div>
+  </div>
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="mt-3">
+          <app-tabs>
+            <app-tab [title]="'Lot Details'" [bmodisplay]="true">
+                <form >
+                    <div class="px-3 pb-3">
+                    
+                       <!-- Header Informations -->
+                       <div class="row header-info">
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">Vendor ID*</span>
+                            <span class="header-info-item-value">{{topCornerDetails['Vendor Company Name']}}-{{topCornerDetails['SAP Account Number']}}</span>
+                          </div>
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">Vendor Name*</span>
+                            <span class="header-info-item-value">{{topCornerDetails['Trading Name']}}</span>
+                          </div>
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">Vendor Branch*</span>
+                            <span class="header-info-item-value">{{topCornerDetails['Vendor Domiclled Branch']}}</span>
+                          </div>
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">Vendor Pic</span>
+                            <span class="header-info-item-value">{{topCornerDetails['Vendor PIC']}}</span>
+                          </div>
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">GST Reg</span>
+                            <span class="header-info-item-value">{{topCornerDetails['GST Reg']}}</span>
+                          </div>
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">Buyer ID*</span>
+                            <span class="header-info-item-value">{{topCornerDetails['Buyer Company Name']}}-{{topCornerDetails['Buyer ID']}}</span>
+                          </div>
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">Buyer Name*</span>
+                            <span class="header-info-item-value">{{topCornerDetails['Buyer Name']}}</span>
+                          </div>
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">Buyer Branch*</span>
+                            <span class="header-info-item-value">{{topCornerDetails['Buyer Branch']}}</span>
+                          </div>
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">Buyer Pic</span>
+                            <span class="header-info-item-value">{{topCornerDetails['Buyer PIC']}}</span>
+                          </div>
+                        <!-- <ng-container *ngFor="let item of topCornerDetails">
+                          <div class="header-info-item col">
+                            <span class="header-info-item-label">{{
+                                item.DisplayName === 'SAP Account Number' ? 'Vendor ID' : 
+                                item.DisplayName === 'Trading Name' ? 'Vendor Name' :
+                                item.DisplayName === 'Vendor Domiclled Branch' ? 'Vendor Branch' :
+                                item.DisplayName
+                              }}</span>
+                            <span class="header-info-item-value">{{item.Value}}</span>
+                          </div>
+                        </ng-container> -->
+                      </div>
+                
+                  
+                      <div class="section-header">Lot Information</div>
+                      <div class="form-row p-2 lot-info-section">
+                        <div class="col-md-6">
+                          <div class="form-row">
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="input-label">Lot Number *</label>
+                                <input
+                                  type="text"
+                                  id="TextBox_dmolotlotinfosalenum"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmolotnumber?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="input-label">Quantity *</label>
+                                <input
+                                  type="number"
+                                  id="TextBox_dmolotlotinfoqnty"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmoquantity?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label class="input-label">Product *</label>
+                                <input
+                                  type="text"
+                                  id="TextBox_dmolotlotinfoprod"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmoproduct?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-row">
+                            <div class="col-md-8">
+                              <div class="form-group">
+                                <label class="input-label">Product Description *</label>
+                                <input
+                                  type="text"
+                                  id="TextBox_dmolotlotinfodesc"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmoproductname?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label class="input-label">Breed</label>
+                                <input
+                                  type="text"
+                                  id="TextBox_dmolotlotinfobrd"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmobreed?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-row">
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="input-label custom">
+                                  <span>Price</span>
+                                  <span>$/Head</span>
+                                </label>
+                                <input
+                                  type="number"
+                                  id="TextBox_lmkoeelotdmopriceaud"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmopriceaud?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="input-label custom">
+                                  <span>Price</span>
+                                  <span>C/Kg</span>
+                                </label>
+                                <input
+                                  type="number"
+                                  id="TextBox_dmolotlotinfopricecpkg"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmopriceckg?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="input-label custom">
+                                  <span>Weight</span>
+                                  <span>Kg</span>
+                                </label>
+                                <input
+                                  type="number"
+                                  id="TextBox_dmolotlotinfowtkg"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmotweight?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="input-label custom">
+                                  <span>Turnover*</span>
+                                  <span>AUD</span>
+                                </label>
+                                <input
+                                  type="number"
+                                  id="TextBox_dmolotlotinfoturnovaud1"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmoturnover?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-row">
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="input-label">Sex</label>
+                                <input
+                                  type="text"
+                                  id="TextBox_dmolotlotinfoturnovaud"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmosex?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="input-label">Paint Mark</label>
+                                <input
+                                  type="text"
+                                  id="TextBox_dmolotlotinfopaintmk"
+                                  class="form-control"
+                                  disabled
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label class="input-label">Contract ID</label>
+                                <input
+                                  type="text"
+                                  id="TextBox_dmolotlotinfocontractid"
+                                  class="form-control"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkopesecdmorecordid?.RLTYPDMOVAL}}"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                              <div class="form-group">
+                                <label class="form-checkbox mr-2">
+                                  <input
+                                    type="checkbox"
+                                    id="CheckBox_dmolotlotinfohgp"
+                                    disabled
+                                    [checked]="applicationData.DataInformation?.lmkoeelotdmohgpused?.RLTYPDMOVAL === 'Yes'"
+                                    value="{{applicationData.DataInformation?.lmkoeelotdmohgpused?.RLTYPDMOVAL}}"
+                                  />
+                                  <i class="skin"></i>
+                                  <span>HGP</span>  
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="form-row">
+                            <div class="form-group d-flex align-items-center">
+                              <label class="form-checkbox mr-2">
+                                <input
+                                  type="checkbox"
+                                  id="CheckBox_dmolotlotinfotransclaim"
+                                  disabled
+                                  value="{{applicationData.DataInformation?.lmkoeelotdmobreed?.RLTYPDMOVAL}}"
+                                />
+                                <i class="skin"></i>
+                                <span>Transit Claim</span> 
+                              </label>
+                            </div>
+                        
+                          </div>
+                        </div>
+                      </div>
+                    
+                    </div>
+                  </form>
+            </app-tab>
+           
+            <app-tab [title]="'Attachments'" [bmodisplay]="true" *ngIf="!isNew">
+              <app-document-view [IsAllowDirectSave]="true"></app-document-view>
+            </app-tab>
+            <app-tab [title]="'Notes'" [bmodisplay]="true" *ngIf="!isNew">
+              <app-notes [IsShowSendMessage]="false"></app-notes>
+            </app-tab>
+          </app-tabs>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+

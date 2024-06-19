@@ -1,0 +1,88 @@
+ <section class="fees-charges-section">
+  <div class="fees-charges-section-header section-header">
+    <span> Fees & Charges </span>
+    <button class="btn delete-btn" (click)="deleteSaleFeesCharges()" [hidden]="!deleteButtonVis" [disabled]="!isHaveSelectedItems()">Delete</button>
+  </div>
+  <div class="fees-charges-section-grid">
+    <table class="basicTable stripped" style="border-top:0;border-right:0;border-left:0;">
+      <thead>
+        <tr>
+          <th width="40">
+            <label class="inline-checkbox ml-2">
+              <input type="checkbox" [(ngModel)]="selectedAll" (ngModelChange)="selectAllItems()">
+              <i class="skin"></i>
+            </label>
+          </th>
+          <th *ngFor="let key of headerMap; let i = index">
+            <span>{{key.displayName}}</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="itemsCount == 0">
+        <tr>
+          <td [colSpan]="6" class="text-center">No Data Found</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="itemsCount > 0">
+        <tr *ngFor="let item of pageData; let i = index" [ngClass]="{'active': item.selected}">
+          <td>
+            <label class="inline-checkbox ml-2 mt-1">
+              <input
+                type="checkbox"
+                name="chkboxlist"
+                [(ngModel)]="item.selected"
+                (ngModelChange)="checkIfAllSelected()">
+              <i class="skin"></i>
+            </label>
+          </td>
+          <td *ngFor="let key of headerMap">
+            <span *ngIf="key.objectKey == 'Amount' || key.objectKey == 'GST' || key.objectKey == 'AmountInclGST'">$</span><span>{{item[key.objectKey]}}</span>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="font-weight-bold" colspan="2">Total</td>
+          <td class="font-weight-bold">${{dataSource.Total.Amount  | number:'1.0-2'}}</td>
+          <td class="font-weight-bold">${{dataSource.Total.GST  | number:'1.0-2'}}</td>
+          <td class="font-weight-bold">${{dataSource.Total.AmountInclGST  | number:'1.0-2'}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+      <div class="filter_pagination justify-content-end">
+        <div>
+          <div class="input-group">
+            <div>Go to page :</div>
+            <input class="gotoPage" #pageSelect type="number" min="1" (change)="goToPage(pageSelect.value)" [value]="currentPage">
+          </div>
+        </div>
+        <div class="selectListing">
+          <div class="input-group">
+            <div>Show Rows:</div>
+            <div ngbDropdown>
+              <button class="btn btn-outline-primary" ngbDropdownToggle>{{pageSize}}</button>
+              <ul ngbDropdownMenu>
+                <li *ngFor="let item of pageSizeOptions;let i = index" ngbDropdownItem  (click)="pageSizeChange(item)">{{item}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="input-group">
+            <div style="padding-right:0px;"> {{first}} - {{last}} of {{itemsCount}}</div>
+          </div>
+        </div>
+        <!--Previous button-->
+        <div class="nxt_prvWrap">
+          <a title="Previous" (click)="previousPage()" tabindex="-1"><i aria-label="Left arrow" class="fas fa-angle-left" role="img"></i></a>
+        </div>
+  
+        <!--Next Button-->
+        <div class="nxt_prvWrap">
+          <a title="Next" (click)="nextPage()" tabindex="-1"><i aria-label="Right arrow" class="fas fa-angle-right" role="img"></i></a>
+        </div>
+      </div>
+    </nav>
+  
+  </div>
+ </section>

@@ -1,0 +1,93 @@
+<section class="forgotpwd_wrapper" role="main">
+  <div class="whiteBgSection" style="margin:0px;">
+    <div class="smallCenteredContainer">
+      <h2 class="FR25">Change Password</h2>
+      <div class="corner-button">
+          <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false)"></button>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="changepassword()">
+    <div class="forgotpwd_content">
+      <div class="smallCenteredContainer">
+       
+          <!-- <div class="alert" *ngIf="formHasErrors">
+          <div class="alert-error">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="alert-content">
+            <h3 class="AL20 colorRed">There was a problem</h3>
+           
+
+            <div *ngIf="f.oldpwd.touched && f.oldpwd.errors">
+              <div *ngIf="f.oldpwd.errors.minlength">Current password should be at least 8 characters long</div>
+              <div *ngIf="f.oldpwd.errors.pattern">Enter a valid password</div>
+            </div>
+            <div *ngIf="f.newpwd.touched && f.newpwd.errors">
+              <div *ngIf="f.newpwd.errors.minlength">New password should be at least 8 characters long</div>
+              <div *ngIf="f.newpwd.errors.pattern">Enter a valid new password</div>
+            </div>
+            <div *ngIf="f.confpwd.touched && f.confpwd.errors">
+             
+              <div *ngIf="f.confpwd.errors.mustMatch">Passwords must match</div>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- <p class="p-large">
+          Please enter the mail address associated with your E-Saleyard account.
+        </p> -->
+        
+          <div class="form-group">
+            <!-- <div class="field-group span12"> -->
+              <label>Please enter old password</label>
+              <input formControlName="oldpwd" id="" placeholder="Old Password" class="span12 form-control col-sm-8" [ngClass]="{ 'is-invalid': submitted && f.oldpwd.errors }" type="password" />
+            <!-- </div> -->
+           <!-- <div *ngIf="submitted && f.email.errors" class="invalid-feedback">      
+              <!-- <div *ngIf="f.email.errors.required">Email is required</div>
+              <div *ngIf="!f.email.errors.required">Email is incorrect</div>        -->
+              <div *ngIf="f.oldpwd.touched && f.oldpwd.errors" class="invalid-feedback">
+                <div *ngIf="f.oldpwd.errors.minlength">Current password should be at least 8 characters long</div>
+                <div *ngIf="f.oldpwd.errors.pattern">Enter a valid password</div>
+              </div>
+         <!--</div> -->
+          </div>
+       
+          <div class="form-group">
+          <!-- <div class="field-group span12"> -->
+            <label>Please enter old password</label>
+            <input formControlName="newpwd" id="" placeholder="New Password" class="span12 form-control col-sm-8" type="password"  [ngClass]="{ 'is-invalid': submitted && f.newpwd.errors }" />
+          <!-- </div> -->
+          <div *ngIf="f.newpwd.touched && f.newpwd.errors">
+            <div *ngIf="f.newpwd.errors.minlength">New password should be at least 8 characters long</div>
+            <div *ngIf="f.newpwd.errors.pattern">Enter a valid new password</div>
+          </div>
+          </div>
+          <div class="form-group">
+          <!-- <div class="field-group span12"> -->
+            <label>Please enter confirm password</label>
+            <input formControlName="confpwd" id="" placeholder="Confirm Password" class="span12 form-control col-sm-8" type="password"  [ngClass]="{ 'is-invalid': submitted && f.confpwd.errors }" />         
+            <div *ngIf="f.confpwd.touched && f.confpwd.errors"  class="invalid-feedback">
+              <div *ngIf="f.confpwd.errors.mustMatch">Passwords must match</div>
+            </div>
+          <!-- </div> -->
+          </div>
+       
+
+        <!-- <div class="padding-xxs"></div> -->
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary login-btn">Continue</button>
+          <button
+            type="button"
+            class="btn btn-clear btn-large"
+            (click)="activeModal.close(false)" >
+            Close
+          </button>
+        </div>
+        <!-- <div class="padding-m"></div> -->
+      </div>
+    </div>
+  </form>
+</section>
+

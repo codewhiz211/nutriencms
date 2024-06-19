@@ -1,0 +1,295 @@
+<section>
+  <table class="basicTable stripped" style="border-top:0;border-right:0;border-left:0;">
+    <tbody>
+      <tr class="span-row">
+        <th class="text-center" rowspan="2" style="width: 55px;">
+          <span>Actions</span>
+        </th>
+        <th rowspan="2" colspan="2">
+          <span>Lot Fees and Charges</span>
+        </th>
+        <th colspan="4" scope="colgroup" style="width: 240px; text-align: center">
+          <span>Charged To</span>
+        </th>
+        <th rowspan="2">
+          <span>Calculation Type</span>
+        </th>
+        <th rowspan="2">
+          <span>Rate</span>
+        </th>
+        <th rowspan="2" *ngIf="!forBulkUpdate">
+          <span>Cost(Excl GST)</span>
+        </th>
+        <th rowspan="2" *ngIf="!forBulkUpdate">
+          <span>GST</span>
+        </th>
+        <th rowspan="2">
+          <span>Third Party Account</span>
+        </th>
+        <th rowspan="2">
+          <span>Third Party Name</span>
+        </th>
+        <th rowspan="2">
+          <span>Reference Text</span>
+        </th>
+      </tr>
+      <tr class="bg-white">
+        <th class="option-th" scope="col">
+          <span>Vendor</span>
+        </th>
+        <th class="option-th" scope="col">
+          <span>Buyer</span>
+        </th>
+        <th class="option-th" scope="col">
+          <span>3rd Party</span>
+        </th>
+        <th class="option-th" scope="col">
+          <span>NTR</span>
+        </th>
+      </tr>
+
+      <ng-container *ngFor="let item of data; let i = index;">
+        <tr *ngIf="!item.IsDeleted">
+          <td class="text-center">
+            <a title="Delete" class="delete-btn" (click)="delete_item(item)" *ngIf="item.RateOverride == 'Yes' && !item.IsRateEdit" [class.disabled]="isFinalised">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+          </td>
+          <td colspan="2">
+            <div class="d-flex align-items-center justify-content-between">
+              <div *ngIf="!forBulkUpdate && !item.IsDescriptionEdit" class="mx-2 flex-1-hidden">{{item.Description}}</div>
+              <div *ngIf="forBulkUpdate && !item.IsDescriptionEdit" class="mx-2 flex-1-hidden" placement="bottom" ngbTooltip="{{item.Description}}">{{item.Description}}</div>
+              <input
+                *ngIf="item.IsDescriptionEdit"
+                type="text"
+                class="form-control"
+                placeholder="Select Fee"
+                [(ngModel)]="item.Description" />
+              <div>
+                <a title="Edit" class="mx-1" (click)="item.IsDescriptionEdit = true; isInlineEdit = true;" *ngIf="item.DescriptionOverrideAllowed == 'Yes' && !item.IsDescriptionEdit" [class.disabled]="isFinalised">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a title="Edit" class="mx-1"  (click)="item.IsDescriptionEdit = false; item.IsManual=true; item.IsNew=true;" *ngIf="item.IsDescriptionEdit">
+                  <i class="fas fa-check"></i>
+                </a>
+              </div>
+            </div>
+          </td>
+          <td>
+            <label class="radio-container">
+            <input type="radio" name="chargedTo{{i}}" value="Vendor" [(ngModel)]="item.ChargedTo" disabled />
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td>
+            <label class="radio-container">
+              <input type="radio" name="chargedTo{{i}}" value="Buyer" [(ngModel)]="item.ChargedTo" disabled />
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td>
+            <label class="radio-container">
+              <input type="radio" name="chargedTo{{i}}" value="3rd Party" [(ngModel)]="item.ChargedTo" disabled />
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td>
+            <label class="radio-container">
+              <input type="radio" name="chargedTo{{i}}" value="Landmark" [(ngModel)]="item.ChargedTo" disabled />
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td>
+            <ng-container *ngIf="forBulkUpdate == true; else other_calculationType">
+              <span placement="bottom" ngbTooltip="{{item.CalculationType}}">{{item.CalculationType}}</span>
+            </ng-container>
+            <ng-template #other_calculationType>
+              <span>{{item.CalculationType}}</span>
+            </ng-template>
+          </td>
+          <td class="rate-cell">
+            <div class="d-flex align-items-center justify-content-between">
+              <div *ngIf="!item.IsRateEdit">{{item.Rate}}</div>
+              <input
+                *ngIf="item.IsRateEdit"
+                type="number"
+                class="form-control"
+                [(ngModel)]="item.Rate"
+                (blur)="rateChanged(item)">
+              <div>
+                <a title="Edit" class="mx-1" (click)="item.IsRateEdit = true;" *ngIf="item.RateOverride == 'Yes' && !item.IsRateEdit" [class.disabled]="isFinalised">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a title="Edit" class="mx-1"  (click)="item.IsRateEdit = false; item.IsNew = true;" *ngIf="item.IsRateEdit">
+                  <i class="fas fa-check"></i>
+                </a>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="!forBulkUpdate"><span>{{item.Cost | number:'1.2-2'}}</span></td>
+          <td *ngIf="!forBulkUpdate"><span>{{item.GST | number:'1.2-2'}}</span></td>
+          <td class="third-account-cell">
+            <div class="d-flex align-items-center justify-content-between">
+              <div *ngIf="!forBulkUpdate && !item.IsThirdPartyAccountEdit" class="flex-1-hidden">{{item.ThirdPartyAccount}}</div>
+              <div *ngIf="forBulkUpdate && !item.IsThirdPartyAccountEdit" placement="bottom" ngbTooltip="{{item.ThirdPartyAccount}}" class="flex-1-hidden">{{item.ThirdPartyAccount}}</div>
+
+              <input
+                *ngIf="item.IsThirdPartyAccountEdit"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="thirdPartyAccountSearch"
+                [editable]="false"
+                (selectItem)="selectVendor($event, item, 'dmocustmstrsapno')"
+                [(ngModel)]="item.ThirdPartyAccount" />
+              <div>
+                <a title="Edit" class="mx-1" (click)="item.IsThirdPartyAccountEdit = true; isInlineEdit = true;" *ngIf="item.ValidFor3rdParty == 'Yes' && !item.IsThirdPartyAccountEdit" [class.disabled]="isFinalised">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a title="Edit" class="mx-1"  (click)="item.IsThirdPartyAccountEdit = false; item.IsManual=true;" *ngIf="item.IsThirdPartyAccountEdit">
+                  <i class="fas fa-check"></i>
+                </a>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex align-items-center justify-content-between">
+              <div *ngIf="!forBulkUpdate && !item.IsThirdPartyNameEdit" class="flex-1-hidden">{{item.ThirdPartyName}}</div>
+              <div *ngIf="forBulkUpdate && !item.IsThirdPartyNameEdit" placement="bottom" ngbTooltip="{{item.ThirdPartyName}}" class="flex-1-hidden">{{item.ThirdPartyName}}</div>
+
+              <input
+                *ngIf="item.IsThirdPartyNameEdit"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="thirdPartyAccountNameSearch"
+                [editable]="false"
+                (selectItem)="selectVendor($event, item, 'dmocustmstrcustname1')"
+                [(ngModel)]="item.ThirdPartyName" />
+  
+              <div>
+                <a title="Edit" class="mx-1" (click)="item.IsThirdPartyNameEdit = true;  isInlineEdit = true;" *ngIf="item.ValidFor3rdParty == 'Yes' && !item.IsThirdPartyNameEdit" [class.disabled]="isFinalised">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a title="Edit" class="mx-1"  (click)="item.IsThirdPartyNameEdit = false; item.IsManual=true;" *ngIf="item.IsThirdPartyNameEdit">
+                  <i class="fas fa-check"></i>
+                </a>
+              </div>
+            </div>
+          </td>
+          <td>
+            <ng-container *ngIf="forBulkUpdate == true; else other_referencetext">
+              <span placement="bottom" ngbTooltip="{{item.ReferenceText}}">{{item.ReferenceText}}</span>
+            </ng-container>
+            <ng-template #other_referencetext>
+              <div class="d-flex align-items-center justify-content-between">
+                <div *ngIf="!item.IsReferenceTextEdit" class="flex-1-hidden">{{item.ReferenceText}}</div>
+              <input type="text" class="form-control" *ngIf="item.IsReferenceTextEdit" [(ngModel)]="item.ReferenceText" [disabled]="item.FeeCode === 'GrossCommission'"/>
+              
+              <div>
+                <a title="Edit" class="mx-1" (click)="item.IsReferenceTextEdit = true; isInlineEdit = true;" *ngIf="item.ValidFor3rdParty == 'Yes' && !item.IsReferenceTextEdit">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a title="Edit" class="mx-1"  (click)="item.IsReferenceTextEdit = false;" *ngIf="item.IsReferenceTextEdit">
+                  <i class="fas fa-check"></i>
+                </a>
+              </div>
+            </div>
+            </ng-template>
+          </td>
+        </tr>
+      </ng-container>
+
+      <tr *ngIf="!isReversal && !isFinalised">
+        <td class="d-flex align-items-center justify-content-around">
+          <a title="Save" class="save-btn" (click)="save_new_item()" *ngIf="newRow.FeeCode != ''">
+            <i class="fas fa-save"></i>
+          </a>
+          <a title="Discard" class="discard-btn" (click)="discard_new_item()" *ngIf="newRow.FeeCode != ''">
+            <i class="fas fa-times"></i>
+          </a>
+        </td>
+        <td colspan="2">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Select Fee"
+            [(ngModel)]="newRow.Description"
+            [ngbTypeahead]="feeChargesSearch"
+            [resultFormatter]="formatter"
+            [inputFormatter]="formatter"
+            (selectItem)="setLotFeesChargesOption($event, newRow, true)" />
+        </td>
+        <td>
+          <label class="radio-container">
+          <input type="radio" name="chargedToNew" value="Vendor" [(ngModel)]="newRow.ChargedTo" disabled />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td>
+          <label class="radio-container">
+            <input type="radio" name="chargedToNew" value="Buyer" [(ngModel)]="newRow.ChargedTo" disabled />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td>
+          <label class="radio-container">
+            <input type="radio" name="chargedToNew" value="3rd Party" [(ngModel)]="newRow.ChargedTo" disabled />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td>
+          <label class="radio-container">
+            <input type="radio" name="chargedToNew" value="Landmark" [(ngModel)]="newRow.ChargedTo" disabled />
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td>
+          <ng-container *ngIf="newRow.FeeCode == 'GrossCommission'; else other_feeTypeCalc">
+            <select style="width: 100%;"
+            [(ngModel)]="newRow.CalculationType"  
+            id="DropDownList_FeeType">
+              <option value="Per Unit">Per Unit</option>
+              <option value="Flatrate">Flatrate</option>
+              <option value="Percentage">Percentage</option>
+            </select>
+          </ng-container>
+          <ng-template #other_feeTypeCalc>
+            <span>{{newRow.CalculationType}}</span>
+          </ng-template>
+        </td>
+        <td class="rate-cell">
+          <input type="number" class="form-control"  [(ngModel)]="newRow.Rate" (blur)="rateChanged(newRow)" />
+        </td>
+        <td *ngIf="!forBulkUpdate">
+          <span>{{newRow.Cost}}</span>
+        </td>
+        <td *ngIf="!forBulkUpdate">
+          <span>{{newRow.GST}}</span>
+        </td>
+        <td class="third-account-cell">
+          <input
+          [disabled]="newRow.FeeCode === 'GrossCommission'"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="thirdPartyAccountSearch"
+            [editable]="false"
+            (selectItem)="selectVendor($event, newRow, 'dmocustmstrsapno')"
+            [(ngModel)]="newRow.ThirdPartyAccount" />
+        </td>
+        <td>
+          <input
+          [disabled]="newRow.FeeCode === 'GrossCommission'"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="thirdPartyAccountNameSearch"
+            [editable]="false"
+            (selectItem)="selectVendor($event, newRow, 'dmocustmstrcustname1')"
+            [(ngModel)]="newRow.ThirdPartyName" />
+        </td>
+        <td>
+          <input type="text" class="form-control" [(ngModel)]="newRow.ReferenceText" [disabled]="newRow.FeeCode === 'GrossCommission'"/>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</section>

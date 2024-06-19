@@ -1,0 +1,66 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between py-3">
+                <button type="button" class="btn btn-primary primary-btn" (click)="open_alias_data_modal()">Update Alias
+                    Data</button>
+                <div>
+
+                    <button type="button" class="btn btn-primary cancel-btn" (click)="go_back()">Back</button>
+                    <button type="button" class="btn btn-primary primary-btn" (click)="createSale()">Create
+                        Sale</button>
+                </div>
+            </div>
+            <div class="separator"></div>
+            <div class="message-list">
+                <span class="message-list-lbl">Messages</span>
+                <div class="message-list-results">
+                    <ng-container *ngFor="let item of msgList ; let index = index">
+                        <div class="message-list-results-row">
+                            <i class="fas fa-check success" *ngIf="item.status === 'success'"></i>
+                            <i class="fas fa-times-circle error" *ngIf="item.status === 'error'"></i>
+                            <span>{{item.msg}}</span>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="lots-grid">
+                <div class="lots-grid-filters">
+                    <div class="d-flex">
+                        <a [ngClass]="isAllRecords ? 'all_records' : 'error_records'" (click)="get_all_records()"
+                            title="All Records">ALL RECORDS</a>
+                        <div class="separator"></div>
+                        <a [ngClass]="isAllRecords ? 'error_records' : 'all_records'" (click)="get_error_records()"
+                            title="Found Records">FOUND ERRORS</a>
+                    </div>
+                    <div>   
+                        <a class="remove-filter" *ngIf="hasFilter" href="javascript:void(0);" title="Remove Filter" (click)="removeFilter()">Remove Filter</a>                     
+                        <div class="d-flex chkBox">                            
+                            <label class="form-checkbox mr-2">
+                                <input type="checkbox" id="CheckBox_updatePIC" [checked]="UpdatePic"
+                                    [(ngModel)]="UpdatePic" />
+                                <i class="skin"></i>
+                                <span>Update Imported PIC Numbers</span>
+                            </label>
+                            <ng-template #dmoTipContent>
+                                <div [innerHTML]="'PIC Numbers with a character length greater than 8 will not be imported'"></div>
+                            </ng-template>
+                            <a class="dmo-tooltip" placement="bottom" [ngbTooltip]="dmoTipContent"
+                                tooltipClass="tooltip-class">
+                                <i class="far fa-question-circle"></i>
+                            </a>
+                        </div>
+                        <button type="button" (click)="Validate_records()" class="btn validate-btn">Validate</button>
+                    </div>
+                </div>
+                <div class="lots-grid-view">
+                    <app-import-data-grid [dataSource]="dataSource" [headerMap]="HeaderMap" [itemsCount]="itemsCount"
+                        [EditColumnList]="EditColumnList" [sNo]="false" [pageNum]="pageNum"
+                        (pageChange)="pageChange($event)" [TotalDetails]="TotalDetails"
+                        (actionClick)="actionClick($event)">
+                    </app-import-data-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

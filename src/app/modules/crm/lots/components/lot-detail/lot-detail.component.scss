@@ -1,0 +1,146 @@
+.submit-btn {
+    font-size: 12px;
+    letter-spacing: 0.35px;
+    line-height: 17px;
+    text-align: center;
+    width: 150px;
+    height: 35px;
+}
+
+.cancel-btn {
+    font-size: 12px;
+    letter-spacing: 0.35px;
+    line-height: 17px;
+    text-align: center;
+    width: 150px;
+    height: 35px;
+    margin-right: 32px;
+    background: white;
+    color: #4c9d01;
+}
+
+.vendor-buyer-section {
+    border-bottom: 1px solid #E1DDD8;
+
+    .form-group {
+        margin-right: 12px;
+    }
+
+    .vendor-section {
+        padding: 8px 16px 0;
+        @media (min-width: 769px) {
+            border-right: 0.5px solid #E1DDD8;
+        }
+    }
+    
+    .buyer-section {
+        padding: 8px 16px 0;
+    }
+}
+
+.lot-info-section {
+    .form-group {
+        margin-right: 32px;
+    }
+}
+
+.calc-btn {
+    border-radius: 10px;
+    color: #FFFFFF;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+    line-height: 4px;
+    text-align: center;
+    width: 100px;
+    height: 20px;
+    background-color: #226398;
+}
+
+.form-control {
+    height: 24px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.99px;
+    line-height: 10px;
+}
+
+.input-label {
+    color: #4D4D51;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.46px;
+    line-height: 17px;
+
+    &.custom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 6px;
+    }
+
+    @media (min-width: 768px) and (max-width: 1240px) {
+        font-size: 11px;
+    }
+}
+
+.ng-select {
+
+    &.form-control {
+        padding: 0;
+    }
+
+    &::ng-deep .ng-select-container  {      
+        min-height: 22px;
+        height: 22px;
+        border-radius: 3px;
+        border: none;
+        background-color: transparent;
+
+        .ng-value-container .ng-value {
+            line-height: 19px;
+        }
+    }
+  
+    &::ng-deep .ng-select-container .ng-input {
+        top: 0 !important;
+    }
+  
+    &::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+        height: 22px;
+        padding: 4px 12px;
+    }
+}
+
+.dmo-tooltip {
+    color: #4C9E00 !important;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.form-checkbox {
+    span {
+        font-size: 13px;
+        letter-spacing: 0.78px;
+        line-height: 18px;
+    }
+}
+
+.invalid-feedback {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.3px;
+}
+.footer-Add-New-Button {
+    font-size: 11px;
+    display: block;
+    text-align: center;
+}
+.IsBlockCustomer{
+    background-color: #80808038 !important;
+}
+.uppercase{
+    text-transform: uppercase;
+}

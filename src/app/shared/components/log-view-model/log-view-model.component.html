@@ -1,0 +1,101 @@
+
+<div style="margin-top: 30px;">
+  <generic-grid
+    [tableName]="bmoGuid"
+    [Change_Log]="gService.data[bmoGuid]?.isChangeLog"
+    [dataSource]="gService.data[bmoGuid]?.gridData"
+    [headerMap]="gService.data[bmoGuid]?.gridColumn"
+    [itemsCount]="gService.data[bmoGuid]?.gridCount"
+    [sNo]="false"
+    (pageChange)="pageChange($event)"
+    (rowClick)="actionClick($event, mailView)"
+  ></generic-grid>
+</div>
+
+<ng-template #mailView let-modal>
+  <!-- <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Mail View</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div> -->
+  <div class="modal-header">
+      <h4 class="modal-title">Mail view</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  <div class="modal-body">
+      <div class="form-group">
+        <div style="padding: 0px 10px;">
+            <table id="tblMailView">
+            <tbody>
+              <tr>
+                <td><b>Sent</b></td>
+                <td><b>:</b></td>
+                <td class="break_word">{{convertToLocalDataAndTime(mailData?.Date_Time)}}</td>
+              </tr>
+              <tr>
+                <td><b>To</b></td>
+                <td><b>:</b></td>
+                <td class="break_word">{{mailData.Mail_To}}</td>
+              </tr>
+              <tr>
+                <td><b>Cc</b></td>
+                <td><b>:</b></td>
+                <td class="break_word">{{mailData.Mail_CC}}</td>
+              </tr>
+              <tr>
+                <td><b>Bcc</b></td>
+                <td><b>:</b></td>
+                <td class="break_word">{{mailData.Mail_CC}}</td>
+              </tr>
+              <tr>
+                <td><b>Subject</b></td>
+                <td><b>:</b></td>
+                <td class="break_word">{{mailData.Subject}}</td>
+              </tr>
+              <tr>
+                <td colspan="2">&nbsp;</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td colspan="3"><b>Mail Content</b></td>
+              </tr>
+              <tr>
+                <!-- Added for Bind HTML Content -->
+                <!-- Keeping safe pipe here since the email is generated on the backend -->
+                  <td colspan="3" [innerHTML]="mailData.Mail_Body  | safe: 'html'"></td>
+              </tr>
+              <tr>
+                <td colspan="3">&nbsp;</td>
+                <td></td>
+              </tr>
+              <tr></tr>
+              <tr>
+                <td><b>Attachment</b></td>
+                <td><b>:</b></td>
+                <td class="break_word">{{mailData.Attachment}}</td>
+              </tr>
+              <tr>
+                <td><b>Status</b></td>
+                <td><b>:</b></td>
+                <td class="break_word">{{mailData.Status}}</td>
+              </tr>
+              <tr>
+                <td><b>Stage/State</b></td>
+                <td><b>:</b></td>
+                <td class="break_word">{{mailData.State}}</td>
+              </tr>
+              <tr>
+                <td><b>Trigger&nbsp;name</b></td>
+                <td><b>:</b></td>
+                <td class="break_word">{{mailData.Trigger_Name}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+
+</ng-template>

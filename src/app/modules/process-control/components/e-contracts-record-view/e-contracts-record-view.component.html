@@ -1,0 +1,20 @@
+<app-tabs>
+    <app-tab [title]="'Lot Summary'" [bmodisplay]="true">
+        <app-grid-view
+          [Config]="{
+            ProcessName: ProcessName,
+            GridGuid: 'MCompContainer',
+            PageNumber: '0',
+            TimeZone: '330',
+            HasGlobalSearch: false,
+            IsSubProcess: true,
+            ParentTransactionId: parentTransactionId
+          }"
+          (navigateDetailPage)="navigateDetailPage($event)"
+        >
+        </app-grid-view>
+    </app-tab>
+    <app-tab [title]="'Notes'" [bmodisplay]="true">
+      <app-notes></app-notes>
+    </app-tab>
+</app-tabs>

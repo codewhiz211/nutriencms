@@ -1,0 +1,24 @@
+<div class="p-3">
+  <app-grid-view
+    [Config]="{
+      ProcessName: ProcessName,
+      GridGuid: 'MCompContainer',
+      PageNumber: '0',
+      TimeZone: '330',
+      HideDeleteActionIcon: HideDeleteIcon
+    }"
+    (navigateDetailPage)="showDetailPage($event)"
+  >
+  </app-grid-view>
+</div>
+<ng-template #detailViewModal let-modal>
+  <div class="modal-header">
+    <a target="_blank" rel="noopener noreferrer" [routerLink]="[detailPageLink]" (click)="close(modal)">Open in new window</a>
+    <button type="button" class="close" aria-label="Close" (click)="close(modal)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-detail-view [transactionId]="transactionId" [processUrlName]="processUrlName"></app-detail-view>
+  </div>
+</ng-template>

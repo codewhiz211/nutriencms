@@ -1,0 +1,19 @@
+
+.Content_manage_wrapper{
+    background-color: #fff;
+    // height: 619px;
+    .content_manage_block{
+        height: 100%;
+        position: relative;
+        .content_manage_left{
+            height: 100%;
+            width: 260px;
+            float: left;
+        }
+        .content_manage_right{
+            margin-left: 260px;
+            min-height: 619px;
+            border-left: 1px solid #cbcbcb;
+        }
+    }
+}

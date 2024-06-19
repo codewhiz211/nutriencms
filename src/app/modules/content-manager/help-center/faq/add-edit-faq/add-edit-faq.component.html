@@ -1,0 +1,54 @@
+<section class="listing_detail">
+  <h3>{{addEditFAQ}}</h3>
+  <div class="corner-button">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="listing_detail_form">
+    <form #userForm="ngForm" novalidate autocomplete="off" (ngSubmit)="onSubmit(userForm.valid,userForm);false">
+      <input type="hidden" name="DataID" [(ngModel)]="addEditData.DataID" #DataID="ngModel">
+      <div class="form-group">
+          <div class="row">
+        <div class="col-sm-6">
+          <label>Status*</label>
+          <select type="text" class="form-control select" placeholder="" name="Status" [(ngModel)]="addEditData.Status"
+            #Status="ngModel" required>
+          <option>Active</option>
+          <option>Inactive</option>
+          </select>
+          <div *ngIf="Status.invalid && ((Status.dirty || Status.touched)||(userForm.submitted && formVal))">
+            <span class="err_message" *ngIf="Status.errors.required">Status is required</span>
+          </div>
+        </div>
+      </div>
+      </div>
+    
+      <div class="form-group">
+          <label>Question*</label>
+          <textarea class="form-control h-100" rows="4" placeholder="" name="Name" [(ngModel)]="addEditData.Name"
+            #Name="ngModel" required>
+          </textarea>
+          <div *ngIf="Name.invalid && ((Name.dirty || Name.touched)||(userForm.submitted && formVal))">
+            <span class="err_message" *ngIf="Name.errors.required">Question is required</span>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label>Answer</label>
+          <!-- <textarea class="form-control h-100" rows="4" placeholder="" name="Description" [(ngModel)]="addEditData.Description"
+            #Description="ngModel" required>
+          </textarea> -->
+          <ckeditor [(ngModel)]="addEditData.Description" #Description='ngModel' name="Description" required></ckeditor>
+          <div *ngIf="Description.invalid && ((Description.dirty || Description.touched)||(userForm.submitted && formVal))">
+            <span class="err_message" *ngIf="Description.errors.required">Answer is required</span>
+          </div>
+        </div>
+  
+      <div class="update_detail" *ngIf="isShowSave">
+        <button type="button" class="btn btn-primary" (click)="activeModal.close(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary">{{addEditData.DataID == '' ? 'Save & Publish' : 'Save & Publish'}} </button>
+      </div>
+    </form>
+  </div>
+</section>

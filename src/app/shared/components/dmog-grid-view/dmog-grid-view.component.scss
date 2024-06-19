@@ -1,0 +1,58 @@
+.dmog-grid-view {
+    padding: 1rem;
+
+    .table-action-group {
+        display: flex;
+        align-items: center;
+        background-color: #f2f2f2;
+        border-top: 1px solid #cbcbcb;
+        border-bottom: 1px solid #cbcbcb;
+        padding: 0 10px;
+
+        .btns-group {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        a {
+            font-weight: bold;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            height: 30px;
+            padding: 5px;
+            margin-left: 10px;
+            line-height: 28px;
+            text-decoration: none;
+            color: #4d4d51;
+        
+            i {
+              font-size: 18px;
+              margin-right: 4px;
+            }
+        }
+    }
+
+    table {
+        border-top:0;
+        border-right:0;
+        border-left:0;
+
+        tr.active {
+            background-color: rgba(0, 126, 72, 0.1) !important;
+        }
+
+        .action-btns {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+          
+            a {
+              color: #4d4d51;
+            }
+        }
+    }
+}

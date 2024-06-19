@@ -1,0 +1,1 @@
+export * from './customized-grid.component';

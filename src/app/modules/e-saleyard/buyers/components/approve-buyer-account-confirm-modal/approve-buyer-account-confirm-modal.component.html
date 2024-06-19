@@ -1,0 +1,22 @@
+<!-- Modals -->
+<div class="modal-header">
+  <h4 class="modal-title">
+    Approve Landmark Buyer Account
+  </h4>
+  <div class="btn-close" (click)="activeModal.dismiss('Close')">
+    <span aria-hidden="true">&times;</span>
+  </div>
+</div>
+<div class="modal-body">
+  <div class="px-3 pt-1 pb-3">
+    <div class="content">
+      <p>User {{firstName | titlecase}} {{lastName | titlecase}} has requested adding access for the following account: <span class="text-primary">{{landmarkAccountNumber}}</span></p>
+      <p>Would you like to approve it?</p>
+    </div>
+    <div class="d-flex align-items-center justify-content-end mt-4">
+      <button type="button" class="btn btn-clear cancel-btn" (click)="activeModal.close(false)">Ignore</button>
+      <button type="button" class="btn btn-primary mr-2 approve-btn" (click)="this.activeModal.close(true);">Approve</button>
+    </div>
+  </div>
+</div>
+<!-- End Modals -->

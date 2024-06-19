@@ -1,0 +1,41 @@
+// @import url(../../../../../../assets/styles/css/reset.css);
+
+.table-filters-group {
+    display: flex;
+    background-color:#f2f2f2;
+    border-top:1px solid #cbcbcb;
+    border-bottom:1px solid #cbcbcb;
+    padding:0px;
+
+    @media (max-width:768px){
+        flex-direction: column;
+    }
+}
+
+  .btn-small {
+    height: 26px;
+    padding: 0px 19px 0px 18px;
+    font-size: 1.0rem;
+    margin: 0px 0px 0px 10px;
+  }
+  .btn-primary-special {
+    background-color: #fff;
+    background-image: linear-gradient(to bottom, #fff 0%, #fff 100%);
+    border: 1px solid #ccc;
+    color: #333 !important;
+    border-radius: 5px;
+  }
+  .videoWrap {
+    width: 100%;
+    // padding-bottom: 57%;
+    position: relative;
+}
+.btnFltr {
+  display: inline-block;
+  vertical-align: top;
+  color: #fff;
+  background-color: #a6a6a6;
+  padding: 5px 10px;
+  margin: 0px 0px 10px 10px;
+  text-decoration: none !important;
+}

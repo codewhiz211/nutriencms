@@ -1,0 +1,116 @@
+table {
+    tbody th {
+        border-left: 0;
+
+        &.option-th {
+            text-align: center;
+            width: 60px;
+        }
+
+        span {
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.3px;
+            line-height: 9px;
+            color: #747476;
+        }
+    }
+
+    .span-row {
+        th {
+            vertical-align: bottom;
+            .inline-checkbox  {
+                i {
+                    top: -16px;
+                }
+            }
+
+        }
+    }
+    tbody {
+
+        td {
+            padding: 3px;
+            border-top: 0;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+
+            &.third-account-cell,
+            &.rate-cell {
+                border-left: 0;
+            }
+        }
+
+        .form-control {
+            height: 24px;
+            border-radius: 3px;
+            font-size: 12px;
+            padding: .375rem .5rem;
+            letter-spacing: 0.36px;
+            line-height: 9px;
+        }
+
+        label {
+            margin-bottom: 0;
+        }
+
+        span {
+            color: #4D4D51;
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 0.36px;
+            line-height: 9px;
+        }
+
+        .radio-container {
+            margin-left: calc(50% - 5px);
+
+            .checkmark {
+                height: 12px;
+                width: 12px;
+                border: 1px solid #56AF31;
+
+                &:after {
+                    background: #56AF31;
+                    border: 0.5px solid #56AF31;
+                    width: 8px;
+                    height: 8px;
+                }
+            }
+        }
+
+        .selectListing {
+            button {
+                height: 20px;
+            }
+
+            .dropdown-menu {
+                // width: 100%;
+                max-height: 200px;
+                overflow-y: scroll;
+
+                .dropdown-item {
+                    line-height: 16px;
+                }
+            }
+        }
+
+        a {
+            cursor: pointer;
+        }
+
+        a.disabled {
+            pointer-events: none;
+            color: gray;
+            cursor: not-allowed;
+            text-decoration: underline;
+            opacity: .8;
+        }
+
+        .flex-1-hidden {
+            flex: 1;
+            overflow: hidden;
+        }
+    }
+}

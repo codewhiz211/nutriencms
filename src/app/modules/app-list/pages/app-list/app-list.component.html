@@ -1,0 +1,23 @@
+<div class="smallCenteredContainer">
+  <div class="appsWrap" style="min-height:650px;">
+    <div *ngFor="let Parent of ParentAllList">
+      <div class="business-apps">{{Parent.name}}</div>
+      <ul class="appList">
+        <li *ngFor="let child of getChildList(Parent.id)">
+          <div class="icon_wrap">
+            <a class="image_wrap" (click)="OpenApp(child)" href="javascript:void(0)">
+              <img src="{{child.ImageUrl =='' ? 'assets/styles/images/cattle-icon.png' :ImageEndpoint+'/UserResource/App-'+child.dId+'/AppLogo/cropped/'+child.ImageUrl}}" onerror="if (this.src != 'assets/styles/images/cattle-icon.png') this.src = 'assets/styles/images/cattle-icon.png';">
+            </a>
+          </div>
+          <div>
+            <span class="livestock-sales" (click)="OpenApp(child)" style="cursor: pointer">
+              {{child.DisplayName}}
+            </span>
+          </div>
+        </li>
+      </ul>
+      <div style="padding: 30px;"></div>
+    </div>
+  </div>
+  <div class="clear"></div>
+</div>

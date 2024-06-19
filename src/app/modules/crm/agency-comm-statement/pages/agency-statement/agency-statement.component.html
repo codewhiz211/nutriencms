@@ -1,0 +1,157 @@
+<section>
+    <div class="d-flex justify-content-between flex-column flex-md-row">
+        <div class="display-name">Commission Payment</div>
+    </div>
+</section>
+<div id="agency-search">
+    <div *ngIf="!isEmptyFilter" class="pt-2 px-3">
+        <div class="tags-list">
+            <div class="tags-list-label">Selected Filter(s) :</div>
+            <ul>
+                <ng-container *ngFor="let item of filters | keyvalue">
+                    <li>
+                        <span>{{this.FilterList(item.value.GridConditions)}}</span>
+                        <a href="javascript:void(0);" class="icon-close" (click)="onFilterClear(item.value.DataField, item.value.FilterType)"><i class="fas fa-times"></i></a>
+                    </li>
+                </ng-container>
+                <ng-container *ngFor="let item of formFields">
+                    <li *ngIf="bodyData[item] != null">
+                        <span>{{bodyData[item+'_val'] ? bodyData[item+'_val'] : bodyData[item]}}</span>
+                        <a href="javascript:void(0);" class="icon-close" (click)="onFormFilterClear(item)"><i class="fas fa-times"></i></a>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+        <a href="javascript:void(0)" title="Clear All" style="font-size: 14px;" (click)="removeFilter()">Clear All</a>
+    </div>
+    <div class="container pt-5">
+        <div class="row">
+            <div class="col-12">
+                <form [formGroup]="searchForm" class="search-input-form" (submit)="search()">
+                    <div class="form-row d-flex align-items-center justify-content-center my-3">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Agency Name</label>
+                                <ng-select
+                                    [items]="ddlData.Agencies"
+                                    bindValue="dmoagencyagncname1"
+                                    bindLabel="dmoagencyagncname1"
+                                    class="form-control"
+                                    formControlName="AgencyName"
+                                    (change)="onAgencyNameChange($event)">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Agency SAP ID</label>
+                                <ng-select
+                                    [items]="ddlData.Agencies"
+                                    bindValue="dmoagencyagncsapno"
+                                    bindLabel="dmoagencyagncsapno"
+                                    class="form-control"
+                                    id="DropDownList_agent"
+                                    formControlName="AgencyNumber"
+                                    (change)="onAgencySapChange($event)">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Activity</label>
+                                <ng-select
+                                    [items]="ddlData?.Activity"
+                                    bindValue="ValueField"
+                                    bindLabel="TextField"
+                                    class="form-control"
+                                    id="DropDownList_activity"
+                                    formControlName="Activity">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Transaction Type</label>
+                                <ng-select
+                                    [items]="ddlData?.TransType"
+                                    bindValue="dmotrnstyptranstypecode"
+                                    bindLabel="dmotrnstyptranstypedscr"
+                                    class="form-control"
+                                    formControlName="TransactionTypeCode">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">Sale Type</label>
+                                <ng-select
+                                    [items]="ddlData?.SaleType"
+                                    bindValue="SALECODE"
+                                    bindLabel="SALETYPENAME"
+                                    class="form-control"
+                                    id="DropDownList_agent"
+                                    formControlName="SaleTypeCode">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">From Date</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-sm btn-outline-secondary" (click)="d1.toggle()"
+                                            type="button">
+                                            <i class="far fa-calendar-alt" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control" ngbDatepicker #d1="ngbDatepicker" formControlName="FromDate" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="input-label">To Date</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-sm btn-outline-secondary" (click)="d2.toggle()"
+                                            type="button">
+                                            <i class="far fa-calendar-alt" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control" ngbDatepicker #d2="ngbDatepicker" formControlName="ToDate" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex align-items-center justify-content-end my-3">
+                                <button type="submit" class="btn btn-primary mr-2 submit-btn">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="search-results" [hidden]="!isSearched">
+                    <generic-grid
+                        [dataSource]="documentsData"
+                        [headerMap]="documentHeaderMap"
+                        [itemsCount]="documentsCount"
+                        [sNo]="false"
+                        [pageNum]="pageNum"
+                        (pageChange)="pageChange($event)"
+                        (actionClick)="actionClick($event)">
+                    </generic-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

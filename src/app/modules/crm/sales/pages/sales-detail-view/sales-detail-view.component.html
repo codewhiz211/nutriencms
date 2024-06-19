@@ -1,0 +1,176 @@
+<div class="sub-header">
+  <div class="breadcrumbs">
+    <a href="javascript:void(0);" (click)="go_back()"><i class="fas fa-home"></i></a>
+    <i class="fas fa-chevron-right arrow"></i>
+    <span>Sale # {{headerInformations.DMOCRM_HeaderInf_SaleID?.DMOVAL}}</span>
+    <span>{{alertMessage}}</span>
+  </div>
+  <!-- Trigger Buttons -->
+  <div class="triggers">
+    <a class="invoice-sale-btn" *ngIf="saleservice.IsAllowInvoiceFinalize && (isInvoiceSaleBtnVisible || isFinaliseBtnVisible) && isTriggerRole" (click)="CalculateSale()" title="Calculate Sale"><i class="fas fa-calculator"></i> <span>Calculate Sale</span></a>
+    <!-- <a class="delete-record-btn" (click)="isDelBtnActivated && show_delete_msg()" [class.disabled]="!isDelBtnActivated" title="Delete Record"><i class="fas fa-times"></i> <span>Delete Record</span></a> -->
+    <a class="edit-sale-header-btn" *ngIf="(!isFinalised && !isReversalCompleted)  && isTriggerRole" (click)="edit_sale_header()" title="Edit Sale Header"><i class="fas fa-edit"></i> <span>Edit Sale Header</span></a>
+    <!-- <a class="save-record-btn" (click)="save_record()" title="Save"><i class="fas fa-save"></i> <span>Save</span></a> -->
+    <a class="invoice-sale-btn" *ngIf="saleservice.IsAllowInvoiceFinalize && isInvoiceSaleBtnVisible  && isTriggerRole" (click)="Update_Stage_Confirmation('Invoiced')" title="Invoice Sale"><i class="fas fa-paper-plane"></i> <span>Invoice Sale</span></a>
+    <a class="finalise-sale-btn" *ngIf="saleservice.IsAllowInvoiceFinalize && isFinaliseBtnVisible  && isTriggerRole" (click)="Update_Stage_Confirmation('Finalised')" title="Finalise Sale"><i class="fas fa-check"></i> <span>Finalise Sale</span></a>
+    <a class="edit-sale-header-btn" *ngIf="isFinalised || isReversalCompleted" (click)="edit_sale_header()" title="View Sale Header"><i class="fas fa-edit"></i> <span>View Sale Header</span></a>
+    <a class="reversal-sale-btn" [ngClass]="{ 'disable': selectedRecords.length === 0 }" *ngIf="saleservice.IsAllowInvoiceFinalize && isFinalised  && isTriggerRole" (click)="ReverseSalePopup(ReverseSaleModel)" title="Reverse Sale"><i class="fas fa-check"></i> <span>Reverse Sale</span></a>
+    <a class="complete-reversal-btn" *ngIf="saleservice.IsAllowInvoiceFinalize && isReversalProcess  && isTriggerRole" (click)="update_stage('Reversal Completed')" title="Complete Reversal"><i class="fas fa-check"></i> <span>Complete Reversal</span></a>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <!-- Stages -->
+      <div class="row stages">
+        <ng-container *ngIf="isReversalProcess || isReversalCompleted">
+          <div class="col stage" [class.active]="isReversalProcess">
+            <a><span>In Process</span></a>
+          </div>
+          <div class="col stage" [class.active]="isReversalCompleted">
+            <a><span>Finalised</span></a>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isReversalProcess && !isReversalCompleted">
+          <div *ngFor="let stage of stages" class="col stage" [class.active]="stage.active">
+            <a><span>{{stage.DisplayName}}</span></a>
+          </div>
+        </ng-container>
+      </div>
+      <!-- Header Informations -->
+        <div class="row header-info">
+          <div class="header-info-item col">
+            <span class="header-info-item-label">Sale Date</span>
+            <span class="header-info-item-value" *ngIf="headerInformations['DMOCRM_HeaderInf_SaleDate']?.DMOVAL">{{headerInformations['DMOCRM_HeaderInf_SaleDate']?.DMOVAL  | date:dateFormat}}</span>
+            <span class="header-info-item-value" *ngIf="!headerInformations['DMOCRM_HeaderInf_SaleDate']?.DMOVAL">N/A</span>
+          </div>
+          <div class="header-info-item col">
+            <span class="header-info-item-label">Transaction Type</span>
+            <span class="header-info-item-value" *ngIf="headerInformations['DMOCRM_HeaderInf_TranType']?.DMOVAL">{{headerInformations['DMOCRM_HeaderInf_TranType']?.DMOVAL}}</span>
+            <span class="header-info-item-value" *ngIf="!headerInformations['DMOCRM_HeaderInf_TranType']?.DMOVAL">N/A</span>
+          </div>
+          <div class="header-info-item col">
+            <span class="header-info-item-label">Sale Type</span>
+            <span class="header-info-item-value" *ngIf="headerInformations['DMOCRM_HeaderInf_SaleType']?.DMOVAL">{{headerInformations['DMOCRM_HeaderInf_SaleType']?.DMOVAL}}</span>
+            <span class="header-info-item-value" *ngIf="!headerInformations['DMOCRM_HeaderInf_SaleType']?.DMOVAL">N/A</span>
+          </div>
+          <div class="header-info-item col">
+            <span class="header-info-item-label">Conducting Branch</span>
+            <span class="header-info-item-value" *ngIf="headerInformations['DMOCRM_HeaderInf_CndBrnc']?.DMOVAL">{{headerInformations['DMOCRM_HeaderInf_CndBrnc']?.DMOVAL}}</span>
+            <span class="header-info-item-value"  *ngIf="!headerInformations['DMOCRM_HeaderInf_CndBrnc']?.DMOVAL">N/A</span>
+          </div>
+          <div class="header-info-item col">
+            <span class="header-info-item-label">Processing Branch</span>
+            <span class="header-info-item-value" *ngIf="headerInformations['DMOCRM_HeaderInf_PrcBrnc']?.DMOVAL">{{headerInformations['DMOCRM_HeaderInf_PrcBrnc']?.DMOVAL}}</span>
+            <span class="header-info-item-value" *ngIf="!headerInformations['DMOCRM_HeaderInf_PrcBrnc']?.DMOVAL">N/A</span>
+          </div>
+          <div class="header-info-item col">
+            <span class="header-info-item-label">Sale Description</span>
+            <span class="header-info-item-value" *ngIf="headerInformations['DMOCRM_HeaderInf_SaleDesc']?.DMOVAL">{{headerInformations['DMOCRM_HeaderInf_SaleDesc']?.DMOVAL}}</span>
+            <span class="header-info-item-value" *ngIf="!headerInformations['DMOCRM_HeaderInf_SaleDesc']?.DMOVAL">N/A</span>
+          </div>
+          <div class="header-info-item col">
+            <span class="header-info-item-label">Contract ID</span>
+            <a *ngIf="headerInformations['DMOCRM_HeaderInf_ContID']?.DMOVAL.indexOf(',') > -1" href="javascript:void(0)" [ngbPopover]="tipContent" [closeDelay]="2000" triggers="mouseenter:mouseleave"> ...</a>
+            <span class="header-info-item-value" *ngIf="headerInformations['DMOCRM_HeaderInf_ContID']?.DMOVAL && headerInformations['DMOCRM_HeaderInf_ContID']?.DMOVAL.indexOf(',')  === -1">{{headerInformations['DMOCRM_HeaderInf_ContID']?.DMOVAL}}</span>
+            <span class="header-info-item-value" *ngIf="!headerInformations['DMOCRM_HeaderInf_ContID']?.DMOVAL">N/A</span>
+          </div>
+          <ng-template #tipContent>
+            <div>
+            <a href="javascript:void(0)" *ngFor="let cntrct of textSepratorHover(headerInformations['DMOCRM_HeaderInf_ContID']?.DMOVAL , ',')">
+              {{cntrct}} <br>
+            </a>
+          </div>
+        </ng-template>
+          <div class="header-info-item col">
+            <span class="header-info-item-label">Saleyard</span>
+            <span class="header-info-item-value" *ngIf="headerInformations['DMOCRM_HeaderInf_Saleyard']?.DMOVAL">{{headerInformations['DMOCRM_HeaderInf_Saleyard']?.DMOVAL}}</span>
+            <span class="header-info-item-value" *ngIf="!headerInformations['DMOCRM_HeaderInf_Saleyard']?.DMOVAL">N/A</span>
+          </div>
+          </div>        
+    </div>
+  </div>
+</div>
+<div>
+  <!-- BMO Tabs -->
+  <div class="bmo-tabs">
+    <app-tabs (tabSelected)="tabSelected($event)">
+      <app-tab [title]="'Sale Summary'" [bmodisplay]="true">
+        <div class="p-3">
+          <app-sales-summary  [stage]="currentStage" [saleProcessorId]="SaleProcessorIds"></app-sales-summary>
+        </div>
+      </app-tab>
+      <app-tab [title]="'Lot Summary'" [bmodisplay]="true" [active]="true">
+        <div class="p-3">
+          <app-lots-grid-view
+            [stage]="currentStage"
+            [Config]="{
+              ProcessName: 'LMKLivestockLots',
+              IsSubProcess: true,
+              HideSelectAll: false,
+              HideActionCol: false,
+              HideDeleteActionIcon: true,
+              ShowBulkUpdateButton: true,
+              CanAddNewRow: true,
+              TriggerName: 'TRGR_LotPreProcessing_Calculate',
+              ParentTransactionId: transactionId
+            }">
+          </app-lots-grid-view>
+        </div>
+      </app-tab>
+      <app-tab [title]="'Vendor Terms'" *ngIf="!(isReversalProcess || isReversalCompleted)" [bmodisplay]="true">
+        <div class="p-3">
+          <app-sales-vendor-terms [stage]="currentStage" [CompCode] = "CompCode" [CondCompCode]="CondCompCode"></app-sales-vendor-terms>
+        </div>
+      </app-tab>
+      <app-tab [title]="'Attachments'" [bmodisplay]="true">
+        <div class="p-3">
+          <app-document-view [isSale] = "true"></app-document-view>
+        </div>
+      </app-tab>
+      <app-tab [title]="'Documents'" [bmodisplay]="true">
+        <div class="p-3">
+          <app-sales-documents [stage]="currentStage" [transactionId]="transactionId"></app-sales-documents>
+        </div>
+      </app-tab>
+      <app-tab [title]="'Notes'" [bmodisplay]="true">
+        <div class="p-3">
+          <app-notes></app-notes>
+        </div>
+      </app-tab>
+    </app-tabs>
+  </div>
+</div>
+
+<ng-template #ReverseSaleModel let-modal>
+  <form class="reverse-sale-form" #myForm="ngForm" (submit)="ReverseSale(myForm.value)">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Reverse Sale</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-center">
+          <div class="form-group mt-4">
+            <div class="input-group">
+              <label class="radio-container">Reverse Sale
+                <input type="radio" name="ReverseType" value="RS" ngModel/>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+            <div class="input-group">
+              <label class="radio-container">Condemned Beast
+                <input type="radio" name="ReverseType" value="CB" ngModel/>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-end my-3">
+          <button type="button" class="btn btn-clear cancel-btn" (click)="modal.dismiss(false)">Cancel</button>
+          <button type="submit" [disabled]="myForm.value.ReverseType == ''" class="btn btn-primary mr-2 submit-btn">Next</button>
+        </div> 
+    </div>
+  </form>
+</ng-template>

@@ -1,0 +1,80 @@
+.quick-mind {
+	height: 30px;
+	width: 123px;
+	color: #4C9E00;
+	font-size: 22px;
+	letter-spacing: 0.66px;
+	line-height: 30px;
+}
+
+.corner-detail {
+    &-item {
+        display: flex;
+        flex-direction: column;
+        padding: 30px 20px;
+
+        &-label {
+            color: #36424F;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.43px;
+        }
+
+        &-value {
+            color: #000000;
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 0.92px;
+        }
+    }
+}
+.search-center {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.find-a-topic {
+	height: 30px;
+	// width: 129px;
+	color: #4C9E00;
+	font-size: 22px;
+	letter-spacing: 0.66px;
+	line-height: 30px;
+}
+.group {	height: 35px;	width: 623px;}
+
+.rectangle input{
+	height: 24px;
+	width: 459px;
+	border: 1px solid #C3BBB1;
+	border-radius: 3px;
+	background-color: #FFFFFF;
+}
+
+.search {
+	height: 16px;
+	width: 23px;
+	color: #79797E;
+	font-family: "Font Awesome 5 Pro";
+	font-size: 16px;
+	letter-spacing: 0.26px;
+	line-height: 16px;
+	text-align: right;
+}
+.background {
+	height: 35px;
+	width: 150px;
+	border-radius: 5px;
+	background-color: #4C9E00;
+}
+.button1 {
+	height: 17px;
+	width: 132.2px;
+	color: #FFFFFF;
+	font-size: 12px;
+	letter-spacing: 0.35px;
+	line-height: 17px;
+	text-align: center;
+}
+

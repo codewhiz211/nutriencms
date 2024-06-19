@@ -1,0 +1,14 @@
+<div class="accordion-item" [ngClass]="{
+  'accordion-item--isOpen': state == 'isOpen',
+  'accordion-item--isClose': state == 'isClose',
+  'accordion-item--isInvalidForm': hasInvalidForm === true
+}">
+  <div class="accordion-item__header" (click)="onClickHeader()">
+    <ng-content select=".accordion-item-header"></ng-content>
+    {{ title }}
+    <i class="fa fa-chevron-down" [ngClass]="state == 'isOpen' ? 'up' : 'down'" aria-hidden="true"></i>
+  </div>
+  <div class="accordion-item__content" [@accordionItemContentAnimation]="state">
+    <ng-content select=".accordion-item-content"></ng-content>
+  </div>  
+</div>

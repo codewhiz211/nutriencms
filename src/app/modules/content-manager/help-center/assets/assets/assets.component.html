@@ -1,0 +1,47 @@
+<div class="breadcrumbs">
+    <i class="fas fa-home"></i> <span><i class="fas fa-chevron-right"></i></span> Help Centre <span><i class="fas fa-chevron-right"></i></span> Assets
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+<div class="p-1"></div>
+<!--Gloabl Search-->
+<form class="position-relative text-center"
+  (ngSubmit)="globalSearch(txtGlobal.value)">
+  <div class="p-2">
+    <div class="wfMainGSearch">
+      <div class="globalSearchWrap">
+        <div class="position-relative">
+          <input id="globalSearch" #txtGlobal placeholder="Global Search" type="search">
+          <button aria-label="Search" class="btn-search" routerlink="" style="z-index: 1;" tabindex="0" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div></div>
+<div class="p-1"></div>
+<div class="table-filters-group">
+    <div class="button-group" style="padding: 3px 5px;">
+      <button *ngIf="isBuyerAccess" class="btn btn-primary-special btn-small" type="button" (click)="openAddEditPopup(null)">Add Asset</button>
+      <button *ngIf="isBuyerAccess" class="btn btn-primary-special btn-small" type="button" (click)="openStatus()">Change Status</button>
+    </div>
+</div>
+<div class="p-1"></div>
+<div class="grid">
+  <generic-grid
+    [BuyerAccessRole]="isBuyerAccess" 
+    [FromDateobj]="FromDateobj"
+    [ToDateobj]="ToDateobj" 
+    [filterValue1]="filterValue1" [filterValue2]="filterValue2" [ConditionOpt1]="ConditionOpt1"
+    [ConditionOpt2]="ConditionOpt2" [logicalOpt]="logicalOpt" [dataSource]="dataSource" [headerMap]="HeaderMap"
+    [itemsCount]="itemsCount" [sNo]="false" [pageNum]="pageNum" (pageChange)="pageChange($event)"
+    (actionClick)="actionClick($event)" #genericgridcomponent></generic-grid>
+  <a class="btnFltr" href="javascript:void(0);" title="Remove Filter" (click)="genericgridcomponent.OnRemoveFilterClick();removeFilter(txtGlobal)">Remove
+    Filter</a>
+</div>
+</div>
+</div>
+</div>

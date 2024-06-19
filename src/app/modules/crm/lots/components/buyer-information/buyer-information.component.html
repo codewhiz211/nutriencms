@@ -1,0 +1,134 @@
+<form [formGroup]="lotDetailForm" (ngSubmit)="onSubmit()">
+    <div class="p-3">
+        <!-- <input type="hidden" id="TextBox_dmolotlotinforlotid" class="form-control"
+            formControlName="DMOLot_LotInfo_LotID" /> -->
+        <div class="form-row py-0 vendor-buyer-section">
+            <div class="col-md-12">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Buyer ID</label>
+                            <input
+                                type="text"
+                                id="TextBox_dmolotbinfobuyerid"
+                                class="form-control"
+                                [ngClass]="{'is-invalid': (submitted && f.DMOLot_BInfo_BuyerId.errors) || ValidateBuyerIdMessage == 'Buyer Id is not exist'}"
+                                formControlName="DMOLot_BInfo_BuyerId"
+                                [ngbTypeahead]="buyerIdSearch"
+                                [editable]="false"
+                                (selectItem)="selectBuyer($event, 'dmocustmstrsapno')"
+                                (blur)="checkValue($event, 'dmolotbinfobuyerid')"
+                          />
+                          <div *ngIf="submitted && f.DMOLot_BInfo_BuyerId.errors?.required" class="invalid-feedback">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Buyer Name</label>
+                            <input
+                              type="text"
+                              id="TextBox_dmolotbinfobuyername"
+                              class="form-control"
+                              [ngClass]="{'is-invalid': (submitted && f.DMOLot_BInfo_BuyerName.errors) || ValidateBuyerNameMessage == 'Buyer name is not exist'}"
+                              formControlName="DMOLot_BInfo_BuyerName"
+                              [ngbTypeahead]="buyerNameSearch"
+                              [editable]="false"
+                              (selectItem)="selectBuyer($event, 'dmocustmstrcustname1')"
+                              (blur)="checkValue($event, 'dmolotbinfobuyername')"
+                              #buyerName
+                            />
+                            <div *ngIf="submitted && f.DMOLot_BInfo_BuyerName.errors?.required" class="invalid-feedback">This field is required</div>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Buyer Branch </label>
+                            <input
+                                type="text"
+                                id="DropDownList_dmolotbinfobuyerbrc"
+                                formControlName="DMOLot_BInfo_BuyerBrc"
+                                class="form-control"
+                                [ngClass]="{'is-invalid': (submitted && f.DMOLot_BInfo_BuyerBrc.errors) || ValidateBuyerBranchMessage === 'Buyer branch is not exist'}"
+                                [ngbTypeahead]="branchSearch"
+                                [editable]="true"
+                                [inputFormatter]="formatter"
+                                [resultFormatter]="formatter"
+                                (selectItem)="selectBranch($event, 'dmolotbinfobuyerbrc')"
+                            />
+                            <div *ngIf="submitted && f.DMOLot_BInfo_BuyerBrc.errors?.required" class="invalid-feedback">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Buyer PIC</label>
+                            <input
+                                *ngIf="!isDdl"
+                                type="text"
+                                maxlength="8"
+                                id="TextBox_dmolotbinfobuyerpic"
+                                class="form-control uppercase"
+                                [ngbTypeahead]="vendorPICSearch"
+                                [editable]="true"
+                                [ngClass]="{'is-invalid': (submitted && f.DMOLot_BInfo_BuyerPic.errors) }"
+                                formControlName="DMOLot_BInfo_BuyerPic"
+                                (blur)="checkValue($event, 'dmolotbinfobuyerpic')"
+                            />
+                            <ng-select
+                                *ngIf="isDdl"
+                                [items]="buyerPic"
+                                [addTag]="addPICTagFn"
+                                class="form-control uppercase"
+                                [ngClass]="{'is-invalid': (submitted && f.DMOLot_BInfo_BuyerPic.errors)}"
+                                bindLabel="dmocuspiccustpic"
+                                bindValue="dmocuspiccustpic"
+                                id="DropDownList_dmolotbinfobuyerpic"
+                                formControlName="DMOLot_BInfo_BuyerPic"
+                            >
+                            </ng-select>
+                            <div *ngIf="submitted && f.DMOLot_BInfo_BuyerPic.errors?.required" class="invalid-feedback">This field is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Invoice Reference</label>
+                            <input
+                            type="text"
+                            id="TextBox_dmolotbinfoinvoiceref"
+                            class="form-control"
+                            formControlName="DMOLot_BInfo_InvoiceRef"
+                          />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Internal Buyer Branch Rebate %</label>
+                            <input
+                                type="number"
+                                id="TextBox_dmolotbinforate"
+                                class="form-control"
+                                [ngClass]="{'is-invalid': (f.DMOLot_BInfo_Rate.errors) }"
+                                formControlName="DMOLot_BInfo_Rate"
+                            />
+                        </div>
+                        <div *ngIf="f.DMOLot_BInfo_Rate.errors" class="invalid-feedback">
+                            <div *ngIf="f.DMOLot_BInfo_Rate.errors.min">minimum 0</div>
+                            <div *ngIf="f.DMOLot_BInfo_Rate.errors.max">maximum 100</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="input-label">Total Selected Record: {{transactionIds?.length}} </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="d-flex align-items-center justify-content-end my-3">
+            <button type="button" class="btn btn-primary cancel-btn" (click)="activeModal.dismiss('Close')">Cancel</button>
+            <button type="submit"  class="btn btn-primary mr-2 submit-btn">Update</button>
+        </div>
+    </div>
+</form>

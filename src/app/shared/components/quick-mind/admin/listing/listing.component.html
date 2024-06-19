@@ -1,0 +1,92 @@
+
+<section class="listing_wrapper">
+  <div class="process_section">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Process</label>
+            <div class="col-sm-10">
+              <ng-container>
+                  <ng-select class="select_process" placeholder="Select Condition" [searchable]="true" (change)="setProcessName($event)" name="process name" [(ngModel)]="processDisplayName"  #ProcessName="ngModel">
+                    <ng-option aria-selected="true" value="">Select Condition...</ng-option>
+                    <ng-option *ngFor="let processname of processData" [value]="processname">{{processname.DisplayName}}</ng-option>
+                  </ng-select>
+                </ng-container>
+            </div>
+            <span class="drop-down-danger" >{{dropdownProcessValidateMessage}}</span>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="add_delete_question">
+    <a class="config-icon" title="Configure View" (click)="openlistingDetailPopup(null)">
+      Add New Question
+    </a>
+    <div class="delete_btn" (click)="deleteQuestions()">
+        <i class="fas fa-trash-alt"></i>
+        <span>Delete</span>
+    </div>
+  </div>
+  <div class="questions_wrapper">
+    <div class="update_detail">
+      <button type="button" class="btn btn-primary" [ngClass]="{'active': activeIds.length != 0?true:false}" (click)="openAll()">Expand All</button>
+      <button type="button" class="btn btn-primary" [ngClass]="{'active': activeIds.length == 0?true:false}" (click)="closeAll()" >Collapse All</button>
+    </div>
+    <div class="question_inner">
+      <div class="QuickAccodionWrap">
+        <ngb-accordion #acc="ngbAccordion" [closeOthers]="closePannel" [activeIds]="activeIds" (panelChange)="toggleAccordian($event)">
+          <ngb-panel title="{{item?.QUES}}" *ngFor="let item of allQuickMindForPaging; let i = index" id="QM{{item.QMID}}">
+              <ng-template ngbPanelHeader>
+                  <button class="SideRectangle" ngbPanelToggle>
+                    <span  [ngClass]="GetClass('QM' + item.QMID)"></span>
+                  </button>
+                  <div class="sideText"><span class="f14">{{item?.QUES}}</span></div>
+                    <div class="right_pannel">
+                        <div class="right_content">
+                          <label class="checkbox" style="margin-top:5px">
+                            <input type="checkbox" value="" (change)="checkedBoxes(item.QMID , $event)">
+                            <i class="skin"></i>
+                          </label>
+                          <a title="Edit" (click)="openlistingDetailPopup(item)">
+                            <i class="fas fa-pen"></i>
+                          </a>
+                      </div>
+                    </div>
+              </ng-template>
+            <ng-template ngbPanelContent>
+              <span class="f14">
+                <div class="my_tabPannel">
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                      <span class="nav-link" [ngClass]="{'active': 'answer'+i == Activtab || 'tag'+i != Activtab}" (click)="showHideTabs('answer' , i)">Answer</span>
+                      <!-- <span class="nav-link" [ngClass]="{'active':'answer'+i == Activtab, 'active':'tag'+i != Activtab}" (click)="showHideTabs('answer' , i)">Answer</span> -->
+                    </li>
+                    <li class="nav-item">
+                      <span class="nav-link" [ngClass]="{'active':'tag'+i == Activtab}" (click)="showHideTabs('tag' , i)">Tag</span>
+                    </li>
+                  </ul>
+                  <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane"  id="home" [ngClass]="{'active': 'answer'+i == Activtab || 'tag'+i != Activtab}" [innerHTML]="item.ANSW"></div>
+                    <div class="tab-pane" id="profile" [ngClass]="{'active':'tag'+i == Activtab}">{{item.TAG}}</div>
+                    <!-- [hidden]="'answer'+i != Activtab"
+                    [hidden]="'tag'+i != Activtab" -->
+                  </div>
+                </div>
+              </span>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion> 
+        <div style="text-align: center;" *ngIf="allQuickMind.length == 0">
+            No data to display
+        </div>
+        <div class="my_pagination" *ngIf = "allQuickMind.length > 0?true:false">
+          <ngb-pagination class="pagination_data" [collectionSize]="recordCount" [(page)]="pageIndex" [rotate]="true" [ellipses]="false" [pageSize]="pageSize" [maxSize]="pageCount" (pageChange)="pageChanged($event)" [boundaryLinks]="true"></ngb-pagination>
+          <div class="pagination_counting"> {{startIndex}} - {{maxIndex}} of {{recordCount}}</div>
+        </div>
+          
+        
+      </div>
+    </div>
+  </div>
+  
+</section>

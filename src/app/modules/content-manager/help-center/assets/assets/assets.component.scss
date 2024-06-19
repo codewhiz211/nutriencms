@@ -1,0 +1,262 @@
+
+.grid-pad {
+    padding: 10px 0; 
+    .grid-pad  col-1-4:last-of-type {padding-right: 20px;}
+}
+.tableWrap{overflow:visible;}
+a {text-decoration: none;}
+h3 {text-align: center; margin-bottom: 0;}
+h4 {position: relative;}
+.grid { 
+    .col-1-4 {width: 25%; float:left; padding-right:20px;padding-bottom:20px;
+        .module {padding: 20px;text-align: center;color: #eee;max-height: 120px; min-width: 120px; background-color: #607D8B;border-radius: 2px;}
+        .module:hover {background-color: #EEE;cursor: pointer;color: #607d8b;}
+        .col-1-4:last-of-type{Padding-right:0px;}
+    }
+}
+ .ColResize{position:relative;
+    .resize{
+        position:absolute;top:0px;right:0px;width:5px;cursor:col-resize;user-select:none;height:100%;
+    }
+ }
+
+
+.open-popup-btn {
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    font-size: 25px;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    @media (max-width:767.99px){
+        position: relative;
+        margin-bottom: 8px;
+    }
+}
+
+.config-icon {
+    line-height: 0;
+    padding: 7px;
+    color: #4d4d51;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.tags-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    &-label {
+        font-size: 12px;
+    }
+
+    ul {
+        font-size: 12px;
+        list-style: none;
+        display: flex;
+        padding: 0;
+        margin: 0;
+
+        li {
+            background-color: #eee;border-radius: 20px;padding: 2px 5px 2px 10px;margin: 3px;align-items: center;display: flex;font-size: 10px;
+
+            span {
+                font-size: 10px;
+                font-weight: 700;
+            }
+
+            .icon-close {
+                text-align:center;background-color:#d0021b;color:#fff;border-radius:50%;margin-left:5px;font-size:11px;padding:2px;width:20px;
+            }
+        }
+        li.resetFilter{padding:2px 10px;cursor:pointer;background: #fff;border:1px solid #eee;}
+    }
+}
+
+.stateFilterGroup{
+    a {
+        font-size:14px;
+        display:inline-block;
+        margin:5px;
+        text-align:center;
+        padding:4px 10px 2px;
+        width:auto;
+        color: black;
+        border-bottom: 3px solid black;
+        text-decoration: none;
+        font-weight: bold;
+        letter-spacing: 0.43px;
+
+        &.active {
+            border-bottom:3px solid #4c9d01;
+            color: #4c9d01;
+        }
+    }
+}
+
+.table-filters-group {
+    display: flex;
+    background-color:#f2f2f2;
+    border-top:1px solid #cbcbcb;
+    border-bottom:1px solid #cbcbcb;
+    padding:0px;
+
+    @media (max-width:768px){
+        flex-direction: column;
+    }
+}
+
+.export-btns-group {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    
+    a {
+        font-weight: bold;
+        font-size: 10px;
+        display: inline-block;
+        height: 34px;
+        padding: 5px;
+        margin-left: 10px;
+        line-height: 28px;
+        text-decoration: none;
+        color: #5a5a5a;
+
+        i {
+            font-size: 18px;
+            margin-right: 4px;
+        }
+    }
+}
+
+.grid-filter-wrap{float:right;
+    .dropdown-toggle{
+        &:after{display:none;}
+    }
+    .dropdown-menu{padding:10px; background: #f2f2f2;border:1px solid #cbcbcb;border-radius:0px;
+        ul{margin:0px;font-size: 12px;
+            li{padding:2px;
+                .form-group{margin-bottom:4px;
+                    .form-control{font-size:11px;outline:none;border-radius:0px;}
+                    select.form-control{background: #f2f2f2;}
+                    .btn.calendar{border-radius:0px;}
+                }
+            }
+ 
+        }
+    }
+}
+ 
+    .basicTable{
+        th{
+            padding-bottom: 0px !important; 
+            padding-top: 2px !important; 
+            vertical-align: top;
+        }
+         td{
+            padding-bottom: 0px !important; 
+            padding-top: 2px !important; 
+            vertical-align: top;
+        }
+       tbody tr {
+            border:0 !important;
+        }
+       .active{
+           //background: #5ffcb847 !important;// #007E48
+           background-color: rgba(0,126,72,0.1) !important;
+       }
+    }
+   
+ .color-code{
+     height: 13px;width: 13px;border-radius: 13px; margin: 0 2px 3px 0;display:inline-block;vertical-align:middle;padding-left:10px;line-height:30px;
+
+ }
+ .sListing2 .dropdown-menu li{
+    &:last-child{border-top:solid 1px #c3c3c3;}
+ }
+ .modal-content{border-radius: 0px;}
+@media (min-width: 992px){
+    .modal-lg{max-width: 1000px !important;}
+    }
+    
+    .checkboxMargin
+    {
+        margin-right: 3px;
+        margin-top: -4px;
+    vertical-align: middle;
+    }
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .list:last-child {
+    border: none;
+  }
+  .drag-grip{
+    padding-right: 4px;
+    padding-top: 2px;
+    color: #ccc;
+    font-size: 12px;
+    cursor: move;
+  }
+  @media (min-width: 576px){
+    .modal-dialog {
+        margin: 1.00rem auto;
+    }
+}
+
+.btn-primary-special {
+    background-color: #fff;
+    background-image: linear-gradient(to bottom, #fff 0%, #fff 100%);
+    border: 1px solid #ccc;
+    color: #333 !important;
+    border-radius: 5px;
+  }
+  
+  .btn-small {
+    height: 26px;
+    padding: 0px 19px 0px 18px;
+    font-size: 1.0rem;
+    margin: 0px 0px 0px 10px;
+  }
+  
+  .btnFltr {
+    display: inline-block;
+    vertical-align: top;
+    color: #fff;
+    background-color: #a6a6a6;
+    padding: 5px 10px;
+    margin: 0px 0px 10px 10px;
+    text-decoration: none !important;
+  }
+  .videoWrap {
+    width: 100%;
+    padding-bottom: 57%;
+    position: relative;
+}
+.btnFltr {
+    display: inline-block;
+    vertical-align: top;
+    color: #fff;
+    background-color: #a6a6a6;
+    padding: 5px 10px;
+    margin: 0px 0px 10px 10px;
+    text-decoration: none !important;
+  }

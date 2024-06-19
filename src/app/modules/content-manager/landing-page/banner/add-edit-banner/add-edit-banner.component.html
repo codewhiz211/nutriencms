@@ -1,0 +1,105 @@
+<section class="listing_detail">
+  <h3>{{addEditBanner}} Banner</h3>
+  <div class="corner-button">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="listing_detail_form">
+    <form #userForm="ngForm" novalidate autocomplete="off" (ngSubmit)="onSubmit(userForm.valid,userForm);false">
+      <!-- <input type="hidden" name="DataID" [(ngModel)]="addEditData.DataID" #QmindId="ngModel"> -->
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-6">
+            <label>Upload Photo*</label>
+            <!-- <input type="text" class="form-control" placeholder="" name="Name" [(ngModel)]="addEditData"
+              #Name="ngModel" required> -->
+            <div class="custom-file">
+              <!-- <input type="file" class="custom-file-input" id="customFile" name="uploadPhoto" [(ngModel)]="addEditData.Name" (change)="uploadPhoto($event)" #ImageName="ngModel"> -->
+              <input #fileInput (click)="fileInput.value = ''" type="file" (change)="handleFileInput($event, content)" class="custom-file-input"
+                id="customFile" name="uploadPhoto" [(ngModel)]="addEditData.Name" #ImageName="ngModel"
+                [required]="fileName?false:true">
+              <!-- <label class="custom-file-label" for="customFile">{{selectedFileName}}</label> -->
+              <label class="custom-file-label" for="customFile">{{fileName}}</label>
+              <span class="filemessage">Image must be .jpg or .png and under 60 MB.</span>
+            </div>
+            <a class="downloadlink" *ngIf="(addEditBanner === 'Edit')" href="javascript:void(0)" (click)="downloadFile()">Click to download file</a>
+            <!-- <div *ngIf="selectedFileName">
+                  <label>{{selectedFileName}}</label>
+                </div> -->
+            <div *ngIf="ImageName.invalid && ((ImageName.dirty || ImageName.touched)||(userForm.submitted && formVal))">
+              <span class="err_message" *ngIf="ImageName.errors.required">Image required</span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label>Status*</label>
+            <select class="form-control" name="Status" [(ngModel)]="addEditData.Status" #Status="ngModel" required>
+              <option *ngFor="let setStatus of bannerStatus">{{setStatus.status}}</option>
+            </select>
+            <div *ngIf="Status.invalid && ((Status.dirty || Status.touched)||(userForm.submitted && formVal))">
+              <span class="err_message" *ngIf="Status.errors.required">Status is required</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Header Text</label>
+        <textarea class="form-control" rows="4" placeholder="" maxlength="50" name="Description" [(ngModel)]="addEditData.Description"
+          #Description="ngModel">
+            </textarea>
+      </div>
+
+      <div class="update_detail" *ngIf="isShowSave">
+        <button type="button" class="btn btn-primary" (click)="activeModal.close(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save & Publish</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Crop Image</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" role="document" aria-label="Modal heading text content">
+    <div class="filemessage">Max image size will be Height : {{height}}px and Width : {{width}}px</div>
+      <div class="videoWrap">
+        <image-cropper
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [onlyScaleDown]="true"          
+          [aspectRatio]="width / height"
+          [cropperMinWidth]="width"
+          [cropperMinHeight]="height"
+          [resizeToWidth]="width"
+          [transform]="transform"
+          format="png"
+          (imageCropped)="imageCropped($event)">
+        </image-cropper>
+
+        <div class="input-range" style="float: right;">
+          <!-- <label for="">Zoom</label> -->
+          <div class="zoom">
+            <button class="btn btn-secondary btn-sm" (click)="onZoomOut()"><i class="fas fa-search-minus"></i></button>
+            <!-- <input type="range" (input)="onZoomChange($event)"> -->
+            <button class="btn btn-secondary btn-sm" (click)="onZoomIn()"><i class="fas fa-search-plus"></i></button>
+          </div>
+        </div>
+        <ng-container *ngIf="croppedImage.base64">
+          <img height="200px" width="200px" [src]="croppedImage.base64"/>
+          <!-- <div>Image Size Height : {{height}}px, Width : {{width}}px</div> -->
+        </ng-container>
+      </div>
+    </div>
+  <div class="modal-footer">
+    <div class="cta-button-group">
+      <button class="btn btn-clear btn-small" (click)="modal.dismiss('Cross click'); addEditData.Name = ''; croppedImage = ''" type="button" data-dismiss="modal">Close</button>    
+      <button class="btn btn-primary btn-small" (click)="Cropped(modal)" type="button" data-dismiss="modal">Crop & Close</button> 
+    </div>
+  </div>
+  <app-loader *ngIf="!croppedImage.base64"></app-loader>
+</ng-template>

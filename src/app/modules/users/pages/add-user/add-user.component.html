@@ -1,0 +1,142 @@
+<div class="container">
+  <button type="button" class="btn btn-light" routerLink="/e-saleyard/users/grid">
+    <i class="fas fa-arrow-left"></i>
+  </button>
+  <h3>Add Buyer</h3>
+  <div class="contents">
+    <div class="contents-title">
+      <h4>Account Details</h4>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="form-group col-md-5">
+          <label for="accountStatus">Account Status</label>
+          <select id="accountStatus" class="form-control" formControlName="accountStatus" [ngClass]="{ 'is-invalid': submitted && f.accountStatus.errors }">
+            <!-- <option value="New">New</option>
+            <option value="Pending">Pending</option> -->
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+            <option value="3">Suspended</option>
+          </select>
+          <div *ngIf="submitted && f.accountStatus.errors" class="invalid-feedback">
+            <div id="accountStatus-error" *ngIf="f.accountStatus.errors.required">
+              Account status is required
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-5"></div>
+
+        <div class="form-group col-md-5">
+          <label for="firstName">First Name</label>
+          <input id="firstName" type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+          <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+            <div id="firstName-error" *ngIf="f.firstName.errors.required">
+              First name is required
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-1"></div>
+
+        <div class="form-group col-md-5">
+          <label for="lastName">Last Name</label>
+          <input id="lastName" type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+          <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+            <div id="lastName-error" *ngIf="f.lastName.errors.required">Last name is required</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-5">
+          <label for="email">Email</label>
+          <input id="email" type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+          <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+            <div id="email-error" *ngIf="f.email.errors.required">Email is required</div>
+            <div id="email-error2" *ngIf="f.email.errors.email">Enter valid email</div>
+          </div>
+        </div>
+
+        <div class="col-md-1"></div>
+
+        <div class="form-group col-md-5">
+          <label for="phone">Phone</label>
+          <input id="phone" type="text" formControlName="phone" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }" />
+          <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+            <div id="phone-error" *ngIf="f.phone.errors.required">Phone number is required</div>
+            <div id="phone-error2" *ngIf="f.phone.errors.pattern">Enter valid phone number</div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-5">
+          <label for="password">Password</label>
+          <input id="password" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+            <div id="password-error" *ngIf="f.password.errors.required">Password is required</div>
+          </div>
+        </div>
+
+        <div class="col-md-1"></div>
+
+        <div class="form-group col-md-5">
+          <label for="confirmPassword">Confirm Password</label>
+          <input id="confirmPassword" type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+          <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+            <div id="confirmPassword-error" *ngIf="f.confirmPassword.errors.required">
+              Confirm password is required
+            </div>
+            <div id="confirmPassword-error2" *ngIf="f.confirmPassword.errors.passwordsNotMatch">
+              Passwords does not match
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-md-12 mt-2 mb-2" *ngIf="accountNumberList.length>0">
+          <table class="table table-sm table-borderless table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Trading Name</th>
+                <th scope="col">Nutrien Account Number</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let acc of accountNumberList; index as i">
+                <td></td>
+                <td>{{ acc }}</td>
+                <td>Pending</td>
+                <td>
+                  <button (click)="editAccountNumber(i)" type="button" class="btn btn-lite btn-sm">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <button (click)="deleteAccountNumber(i)" type="button" class="btn btn-lite btn-sm">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="form-group col-md-5">
+          <label for="landmarkAccountNumber">Nutrien Account Number</label>
+          <span class="landmark-acc">
+            <input id="landmarkAccountNumber" type="text" formControlName="newAccountNumber" class="form-control" />
+            <button (click)="addOrSaveEditedAccountNumber()" type="button" class="btn btn-lite btn-sm"> <i class="fas fa-plus-circle" style="font-size: 1.6em;">
+              </i></button>
+          </span>
+        </div>
+
+        <div class="col-md-5"></div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" [disabled]="loading" class="btn btn-sm btn-primary mr-1">Save</button>
+        <img *ngIf="loading" class="pl-3"
+             src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        <button type="reset" class="btn btn-sm">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

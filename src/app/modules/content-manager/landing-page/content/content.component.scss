@@ -1,0 +1,129 @@
+
+
+.page-wrapper1-1 {
+    background-color: #fff;
+    overflow: hidden;
+    padding-bottom: 65px;
+    position: relative;
+    padding: 15px;
+    min-height: 450px;
+    border-left: 1px solid #cbcbcb;
+}
+hr.lite {
+    background-color: #cccccc;
+}
+hr, .hr-or {
+    display: block;
+    height: 1px;
+    margin: 15px 0;
+    border: none;
+    background-repeat: repeat-x;
+    background-color: #666666;
+    position: relative;
+}
+* {
+    box-sizing: border-box;
+}
+hr {
+    display: block;
+    unicode-bidi: isolate;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+    overflow: hidden;
+    border-style: inset;
+    border-width: 1px;
+}
+.padding-xs {
+    padding: 10px;
+}
+strong {
+    font-weight: bold;
+}
+
+.paddingTop-xxs {
+    padding-top: 5px;
+}
+.p-small {
+    font-size: 1.4rem;
+    line-height: 1.6rem;
+}
+p {
+    margin: 0 0 15px 0;
+    line-height: 2rem;
+}
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+.grid-m {
+    margin-top: -20px;
+    margin-left: -20px;
+}
+
+
+.custom-file {
+    .custom-file-label {
+        border: 1px solid #ccc;
+        height:38px;
+        &::after {width: 100px;
+            content: "Browse";
+            color: white;text-align: center;
+            height:36px;
+            line-height:24px;
+            background-color:#f3f3f3;
+            background-image:linear-gradient(to bottom, #fcfcfc 0%, #f3f3f3 100%);
+            border-color:#ccc;
+            border-left:1px solid #ccc;color:#333;display:inline-block;
+            transition-duration:.3s;transition-timing-function:linear;transition-delay:0s;
+        }
+    }
+}
+button {
+    font-size: 12px;
+  }
+  .filemessage{
+    font-size: 12px;
+}
+.listing_detail_form{
+    padding: 0 6px;
+    label{
+        font-size: 13px;
+        color: #4D4D51;
+        font-weight: bold;
+    }
+
+}
+.update_detail{
+    padding: 40px 0 25px;
+    text-align: right;
+    button{
+        margin-left: 10px;
+        width: 150px;
+        &:first-child{
+            border-color: #4C9E00;
+            background-color: #4C9E00;
+           
+        }
+    }
+}
+.err_message{
+    font-size: 12px;
+    color: red;
+}
+.filemessage{
+    font-size: 12px;
+}
+.videoWrap{
+    image-cropper{padding:10px 0px;}
+    div{float:right;font-size:12px;}
+}
+
+textarea.invalid {
+    border-color: var(--red);
+    box-shadow: unset;
+}

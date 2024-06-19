@@ -1,0 +1,39 @@
+<!-- Modals -->
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span>Bulk Update</span>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Close')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="drow">
+    <app-tabs (tabSelected)="tabSelected($event)" [confirmSwitchTab]="true" [confirmed$]="confirmedSwitching$">
+        <app-tab [title]="'Vendor Information'" [bmodisplay]="true">
+            <app-vendor-information
+                [stage] = "configLot.stage"
+                [transactionIds]="configLot.transactionIds"
+                [selectedLots]="configLot.selectedLots"
+                [processName] ="configLot.processName"
+                (markTabDirty)="markTabDirty($event)">
+            </app-vendor-information> 
+        </app-tab>
+        <app-tab [title]="'Buyer Information'" [bmodisplay]="true">
+           <app-buyer-information
+                [stage] = "configLot.stage"
+                [transactionIds]="configLot.transactionIds"
+                [selectedLots]="configLot.selectedLots"
+                [processName] ="configLot.processName"
+                (markTabDirty)="markTabDirty($event)">
+            </app-buyer-information>
+        </app-tab>
+        <app-tab [title]="'Lot Information'" [bmodisplay]="true">
+            <app-lot-information [stage] = "configLot.stage" [transactionIds]="configLot.transactionIds" [selectedLots]="configLot.selectedLots" [saleId]="configLot.saleId" [processName] ="configLot.processName" [isShowVendorCommission] = "configLot.isShowAgent"></app-lot-information>
+        </app-tab>
+        <app-tab *ngIf="configLot.isShowAgent" [title]="'Agent Commission Information'" [bmodisplay]="true">
+            <app-agent-information [transactionIds]="configLot.transactionIds"></app-agent-information>
+        </app-tab>
+    </app-tabs>
+</div>
+</div>

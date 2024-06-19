@@ -1,0 +1,1348 @@
+<div id="app-grid-view-page">
+  <!--Header-->
+  <section>
+    <div class="d-flex justify-content-between flex-column flex-md-row">
+      <!-- Filter List-->
+      <div class="tags-list" *ngIf="_bodyData.SortColumn !='-1' || !(isEmptyObject(filters))">
+        <div class="tags-list-label">Selected Filter(s) :</div>
+        <ul>
+          <li *ngIf="_bodyData.SortColumn != '-1' "><span>{{sortColumnName + '(' +_bodyData.SortOrder+')' }}</span>
+            <a id="a_otchannel" href="javascript:void(0);" class="icon-close"
+              *ngIf="!(_bodyData.SortColumn.toLowerCase() ==='crtdon' && _bodyData.SortOrder.toLowerCase() ==='desc')"
+              (click)="onFilterClear(_bodyData.SortColumn, 'sort')"><i class="fas fa-times"></i></a>
+          </li>
+          <li *ngFor="let item of filters | keyvalue"><span>{{this.FilterList(item.value.GridConditions)}}</span>
+            <a id="a_otchannel" href="javascript:void(0);" class="icon-close"
+              (click)="onFilterClear(item.value.DataField, item.value.FilterType, item)"><i class="fas fa-times"></i></a>
+          </li>
+          <li class="resetFilter" (click)="ClearFilters()">
+            <span>Remove All Filter(s)</span>
+          </li>
+        </ul>
+      </div>
+      <!-- Right Pane-->
+      <div class="d-flex align-items-center ml-auto">
+        <div class="selectListing sListing2">
+          <!--View Dropdown-->
+          <div ngbDropdown>
+            <button class="btn btn-outline-primary" ngbDropdownToggle>{{ViewName}}</button>
+            <ul ngbDropdownMenu aria-labelledby="dropdownConfig">
+              <li ngbDropdownItem *ngFor="let item of viewList" (click)="getGridConfig(item.Viewname)">
+                {{item.Viewname}}
+              </li>
+              <li ngbDropdownItem (click)="getGridConfig('')"> + Create New</li>
+            </ul>
+          </div>
+        </div>
+        <!-- Grid Config -->
+        <a class="config-icon" title="Configure View"
+          (click)="openGridConfigurationPopup('GridConfiguration',ViewName)">
+          <i class="fa fa-cog" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+  <div *ngIf="HasGlobalSearch">
+    <div class="p-1"></div>
+    <!--Gloabl Search-->
+    <form class="position-relative text-center" #gblFilterForm
+      (ngSubmit)="onFilter(gblFilterForm,'dmoName','Global_Search',undefined)">
+      <div class="p-2">
+        <div class="wfMainGSearch">
+          <div class="globalSearchWrap">
+            <div class="position-relative">
+              <input id="globalSearch" placeholder="Global Search" type="search">
+              <button aria-label="Search" class="btn-search" routerlink="" style="z-index: 1;" tabindex="0" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!--State Filter-->
+  <div class="stateFilterGroup" *ngIf="StateFilter?.length > 0">
+    <a class="" href="javascript:void(0)" (click)="onFilter(StateFilter,'All','State_Filter',$event)"
+      class="{{activeStateFilter.length==0?'active':''}}">All</a>
+    <a href="javascript:void(0)" *ngFor="let SFilter of StateFilter;"
+      (click)="onFilter(DMOFilterForm1,SFilter,'State_Filter',$event)"
+      class="{{activeStateFilter.indexOf(SFilter)>-1?'active':''}}">{{SFilter}}</a>
+  </div>
+  <!--Stage Filter-->
+  <div class="stateFilterGroup" *ngIf="StageFilter?.length > 0">
+    <a class="" href="javascript:void(0)" (click)="onFilter(StageFilter,'All','Stage_Filter',$event)"
+      class="{{activeStateFilter.length==0?'active':''}}">All</a>
+    <a href="javascript:void(0)" *ngFor="let SFilter of StageFilter;"
+      (click)="onFilter(DMOFilterForm1,SFilter,'Stage_Filter',$event)"
+      class="{{activeStateFilter.indexOf(SFilter)>-1?'active':''}}">{{SFilter}}</a>
+  </div>
+  <div class="p-1"></div>
+  <div class="table-filters-group">
+    <button class="btn add-new-btn" [disabled]="editDisabled" (click)="goToNewLotPage()">
+      <i class="fas fa-plus mr-1"></i><span>Add New Lot</span>
+    </button>
+    <!--Custom Filter -->
+    <form class="d-flex flex-wrap-reverse" #DMOFilterForm1>
+      <div class="selectListing" *ngIf="!isEmptyObject(CustomFilter)">
+        <div ngbDropdown>
+          <button class="btn btn-outline-primary" ngbDropdownToggle id="dropdownCustomFilter">{{selectedCustomFilter}}</button>
+          <ul ngbDropdownMenu aria-labelledby="dropdownCustomFilter">
+            <li ngbDropdownItem (click)="onFilter(DMOFilterForm1,'Custom Filter(s)','Custom_Filter','Custom Filter(s)')">
+              Custom Filter(s)
+            </li>
+            <li ngbDropdownItem *ngFor="let item of CustomFilter | keyvalue" (click)="onFilter(DMOFilterForm1,'Custom Filter(s)','Custom_Filter',item.key)">
+              {{item.key}}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Dmo Filter -->
+      <!-- //Changes Based on Parent Transaction ID #1038 -->
+      <div class="selectListing" *ngFor="let dmoItem of DMOField; let i = index">
+        <div ngbDropdown (click)="BindDMODropDown(dmoItem.GUID)">
+          <button class="btn btn-outline-primary" class="dropdownConfig" ngbDropdownToggle>
+            <div *ngIf="selectedDmoFilter[dmoItem.GUID] && dmoItem.Type=='ColorCodeStatus'" class="color-code" [ngStyle]="{'background': selectedDmoFilter[dmoItem.GUID]}"></div>
+            {{!selectedDmoFilter[dmoItem.GUID]? dmoItem.DisplayName : selectedDmoFilter[dmoItem.GUID]}}
+          </button>
+          <ul ngbDropdownMenu aria-labelledby="dropdownConfig" class="dmoPopup">
+            <li [hidden]="!showItemLoading" ngbDropdownItem
+              (click)="onFilter(DMOFilterForm1,dmoItem,'DMO_Filter','All',dmoItem.Type)">
+              {{dmoItem.DisplayName}}</li>
+              <div class="form-group dmoFormGroup ">
+                <input type="text"  class="form-control dmoFilterTextBox" (keyup)="dmoFilterFn(dmoItem.GUID,$event)"/>
+            </div>
+            <li [hidden]="showItemLoading" class="dropdown-item text-center"><i
+                class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i></li>
+            <li ngbDropdownItem *ngFor="let name of DMOData[dmoItem.GUID];"
+              (click)="onFilter(DMOFilterForm1,dmoItem.GUID,'DMO_Filter',name.DataValue,dmoItem.Type)">
+              <div *ngIf="dmoItem.Type=='ColorCodeStatus'" class="color-code"
+                [ngStyle]="{'background': name.DataValue}">
+              </div>
+              {{name.DataValue}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </form>
+    <!--Export-->
+    <div class="export-btns-group">
+      <a [hidden]="!IsBulkUploadAllow" href="javascript:void(0)" (click)="openBulkUpload(bulkUpload)" title="Bulk Update">
+        <i class="fas fa-edit"></i>Bulk Upload</a>
+      <a *ngIf="!isReversal" [class.disabled]="hideBulkUpdateButton() || editDisabled" href="javascript:void(0)" (click)="bulk_update()" title="Bulk Update">
+        <i class="fas fa-edit"></i>Bulk Update</a>
+      <a href="javascript:void(0)" (click)="openExportGridConfigurationPopup('GridConfiguration',ViewName, 'Excel')" title="Excel">
+        <i class="far fa-file-excel" role="img" aria-label="Excel"></i>Excel</a>
+      <a href="javascript:void(0)" (click)="openExportGridConfigurationPopup('GridConfiguration',ViewName, 'Pdf')" title="PDF">
+        <i class="far fa-file-pdf" role="img" aria-label="PDF"></i>PDF</a>
+      <a [hidden]="!IsDeletionAllow" href="javascript:void(0)" (click)="showDeleteMessage()" title="Delete"  *ngIf="!editDisabled || isReversal">
+        <i class="fas fa-trash-alt" role="img" aria-label="Delete"></i>Delete</a>
+    </div>
+  </div>
+  <div class="p-2"></div>
+  <div id="ProcessName">
+    <div class="tableWrap">
+      <table class="basicTable stripped border-bottom-0" id="gridView">
+        <thead cdkDropListGroup>
+          <tr cdkDropList cdkDropListOrientation="horizontal" id='tableHeadRow' class="list" (cdkDropListDropped)="drop($event)">
+            <th [hidden]="HideSelectAll" style="width:40px">
+              <label class="inline-checkbox ml-2 mt-1" [style.width.%]="'1%'">
+                <input type="checkbox" name="chkboxlist" id="selectAll" [(ngModel)]="selectedAll" (click)="SelectAllCheckBox($event)">
+                <i class="skin"></i>
+              </label>
+            </th>
+            <th [hidden]="HideActionCol" style="width: 70px"><span class="">Action</span></th>
+            <th *ngFor="let item of columns; let i = index" class="ColResize" id="{{item.datafield}}" [ngStyle]="{'width': item.width}" cdkDrag>
+              <div class="float-left drag-grip" cdkDragHandle>
+                <i class="fas fa-grip-vertical"></i>
+              </div>
+              <!--Header Title-->
+              <span class="colHead content-text" (click)="sortColumn(item.datafield)"> {{item.text}}</span>
+              <!--Column Filter Button-->
+              <div ngbDropdown class="grid-filter-wrap">
+                <div id="dropdownBasic1" ngbDropdownToggle>
+                  <img alt="" (click)="bindColumnFilterDdl(item)" src="assets/styles/images/arrange-arrow.png">
+                </div>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                  <ul class="list-unstyled">
+                    <li role="menuitem" (click)="onSort(item.datafield,'asc')">
+                      <a href="javasript: void(0)">
+                        <div class="fas fa-sort-alpha-down"></div> Sort Ascending
+                      </a>
+                    </li>
+                    <li role="menuitem" (click)="onSort(item.datafield,'desc')">
+                      <a href="javasript: void(0)">
+                        <div class="fas fa-sort-alpha-up"></div> Sort Descending
+                      </a>
+                    </li>
+                    <li role="menuitem" (click)="onSort()">
+                      <a href="javasript: void(0)">
+                        <div class="fas fa-random"></div> Remove Sort
+                      </a>
+                    </li>
+                    <li type="separator" class="li-separator" role="menuitem"></li>
+                    <li>
+                      <form #tblFilterForm #f="ngForm" id='frm_{{item.datafield}}'
+                        (ngSubmit)="f.form.valid && onFilter(tblFilterForm,item.datafield,'Column_Filter',f,item.dataType)">
+                        <div class="filter" style="height: 18px; margin-top: 3px; margin-bottom: 3px;">Show rows where:</div>
+                        <div *ngIf="this.columnFilter.condition.OptionTypes.includes(item.dataType); else OtherColumnFilter">
+                          <input type="hidden" value="or" />
+                          <div class="list-group">
+                            <ul style="width: 200px;" class="list-unstyled list-group">
+                              <li [hidden]="showItemLoading" class="dropdown-item text-center" class="list-group-item">
+                                <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i></li>
+                                <li *ngIf="ColumnData[item.datafield]?.length == 0"> No record exist</li>
+                              <li *ngFor="let obj of ColumnData[item.datafield]">
+
+                                <input type="checkbox" class="checkbox checkboxMargin" [value]="obj.DataValue">
+                                <span>
+                                  {{obj.DataValue}}
+                                </span>
+
+                              </li>
+                              <li type="separator" class="li-separator" role="menuitem"></li>
+                            </ul>
+                          </div>
+                        </div>
+                        <ng-template #OtherColumnFilter>
+                          <div class="form-group"
+                          [hidden]="(ConditionOpt2.value =='NOT_NULL' || ConditionOpt2.value =='NULL')">
+                            <select class="form-control" style="width: 200px;" name="ConditionOpt1" #ConditionOpt1
+                              [ngClass]="{ 'is-invalid': f.submitted && ConditionOpt1.value == 'Select...'}" required>                            
+                              <option *ngFor="let conditionType of ColumnData[item.datafield]"
+                                [value]="conditionType.key">{{conditionType.value}}</option>
+                            </select>
+                          </div>
+                          <div 
+                          [hidden]="(ConditionOpt1.value =='NOT_NULL' || ConditionOpt2.value =='NOT_NULL' || ConditionOpt1.value =='NULL' || ConditionOpt2.value =='NULL')"
+                          class="form-group" *ngIf="this.columnFilter.condition.DateFieldTypes.includes(item.dataType)">
+                            <div class="input-group">
+                              <input class="form-control" placeholder="dateFormat" name="filterValue1"
+                                ngbDatepicker #d="ngbDatepicker" #filterValue1
+                                [ngClass]="{ 'is-invalid': f.submitted  && filterValue1.value == ''  }" required>
+                              <div class="input-group-append">
+                                <button class="btn btn-sm btn-outline-secondary calendar" (click)="d.toggle()"
+                                  type="button"><i _ngcontent-lcu-c9="" aria-hidden="true"
+                                    class="far fa-calendar-alt"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group" 
+                          [hidden]="(ConditionOpt1.value =='NOT_NULL' || ConditionOpt2.value =='NOT_NULL' || ConditionOpt1.value =='NULL' || ConditionOpt2.value =='NULL')"
+                          *ngIf="!this.columnFilter.condition.DateFieldTypes.includes(item.dataType)">
+                            <input type="text" class="form-control" name="filterValue1"
+                              placeholder="Filter Value" #filterValue1
+                              [ngClass]="{ 'is-invalid': f.submitted  && filterValue1.value == ''  }" required
+                              style="width: 200px;">
+                          </div>
+                          <div class="form-group"
+                          [hidden]="(ConditionOpt1.value =='NOT_NULL' || ConditionOpt2.value =='NOT_NULL' || ConditionOpt1.value =='NULL' || ConditionOpt2.value =='NULL')">
+                            <select class="form-control" style="width: 200px;" name="logicalOpt" #logicalOpt
+                            [ngClass]="{ 'is-invalid': f.submitted && logicalOpt.value == 'Select...' }" required>
+                              <option>Select...</option>
+                              <option value="OR" selected>Or</option>
+                              <option value="AND">AND</option>
+                            </select>
+                          </div>
+                          <div class="form-group"
+                          [hidden]="(ConditionOpt1.value =='NOT_NULL' || ConditionOpt1.value =='NULL')">
+                            <select class="form-control" style="width: 200px;" name="ConditionOpt2" #ConditionOpt2>
+                              <option *ngFor="let conditionType of ColumnData[item.datafield]"
+                                [value]="conditionType.key">{{conditionType.value}}</option>
+                            </select>
+                          </div>
+                          <div class="form-group" *ngIf="this.columnFilter.condition.DateFieldTypes.includes(item.dataType)"
+                          [hidden]="(ConditionOpt1.value =='NOT_NULL' || ConditionOpt2.value =='NOT_NULL' || ConditionOpt1.value =='NULL' || ConditionOpt2.value =='NULL')">
+                            <div class="input-group">
+                              <input class="form-control" placeholder="dateFormat" name="filterValue2" #filterValue2
+                                ngbDatepicker #d="ngbDatepicker">
+                              <div class="input-group-append">
+                                <button class="btn btn-sm btn-outline-secondary calendar" (click)="d.toggle()"
+                                  type="button"><i _ngcontent-lcu-c9="" aria-hidden="true"
+                                    class="far fa-calendar-alt"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group" *ngIf="!this.columnFilter.condition.DateFieldTypes.includes(item.dataType)"
+                          [hidden]="(ConditionOpt1.value =='NOT_NULL' || ConditionOpt2.value =='NOT_NULL' || ConditionOpt1.value =='NULL' || ConditionOpt2.value =='NULL')">
+                            <input type="text" class="form-control" name="filterValue2" #filterValue2 placeholder="Filter Value"
+                              style="width: 200px;">
+                          </div>
+
+                        </ng-template>
+                        <div>
+                          <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                          <button type="reset" class="btn btn-secondary btn-sm float-right"
+                            (click)="onFilterClear(item.datafield,'Column_Filter')">Clear</button>
+                        </div>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="resize">
+                <i class="fas fa-grip-lines-vertical" (mousedown)="mouseDown($event)" cdkDragDisabled></i>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tableData; let rowIndex=index;" id="tr_{{item[keyColumn]}}" [ngClass]="{'active': item.selected}">
+            <td [hidden]="HideSelectAll">
+              <label class="inline-checkbox ml-2 mt-1">
+                <input type="checkbox" name="chkboxlist" id="{{item[keyColumn]}}"
+                  checked="{{item['selected']?'checked':''}}" value="{{item['selected']}}"
+                  (change)="checkIfAllSelected($event,item)">
+                <i class="skin"></i>
+              </label>
+            </td>
+            <!--Column Action Button-->
+            <td [hidden]="HideActionCol">
+              <div class="action-btns">
+                <ng-container *ngIf="!item.isEdit">
+                  <ng-container *ngIf="editDisabled && !isReversal">
+                    <a href="javascript:void(0)" (click)="goToDetailPage(item)" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </ng-container>
+                  <ng-container *ngIf="!editDisabled || isReversal">
+                    <a href="javascript:void(0)" (click)="goToDetailPage(item)" title="Edit">
+                      <i class="fas fa-pencil-alt"></i>
+                    </a>
+                  </ng-container>
+                  <a [hidden]="!IsCopyAllow" [class.disabled]='editDisabled' href="javascript:void(0)" title="Copy" (click)="createDuplicateLot(item)">
+                    <i class="far fa-copy"></i>
+                  </a>
+                  <a [hidden]="!IsDeletionAllow || HideDeleteActionIcon" href="javascript:void(0)" (click)="openConfirmation(item[keyColumn])" title="Delete">
+                    <i class="far fa-trash-alt"></i>
+                  </a>
+                </ng-container>
+                <ng-container *ngIf="item.isEdit">
+                  <a href="javascript:void(0)" (click)="confirmSaveRowRecord(item)" title="Save" *ngIf="!editDisabled || isReversal">
+                    <i class="fas fa-save"></i>
+                  </a>
+                  <a href="javascript:void(0)" (click)="item.isEdit = false; isEditClicked = false; item.isDdl = false;" title="Cancel">
+                    <i class="fas fa-times"></i>
+                  </a>
+                </ng-container>
+              </div>
+            </td>
+            <td *ngFor="let colIndex of columns; let columnIndex=index;" [ngSwitch]="colIndex.dataType">
+              <!-- TextBox,  EmailEditBox, UrlTextBox-->
+              <div *ngSwitchCase="colIndex.dataType==='TextBox' || colIndex.dataType==='EmailEditBox'  || colIndex.dataType==='UrlTextBox' ? colIndex.dataType : ''" (keyup.enter)="rowEntered($event, true, item)">
+                <i *ngIf="colIndex.datafield !== 'dmolotlotinfolotid' && colIndex.datafield !== 'dmolotlotinfogstrate' && colIndex.datafield !== 'lmkldproductcategory' && colIndex.datafield !== 'dmolotagncycommagent' && colIndex.datafield !== 'dmolotlotinfoturnovergs' && colIndex.datafield !== 'dmolotlotinfogst'"  class="icon-edit fas fa-edit"
+                  (click)="editRow(item)"></i>
+                <ng-container [ngSwitch]="colIndex.datafield">
+                  <ng-container *ngSwitchCase="'dmolotlotinfolotid'">
+                    <div class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotlotinfogstrate'">
+                    <div class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'lmkldproductcategory'">
+                    <div class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotvinfovendorid'">
+                    <div *ngIf="!item.isEdit" [ngClass]="{'IsBlockCustomer': item.IsVendorBlock}" class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotvinfovendornam'">
+                    <div *ngIf="!item.isEdit" [ngClass]="{'IsBlockCustomer': item.IsVendorBlock}" class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotvinfovendorbrc'">
+                    <div *ngIf="!item.isEdit" [ngClass]="{'IsBlockCustomer': item.IsVendorBlock}" class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotbinfobuyerid'">
+                    <div *ngIf="!item.isEdit" [ngClass]="{'IsBlockCustomer': item.IsBuyerBlock}" class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotbinfobuyername'">
+                    <div *ngIf="!item.isEdit" [ngClass]="{'IsBlockCustomer': item.IsBuyerBlock}" class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotagncycommagent'">
+                    <div class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotlotinfoturnovergs'">
+                    <div class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotlotinfogst'">
+                    <div class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+                  <!-- <ng-container 
+                    *ngSwitchCase="'dmolotbinfobuyerbrc'">
+                    <div *ngIf="!item.isEdit" [ngClass]="{'IsBlockCustomer': item.IsBuyerBlock}" class="content-text">Roshan {{item[colIndex.datafield]}}</div>
+                  </ng-container> -->
+                  <ng-container *ngSwitchCase="'dmolotlotinfopdct'">
+                    <input *ngIf="item.isEdit"
+                      [attr.type]="colIndex.isNumeric ? 'number' : 'text'"
+                      class="form-control textBox_dmolotlotinfopdct"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [ngbTypeahead]="productSearch"
+                      (selectItem)="setProductDescription($event, item)"
+                      (blur)="ValidateProduct($event);"
+                      (keyup)="ValidateProductOnKeyUp($event, item);"
+                      [disabled]="editDisabled"
+                      [ngClass]="{'is-invalid':productNameMessage === 'Product name is Not Exist'}"
+                    >
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotlotinfoproddesc'">
+                    <input *ngIf="item.isEdit"
+                      [attr.type]="colIndex.isNumeric ? 'number' : 'text'"
+                      class="form-control textBox_dmolotlotinfoproddesc"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [disabled]="editDisabled && !isReversal"
+                      maxlength="60"
+                    >
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotlotinfobrd'">
+                    <input *ngIf="item.isEdit"
+                      [attr.type]="colIndex.isNumeric ? 'number' : 'text'"
+                      class="form-control textBox_dmolotlotinfobrd"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [ngbTypeahead]="breedSearch"
+                      (focus)="onFocus($event)"
+                      [disabled]="editDisabled || item.IsEmpty"
+                      (selectItem)="typeaheadSelected()"
+                      [ngClass]="{'is-invalid':breedMessage === 'Breed name is Not Exist'}"
+                    >
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotvinfovendorid'">
+                    <input *ngIf="item.isEdit"
+                      [attr.type]="colIndex.isNumeric ? 'number' : 'text'"
+                      class="form-control textBox_dmolotvinfovendorid"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [ngbTypeahead]="vendorIdSearch"
+                      (focus)="onFocus($event)"
+                      (selectItem)="selectVendor($event, 'dmocustmstrsapno', item)"
+                      [disabled]="editDisabled || item.isBuyerCartage"
+                      [ngClass]="{'is-invalid':vendorIdMessage === 'VendorId is Not Exist'}"
+                      (blur)="TrackVendor(item)"
+                    >
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotvinfovendornam'">
+                    <input *ngIf="item.isEdit"
+                      [attr.type]="colIndex.isNumeric ? 'number' : 'text'"
+                      class="form-control textBox_dmolotvinfovendornam"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [ngbTypeahead]="vendorNameSearch"
+                      (focus)="onFocus($event)"
+                      (selectItem)="selectVendor($event, 'dmocustmstrcustname1', item)"
+                      [disabled]="editDisabled || item.isBuyerCartage"
+                      [ngClass]="{'is-invalid':vendorNameMessage === 'Vendor name is Not Exist'}"
+                    >
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotbinfobuyerid'">
+                    <input *ngIf="item.isEdit"
+                      [attr.type]="colIndex.isNumeric ? 'number' : 'text'"
+                      class="form-control textBox_dmolotbinfobuyerid"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [ngbTypeahead]="buyerIdSearch"
+                      (focus)="onFocus($event)"
+                      [disabled]="editDisabled || item.isUnsoldLots || item.isVendorCartage"
+                      (selectItem)="selectBuyer($event, 'dmocustmstrsapno', item)"
+                      [ngClass]="{'is-invalid':buyerIdMessage === 'BuyerId is Not Exist'}"
+                    >
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotbinfobuyername'">
+                    <input *ngIf="item.isEdit"
+                      [attr.type]="colIndex.isNumeric ? 'number' : 'text'"
+                      class="form-control textBox_dmolotbinfobuyername"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [ngbTypeahead]="buyerNameSearch"
+                      (focus)="onFocus($event)"
+                      (selectItem)="selectBuyer($event, 'dmocustmstrcustname1', item)" 
+                      [disabled]="editDisabled || item.isUnsoldLots || item.isVendorCartage"
+                      [ngClass]="{'is-invalid':buyerNameMessage === 'Buyer name is Not Exist'}"
+                    >
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotlotinfopricecpkg'">
+                    <input *ngIf="item.isEdit"
+                      class="form-control textBox_dmolotlotinfopricecpkg"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      (ngModelChange)="edit_item_value($event, colIndex.datafield, item)"
+                      [disabled]="editDisabled || is_cell_disabled(item, colIndex.datafield) || item.IsEmpty"
+                      appFourDigitDecimaNumber
+                      (blur)="fixedValue(item, colIndex.datafield, 4)"
+                    >
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dmolotlotinfopricephd'">
+                    <input *ngIf="item.isEdit"
+                      class="form-control textBox_dmolotlotinfopricephd"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      (ngModelChange)="edit_item_value($event, colIndex.datafield, item)"
+                      [disabled]="editDisabled || is_cell_disabled(item, colIndex.datafield)  || item.IsEmpty"
+                      (blur)="fixedValue(item, colIndex.datafield)"
+                      appTwoDigitDecimaNumber
+                    >
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'dmolotlotinfoqnty'">
+                    <input *ngIf="item.isEdit"
+                      class="form-control textBox_dmolotlotinfoqnty"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      (ngModelChange)="getQuantity_Value($event, colIndex.datafield, item)"
+                      [disabled]="(editDisabled && isDisabledQty) || item.IsEmpty"
+                      (blur)="checkQty($event, colIndex.datafield, item)"
+                      appTwoDigitDecimaNumber              
+                    >
+                  </ng-container>
+
+                   <ng-container *ngSwitchCase="'dmolotlotinfowtkg'">
+                    <input *ngIf="item.isEdit"
+                      class="form-control textBox_dmolotlotinfowtkg"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      (ngModelChange)="getWeight_Value($event, colIndex.datafield, item)"
+                      [disabled]="editDisabled || item.IsEmpty"
+                      (keydown.Tab)="!editDisabled && lastTabEntered($event, true, item)"
+                      appTwoDigitDecimaNumber
+                      (blur)="fixedValue(item, colIndex.datafield)"
+                    >
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'dmolotlotinfoturnovaud'">
+                    <input *ngIf="item.isEdit"
+                      class="form-control textBox_dmolotlotinfoturnovaud"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      (ngModelChange)="getTurnover_Value($event, colIndex.datafield, item)"
+                      [disabled]="editDisabled || item.IsEmpty"
+                      (keypress)="accept_only_zero($event, item)"
+                      appTwoDigitDecimaNumber (blur)="fixedValue(item, colIndex.datafield)">
+                      
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'dmolotlotinfolotnum'">
+                    <input *ngIf="item.isEdit"
+                      class="form-control textBox_dmolotlotinfolotnum"
+                      (keypress)="ValidateAlphanumeric($event)"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [disabled]="editDisabled || item.IsEmpty"
+                    >
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault>
+                    <input *ngIf="item.isEdit"
+                      [attr.type]="colIndex.isNumeric ? 'number' : 'text'"
+                      class="form-control textBox_{{colIndex.datafield}}"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [disabled]="editDisabled"
+                    >
+                  </ng-container>
+                </ng-container>
+
+                <div *ngIf="!item.isEdit && colIndex.datafield !== 'dmolotvinfovendorid' && colIndex.datafield !== 'dmolotvinfovendornam' && colIndex.datafield !== 'dmolotvinfovendorbrc' && colIndex.datafield !== 'dmolotbinfobuyerid' && colIndex.datafield !== 'dmolotbinfobuyername' && colIndex.datafield !== 'dmolotbinfobuyerbrc'  && colIndex.datafield !== 'dmolotlotinfolotid' && colIndex.datafield !== 'dmolotlotinfogstrate' && colIndex.datafield !== 'lmkldproductcategory'  && colIndex.datafield !== 'dmolotagncycommagent' && colIndex.datafield !== 'dmolotlotinfoturnovergs' && colIndex.datafield !== 'dmolotlotinfogst'" class="content-text">
+                {{item[colIndex.datafield]}}
+                </div>
+              </div>
+              <!-- PhoneTextBox-->
+              <div *ngSwitchCase="'PhoneTextBox'" (keyup.enter)="rowEntered($event, true, item)">
+                <i class="icon-edit fas fa-edit" (click)="editRow(item)"></i>
+                <input type="tel" class="form-control" [textMask]="{mask: mask}" id="textBox_{{item[keyColumn]}}"
+                  [(ngModel)]="item.edit_value[colIndex.datafield]" *ngIf="item.isEdit">
+                <div *ngIf="!item.isEdit" class="content-text">{{item[colIndex.datafield]}}</div>
+              </div>
+              <!-- ColorCodeStatus-->
+              <div *ngSwitchCase="colorCode.indexOf(colIndex.dataType)>-1 ? colIndex.dataType:''">
+                <ng-template [ngIf]="colIndex.datafield === 'dmolotlotinfostatus'" [ngIfElse]="color">
+                  <div class="color-code" [ngStyle]="{'background': item[colIndex.datafield]}"></div>
+                </ng-template>
+                <ng-template *color>
+                  <div ngbDropdown class="grid-wrap" tabIndex="0" #myDrop="ngbDropdown" (focus)="myDrop.open()"
+                    (openChange)="getDropDownData(colIndex.datafield); editRow(item);">
+                    <div id="cell-edit" ngbDropdownToggle>
+                      <i class="icon-edit fas fa-edit"></i>
+                    </div>
+                    <div ngbDropdownMenu aria-labelledby="cell-edit">
+                      <ul class="list-unstyled">
+                        <li [hidden]="!(!DMOData[colIndex.datafield])" class="dropdown-item text-center">
+                          <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i>
+                        </li>
+                        <li ngbDropdownItem *ngFor="let name of DMOData[colIndex.datafield];"
+                          (click)="changeEditValue($event, item, colIndex, name)">
+                          <div *ngIf="colIndex.dataType ==='ColorCodeStatus'" class="color-code"
+                            [ngStyle]="{'background': name.DataValue}"></div>
+                          {{name.DataValue}}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="content-text">
+                    <ng-container *ngIf="item.isEdit">
+                      <div class="color-code" [ngStyle]="{'background': item.edit_value[colIndex.datafield]}"></div>
+                      {{item.edit_value[colIndex.datafield]}}
+                    </ng-container>
+                    <ng-container *ngIf="!item.isEdit">
+                      <div class="color-code-middle" [ngStyle]="{'background': item[colIndex.datafield]}"></div>
+                      {{item[colIndex.datafield]}}
+                    </ng-container>
+                  </div>
+                </ng-template>
+              </div>
+              <!-- DropDownList, CountryList, USAStateList,  ListBox -->
+              <div *ngSwitchCase="(dropDown.indexOf(colIndex.dataType)>-1 || colIndex.dataType ==='KeyValueSearchBox')? colIndex.dataType: ''">
+                <ng-container [ngSwitch]="colIndex.datafield">
+
+                  <ng-container *ngSwitchCase="'dmolotvinfovendorpic'">
+                    <i class="icon-edit fas fa-edit" (click)="editRow(item)"></i>
+                    <ng-select
+                      *ngIf="item.isEdit"
+                      ngbTooltip="{{item.edit_value[colIndex.datafield]}}"
+                      [items]="item.vendorPICOptions"
+                      [addTag]="addPICTagFn"
+                      [selectOnTab]="true"
+                      class="form-control DropDownList_dmolotvinfovendorpic uppercase"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                      [disabled]="editDisabled || item.isBuyerCartage"
+                    >
+                      <ng-template ng-option-tmp let-item="item">
+                        <div title="{{item}}">{{item}}</div>
+                      </ng-template>
+                    </ng-select>
+                 
+                    <div *ngIf="!item.isEdit" class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'dmolotbinfobuyerpic'">
+                    <i class="icon-edit fas fa-edit" (click)="editRow(item)"></i>
+                    <ng-select 
+                      ngbTooltip="{{item.edit_value[colIndex.datafield]}}"
+                      *ngIf="item.isEdit"
+                      [items]="item.buyerPICOptions"
+                      [addTag]="addPICTagFn"
+                      [selectOnTab]="true"
+                      class="form-control DropDownList_dmolotbinfobuyerpic uppercase"
+                      [disabled]="editDisabled || item.isUnsoldLots || item.isVendorCartage"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]"
+                    >
+                      <ng-template ng-option-tmp let-item="item">
+                        <div title="{{item}}">{{item}}</div>
+                      </ng-template>
+                    </ng-select>
+                    <div *ngIf="!item.isEdit" class="content-text">{{item[colIndex.datafield]}}</div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'dmolotvinfovendorbrc'">
+                    <i class="icon-edit fas fa-edit" (click)="editRow(item)"></i>
+                    <ng-select
+                      *ngIf="item.isEdit && !item.isDdl"
+                      [items]="item.vendorBranchOptions"
+                      bindValue="ValueField"
+                      bindLabel="TextField"
+                      class="form-control DropDownList_dmolotvinfovendorbrc"
+                      [disabled]="editDisabled || item.isBuyerCartage"
+                      [(ngModel)]="item.edit_value[colIndex.datafield]">
+                      <ng-template ng-footer-tmp>
+                        <a href="javascript:void(0)" class="footer-Add-New-Button" (click)="item.isDdl = true;">Add New</a>
+                      </ng-template>
+                    </ng-select>
+                   
+                    <input
+                        *ngIf="item.isEdit && item.isDdl"
+                        type="text"
+                        id="TextBox_dmolotvinfovendorbrc"
+                        class="form-control DropDownList_dmolotvinfovendorbrc"                     
+                        [(ngModel)]="item.edit_value[colIndex.datafield]"
+                        [ngbTypeahead]="vendorBranchSearch"
+                        [editable]="true"
+                        [disabled]="item.isBuyerCartage"
+                        (focus)="onFocus($event)"
+                        [inputFormatter]="formatter"
+                        [resultFormatter]="formatter"
+                        [ngClass]="{'is-invalid':VendorBranchMessage == 'Vendor branch is Not Exist'}"
+                        (selectItem)="selectBranch($event, 'dmolotvinfovendorbrc', item)"
+                    />
+                    <div *ngIf="!item.isEdit" [ngClass]="{'IsBlockCustomer': item.IsVendorBlock}" class="content-text"> {{item[colIndex.datafield]}}</div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'dmolotbinfobuyerbrc'">
+                    <i class="icon-edit fas fa-edit" (click)="editRow(item)"></i>
+                    <ng-select
+                        *ngIf="item.isEdit && !item.isDdlBuyer"
+                        [items]="item.buyerBranchOptions"
+                        bindValue="ValueField"
+                        bindLabel="TextField"
+                        class="form-control DropDownList_dmolotbinfobuyerbrc"
+                        [disabled]="editDisabled || item.isUnsoldLots || item.isVendorCartage"
+                        [(ngModel)]="item.edit_value[colIndex.datafield]">
+                        <ng-template ng-footer-tmp>
+                          <a href="javascript:void(0)" class="footer-Add-New-Button" (click)="item.isDdlBuyer = true;">Add New</a>
+                        </ng-template>
+                    </ng-select>
+
+                    <input
+                        *ngIf="item.isEdit && item.isDdlBuyer"
+                        type="text"
+                        class="form-control DropDownList_dmolotbinfobuyerbrc"
+                        [disabled]="editDisabled || item.isUnsoldLots || item.isVendorCartage"
+                        [(ngModel)]="item.edit_value[colIndex.datafield]"
+                        [ngbTypeahead]="branchSearch"
+                        [editable]="true"
+                        [inputFormatter]="formatter"
+                        [resultFormatter]="formatter"
+                        [ngClass]="{'is-invalid':BuyerBranchMessage == 'Buyer branch is Not Exist'}"
+                        (selectItem)="selectBranch($event, 'dmolotbinfobuyerbrc', item)"
+                    />
+
+                    <div *ngIf="!item.isEdit" [ngClass]="{'IsBlockCustomer': item.IsBuyerBlock}" class="content-text"> {{item[colIndex.datafield]}}</div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault>
+                    <div ngbDropdown class="grid-wrap" tabIndex="0" #myDrop="ngbDropdown" (focus)="myDrop.open()"
+                      (openChange)="getDropDownData(colIndex.datafield); editRow(item)">
+                      <div id="cell-edit" ngbDropdownToggle>
+                        <i class="icon-edit fas fa-edit"></i>
+                      </div>
+                      <div ngbDropdownMenu aria-labelledby="cell-edit">
+                        <ul class="list-unstyled">
+                          <!--Loding icon-->
+                          <li [hidden]="!(!DMOData[colIndex.datafield])" class="dropdown-item text-center">
+                            <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i>
+                          </li>
+                          <li ngbDropdownItem *ngFor="let name of DMOData[colIndex.datafield];"
+                            (click)="changeEditValue($event, item, colIndex, name)">
+                            <div>{{name.DataValue}}</div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="content-text">
+                      <ng-container *ngIf="item.isEdit">
+                        {{item.edit_value[colIndex.datafield]}}
+                      </ng-container>
+                      <ng-container *ngIf="!item.isEdit">
+                        {{item[colIndex.datafield]}}
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+              <!--RoleType-->
+              <div *ngSwitchCase="roleType.indexOf(colIndex.dataType)>-1? colIndex.dataType:'' ">
+                <div ngbDropdown class="grid-wrap" tabIndex="0" #myDrop="ngbDropdown" (focus)="myDrop.open()"
+                  (openChange)="getDropDownData(colIndex.datafield, true); editRow(item);">
+                  <div id="cell-edit" ngbDropdownToggle>
+                    <i class="icon-edit fas fa-edit"></i>
+                  </div>
+                  <div ngbDropdownMenu aria-labelledby="cell-edit">
+                    <form>
+                      <ul class="list-unstyled">
+                        <!--Loding icon-->
+                        <li [hidden]="!(!DMOData[colIndex.datafield])" class="dropdown-item text-center">
+                          <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i>
+                        </li>
+                        <li *ngFor="let name of DMOData[colIndex.datafield]; let i = index">
+                          <div class="form-check">
+                            <input type="radio" name="radio" class="form-check-input"
+                              [checked]="CheckedSelected(item.isEdit ? item.edit_value[colIndex.datafield] :item[colIndex.datafield], name.DataValue.key)"
+                              value="{{name.DataValue.key}}" class="{{'check_'+i}}">
+                            <label class="form-check-label" for="{{'check_'+i}}">{{name.DataValue.value}}</label>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <button type="button" class="btn btn-primary btn-sm"
+                              (click)="changeEditValue($event, item, colIndex); myDrop.close()">Apply</button>
+                            <button type="button" class="btn btn-secondary btn-sm float-right"
+                              (click)="myDrop.close()">Cancel</button>
+                          </div>
+                        </li>
+                      </ul>
+                    </form>
+                  </div>
+                </div>
+                <div class="content-text">
+                  <ng-container *ngIf="item.isEdit">
+                    {{item.edit_value[colIndex.datafield]}}
+                  </ng-container>
+                  <ng-container *ngIf="!item.isEdit">
+                    {{item[colIndex.datafield]}}
+                  </ng-container>
+                </div>
+              </div>
+              <!-- CheckBoxList, MultiSelectDropDownList, RadioButtonList-->
+              <div *ngSwitchCase="dropDownWithCheckbox.indexOf(colIndex.dataType)>-1? colIndex.dataType:'' ">
+                <div ngbDropdown class="grid-wrap" tabIndex="0" #myDrop="ngbDropdown" (focus)="myDrop.open()"
+                  (openChange)="getDropDownData(colIndex.datafield); editRow(item)">
+                  <div id="cell-edit" ngbDropdownToggle>
+                    <i class="icon-edit fas fa-edit"></i>
+                  </div>
+                  <div ngbDropdownMenu aria-labelledby="cell-edit">
+                    <form>
+                      <ul class="list-unstyled">
+                        <!--Loding icon-->
+                        <li [hidden]="!(!DMOData[colIndex.datafield])" class="dropdown-item text-center">
+                          <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i>
+                        </li>
+                        <li *ngFor="let name of DMOData[colIndex.datafield]; let i = index">
+                          <div class="form-check">
+                            <input
+                              type="{{colIndex.dataType==='RadioButtonList' ? 'radio' :'checkbox'}}"
+                              class="form-check-input"
+                              [checked]="CheckedSelected(item.isEdit ? item.edit_value[colIndex.datafield] :item[colIndex.datafield], name.DataValue)"
+                              class="{{'check_'+i}}">
+                            <label class="form-check-label" for="{{'check_'+i}}">{{name.DataValue}}</label>
+                          </div>
+                        </li>
+                        <li>
+                          <div>
+                            <button type="button" class="btn btn-primary btn-sm"
+                              (click)="changeEditValue($event, item, colIndex); myDrop.close()">Apply</button>
+                            <button type="button" class="btn btn-secondary btn-sm float-right"
+                              (click)="myDrop.close()">Cancel</button>
+                          </div>
+                        </li>
+                      </ul>
+                    </form>
+                  </div>
+                </div>
+                <div class="content-text">
+                  <ng-container *ngIf="item.isEdit">
+                    {{item.edit_value[colIndex.datafield]}}
+                  </ng-container>
+                  <ng-container *ngIf="!item.isEdit">
+                    {{item[colIndex.datafield]}}
+                  </ng-container>
+                </div>
+              </div>
+              <!-- DateEditBox, DateWithCalendar -->
+              <div *ngSwitchCase="calender.indexOf(colIndex.dataType)>-1 ? colIndex.dataType:'' " class="cell-date">
+                <input type="hidden" ngbDatepicker (dateSelect)="changeEditValue($event, item, colIndex)" placeholder="dateFormat" name="dp" #d="ngbDatepicker" />
+                <i aria-hidden="true" class="icon-edit fas fa-edit"
+                  (click)="d.toggle();d.navigateTo(getDateForCalender(item.isEdit ? item.edit_value[colIndex.datafield]: item[colIndex.datafield])); item.isEdit=true;">
+                </i>
+                <div class="content-text">
+                  <ng-container *ngIf="item.isEdit">
+                    {{ convertToLocalDataAndTime(item.edit_value[colIndex.datafield],  dateFormat) }}
+                  </ng-container>
+                  <ng-container *ngIf="!item.isEdit">
+                    {{ convertToLocalDataAndTime(item[colIndex.datafield],  dateFormat) }}
+                  </ng-container>
+                </div>
+              </div>
+              <!--Default Date Format-->
+              <div
+                *ngSwitchCase="colIndex.dataType==='CreatedDateTime' || colIndex.dataType==='LastUpdatedDateTime'?colIndex.dataType:''">
+                <div class="content-text">{{ convertToLocalDataAndTime(item[colIndex.datafield], dateTimeFormat ) }}
+                </div>
+              </div>
+              <div *ngSwitchCase="colIndex.dataType==='MODFON' || colIndex.dataType==='CRTDON'?colIndex.dataType:''">
+                <div class="content-text">
+                  {{ convertToLocalDataAndTime(item[colIndex.datafield], dateTimeFormat2,'0' ) }}</div>
+              </div>
+              <div *ngSwitchCase="'doc'">
+                <a href="javascript:void(0)" title="Documents" [ngbPopover]="tipContent"  placement="bottom"  [closeDelay]="5000" triggers="click:mouseleave">
+                    <i class="fas fa-file"></i>
+                </a>
+                <ng-template #tipContent>
+                    <div class="text-right">
+                      <ng-container *ngFor="let docs of docsMap | keyvalue">
+                        <ng-container *ngIf="docs.key === stage">
+                          <ng-container *ngFor="let doc of docs.value">
+                            <a href="javascript:void(0)" class="doct1" (click)="runReport(item, doc.reportName)">{{doc.label}}</a><br>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                  </div>
+                </ng-template>
+              </div>
+              <!-- Others -->
+              <div *ngSwitchDefault>
+                <div class="content-text">{{ item[colIndex.datafield] }}</div>
+              </div>
+            </td>
+          </tr>
+          <!-- Add New Row using inline editing functionality -->
+          <tr *ngIf="CanAddNewRow">
+            <td></td>
+            <ng-container *ngIf="!IsAddNewRow">
+              <td [colSpan]="colSpan-2">
+                <div class="action-btns justify-content-start" *ngIf="!editDisabled">
+                  <a href="javascript:void(0)" (click)="IsAddNewRow = true; newRow.edit_value={}; newRow.isVendorCartage = false; newRow.isBuyerCartage = false" class="btn-link h-75">
+                    <i class="font-italic">Add New Lot</i>
+                  </a>
+                </div>
+              </td>
+              <td></td>
+            </ng-container>
+            <ng-container *ngIf="IsAddNewRow">
+              <td>
+                <div class="action-btns">
+                  <a href="javascript:void(0)" (click)="confirmCreateNewRecord()" title="Create">
+                    <i class="fas fa-save"></i>
+                  </a>
+                  <a href="javascript:void(0)" (click)="IsAddNewRow = false;" title="Cancel">
+                    <i class="fas fa-times"></i>
+                  </a>
+                </div>
+              </td>
+              <td *ngFor="let colIndex of columns;let columnIndex=index" [ngSwitch]="colIndex.dataType">
+                <!-- TextBox,  EmailEditBox, UrlTextBox-->
+                <div
+                  *ngSwitchCase="colIndex.dataType==='TextBox' || colIndex.dataType==='EmailEditBox'  || colIndex.dataType==='UrlTextBox' ? colIndex.dataType:''"
+                  (keyup.enter)="rowEntered($event, false)">
+                  <ng-container [ngSwitch]="colIndex.datafield">
+                    <ng-container *ngSwitchCase="'dmolotlotinfolotid'">
+                      <div></div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotlotinfogstrate'">
+                      <div></div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'lmkldproductcategory'">
+                      <div></div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotvinfovendorid'">
+                      <div></div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotagncycommagent'">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotlotinfoturnovergs'">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotlotinfogst'">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotlotinfopdct'">
+                      <input [attr.type]="colIndex.isNumeric ? 'number' : 'text'" class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]" [ngbTypeahead]="productSearch"
+                        (selectItem)="setProductDescription($event, newRow)"
+                        (blur)="ValidateProduct($event);"
+                        (keyup)="ValidateProductOnKeyUp($event, newRow);"
+                        [ngClass]="{'is-invalid':productNameMessage === 'Product name is Not Exist'}"
+                        >
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotlotinfoproddesc'">
+                      <input [attr.type]="colIndex.isNumeric ? 'number' : 'text'" class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                        maxlength="60"
+                      >
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotlotinfobrd'">
+                      <input [attr.type]="colIndex.isNumeric ? 'number' : 'text'" class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]" [ngbTypeahead]="breedSearch"
+                        (focus)="onFocus($event)" (selectItem)="typeaheadSelected()"   [ngClass]="{'is-invalid':breedMessage === 'Breed name is Not Exist'}">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotvinfovendorid'">
+                      <input [attr.type]="colIndex.isNumeric ? 'number' : 'text'" class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]" [ngbTypeahead]="vendorIdSearch"
+                        (focus)="onFocus($event)" (selectItem)="selectVendor($event, 'dmocustmstrsapno', newRow)" (blur)="TrackVendor(newRow)" [disabled]="newRow.isBuyerCartage"
+                        [ngClass]="{'is-invalid':vendorIdMessage === 'VendorId is Not Exist'}"
+                        >
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotvinfovendornam'">
+                      <input [attr.type]="colIndex.isNumeric ? 'number' : 'text'" class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]" [ngbTypeahead]="vendorNameSearch"
+                        (focus)="onFocus($event)" (selectItem)="selectVendor($event, 'dmocustmstrcustname1', newRow)" [disabled]="newRow.isBuyerCartage"
+                        [ngClass]="{'is-invalid':vendorNameMessage === 'Vendor name is Not Exist'}"
+                        >
+                       
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotbinfobuyerid'">
+                      <input [attr.type]="colIndex.isNumeric ? 'number' : 'text'" class="form-control" [disabled]="newRow.isUnsoldLots || newRow?.isVendorCartage"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]" [ngbTypeahead]="buyerIdSearch"
+                        (focus)="onFocus($event)" (selectItem)="selectBuyer($event, 'dmocustmstrsapno', newRow)"
+                        [ngClass]="{'is-invalid':buyerIdMessage === 'BuyerId is Not Exist'}"
+                        >
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotbinfobuyername'">
+                      <input [attr.type]="colIndex.isNumeric ? 'number' : 'text'" class="form-control" [disabled]="newRow.isUnsoldLots || newRow?.isVendorCartage"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]" [ngbTypeahead]="buyerNameSearch"
+                        (focus)="onFocus($event)" (selectItem)="selectBuyer($event, 'dmocustmstrcustname1', newRow)"
+                        [ngClass]="{'is-invalid':buyerNameMessage === 'Buyer name is Not Exist'}"
+                        >
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotlotinfopricecpkg'">
+                      <input
+                        [attr.disabled]="is_cell_disabled(newRow, colIndex.datafield) ? '' : null" class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                        (ngModelChange)="edit_item_value($event, colIndex.datafield, newRow)" appTwoDigitDecimaNumber (blur)="fixedValue(newRow, colIndex.datafield,4)">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotlotinfopricephd'">
+                      <input
+                        [attr.disabled]="is_cell_disabled(newRow, colIndex.datafield) ? '' : null" class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                        (ngModelChange)="edit_item_value($event, colIndex.datafield, newRow)" appTwoDigitDecimaNumber (blur)="fixedValue(newRow, colIndex.datafield)">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'dmolotlotinfoqnty'">
+                      <input
+                       class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                        (ngModelChange)="getQuantity_Value($event, colIndex.datafield, newRow)" appTwoDigitDecimaNumber >
+                    </ng-container>
+
+                     <ng-container *ngSwitchCase="'dmolotlotinfowtkg'">
+                      <input
+                       class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                        (ngModelChange)="getWeight_Value($event, colIndex.datafield, newRow)"
+                        (keydown.Tab)="lastTabEntered($event, false)" appTwoDigitDecimaNumber (blur)="fixedValue(newRow, colIndex.datafield)">
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'dmolotlotinfoturnovaud'">
+                      <input
+                       class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                        (ngModelChange)="getTurnover_Value($event, colIndex.datafield, newRow)"
+                        (keypress)="accept_only_zero($event, newRow)"
+                        appTwoDigitDecimaNumber (blur)="fixedValue(newRow, colIndex.datafield)">
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'dmolotlotinfolotnum'">
+                      <input  class="form-control" [(ngModel)]="newRow.edit_value[colIndex.datafield]" (keypress)="ValidateAlphanumeric($event)" [disabled]="newRow.isBuyerCartage || newRow.IsEmpty">
+                    </ng-container>
+
+
+
+                    <ng-container *ngSwitchDefault>
+                      <input [attr.type]="colIndex.isNumeric ? 'number' : 'text'" class="form-control"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]">
+                    </ng-container>
+                  </ng-container>
+
+                </div>
+                <!-- PhoneTextBox-->
+                <div *ngSwitchCase="'PhoneTextBox'" (keyup.enter)="rowEntered($event, false)">
+                  <input class="form-control" type="tel" [textMask]="{mask: mask}"
+                    [(ngModel)]="newRow.edit_value[colIndex.datafield]">
+                </div>
+                <!-- ColorCodeStatus-->
+                <div *ngSwitchCase="colorCode.indexOf(colIndex.dataType)>-1 ? colIndex.dataType:''">
+                  <ng-template [ngIf]="colIndex.datafield === 'dmolotlotinfostatus'" [ngIfElse]="color">
+                    <div></div>
+                  </ng-template>
+                  <ng-template *color>
+                    <div ngbDropdown class="grid-wrap" tabIndex="0" #myDrop="ngbDropdown" (focus)="myDrop.open()"
+                      (openChange)="getDropDownData(colIndex.datafield)">
+                      <div id="cell-edit" ngbDropdownToggle>
+                        <i class="icon-edit fas fa-edit"></i>
+                      </div>
+                      <div ngbDropdownMenu aria-labelledby="cell-edit">
+                        <ul class="list-unstyled">
+                          <li [hidden]="!(!DMOData[colIndex.datafield])" class="dropdown-item text-center">
+                            <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i>
+                          </li>
+                          <li ngbDropdownItem *ngFor="let name of DMOData[colIndex.datafield];"
+                            (click)="changeEditValue($event, newRow, colIndex, name)">
+                            <div *ngIf="colIndex.dataType ==='ColorCodeStatus'" class="color-code"
+                              [ngStyle]="{'background': name.DataValue}"></div>
+                            {{name.DataValue}}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="content-text">
+                      <div class="color-code" [ngStyle]="{'background': newRow.edit_value[colIndex.datafield]}"></div>
+                      {{ newRow.edit_value[colIndex.datafield] }}
+                    </div>
+                  </ng-template>
+
+                </div>
+                <!-- DropDownList, CountryList, USAStateList,  ListBox -->
+                
+                <div *ngSwitchCase="( dropDown.indexOf(colIndex.dataType)>-1 || colIndex.dataType ==='KeyValueSearchBox' )? colIndex.dataType:'' ">
+                  <ng-container [ngSwitch]="colIndex.datafield">
+
+                    <ng-container *ngSwitchCase="'dmolotvinfovendorpic'">
+                      <ng-select 
+                        ngbTooltip="{{newRow.edit_value[colIndex.datafield]}}"
+                        [items]="newRow.vendorPICOptions"
+                        [addTag]="addPICTagFn"
+                        [selectOnTab]="true"
+                        [disabled]="newRow.isBuyerCartage"
+                        class="form-control DropDownList_dmolotvinfovendorpic uppercase"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                      >
+                        <ng-template ng-option-tmp let-item="item">
+                          <div title="{{item}}">{{item}}</div>
+                        </ng-template>
+                      </ng-select>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'dmolotbinfobuyerpic'">
+                      <ng-select 
+                        ngbTooltip="{{newRow.edit_value[colIndex.datafield]}}"
+                        [items]="newRow.buyerPICOptions"
+                        [addTag]="addPICTagFn"
+                        [selectOnTab]="true"
+                        class="form-control DropDownList_dmolotbinfobuyerpic uppercase"
+                        [disabled]="newRow.isUnsoldLots || newRow?.isVendorCartage"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                      >
+                        <ng-template ng-option-tmp let-item="item">
+                          <div title="{{item}}">{{item}}</div>
+                        </ng-template>
+                      </ng-select>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'dmolotvinfovendorbrc'">
+                      <ng-select
+                          [items]="newRow.vendorBranchOptions"
+                          *ngIf="!newRow.isDdl"
+                          bindValue="ValueField"
+                          bindLabel="TextField"
+                          class="form-control DropDownList_dmolotvinfovendorbrc" [disabled]="newRow.isBuyerCartage"
+                          [(ngModel)]="newRow.edit_value[colIndex.datafield]">
+                          <ng-template ng-footer-tmp>
+                            <a href="javascript:void(0)" class="footer-Add-New-Button" (click)="newRow.isDdl = true;">Add New</a>
+                          </ng-template>
+                      </ng-select>
+                     
+                      <input
+                          *ngIf="newRow.isDdl"
+                          type="text"
+                          id="TextBox_dmolotvinfovendorbrc"
+                          class="form-control DropDownList_dmolotvinfovendorbrc"
+                          [disabled]="newRow.isBuyerCartage"
+                          [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                          [ngbTypeahead]="vendorBranchSearch"
+                          [editable]="true"
+                          (focus)="onFocus($event)"
+                          [inputFormatter]="formatter"
+                          [resultFormatter]="formatter"
+                          [ngClass]="{'is-invalid':VendorBranchMessage == 'Vendor branch is Not Exist'}"
+                          (selectItem)="selectBranch($event, 'dmolotvinfovendorbrc', newRow)"
+                      />
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'dmolotbinfobuyerbrc'">
+                      <ng-select
+                          [items]="newRow.buyerBranchOptions"
+                          *ngIf="!newRow.isDdlBuyer"
+                          bindValue="ValueField"
+                          bindLabel="TextField"
+                          class="form-control DropDownList_dmolotbinfobuyerbrc" [disabled]="newRow.isUnsoldLots || newRow?.isVendorCartage"
+                          [(ngModel)]="newRow.edit_value[colIndex.datafield]">
+                          <ng-template ng-footer-tmp>
+                            <a href="javascript:void(0)" class="footer-Add-New-Button" (click)="newRow.isDdlBuyer = true;">Add New</a>
+                          </ng-template>
+                      </ng-select>
+
+                    <input
+                        *ngIf="newRow.isDdlBuyer"
+                        type="text"
+                        class="form-control DropDownList_dmolotbinfobuyerbrc"
+                        [disabled]="newRow.isUnsoldLots || newRow?.isVendorCartage"
+                        [(ngModel)]="newRow.edit_value[colIndex.datafield]"
+                        [ngbTypeahead]="branchSearch"
+                        [editable]="true"
+                        [inputFormatter]="formatter"
+                        [resultFormatter]="formatter"
+                        [ngClass]="{'is-invalid':BuyerBranchMessage == 'Buyer branch is Not Exist'}"
+                        (selectItem)="selectBranch($event, 'dmolotbinfobuyerbrc', newRow)"
+                    />
+                    </ng-container>
+                
+                    <ng-container *ngSwitchDefault>
+                      <div ngbDropdown class="grid-wrap" tabIndex="0" #myDrop="ngbDropdown" (focus)="myDrop.open()"
+                        (openChange)="getDropDownData(colIndex.datafield)">
+                        <div id="cell-edit" ngbDropdownToggle>
+                          <i class="icon-edit fas fa-edit"></i>
+                        </div>
+                        <div ngbDropdownMenu aria-labelledby="cell-edit">
+                          <ul class="list-unstyled">
+                            <!--Loding icon-->
+                            <li [hidden]="!(!DMOData[colIndex.datafield])" class="dropdown-item text-center">
+                              <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i>
+                            </li>
+                            <li ngbDropdownItem *ngFor="let name of DMOData[colIndex.datafield];"
+                              (click)="changeEditValue($event, newRow, colIndex, name)">
+                              <div>{{name.DataValue}}</div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="content-text">{{ newRow.edit_value[colIndex.datafield] }}</div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+                <!-- CheckBoxList, MultiSelectDropDownList, RadioButtonList-->
+                <div *ngSwitchCase="dropDownWithCheckbox.indexOf(colIndex.dataType)>-1? colIndex.dataType:'' ">
+                  <div ngbDropdown class="grid-wrap" tabIndex="0" #myDrop="ngbDropdown" (focus)="myDrop.open()"
+                    (openChange)="getDropDownData(colIndex.datafield)">
+                    <div id="cell-edit" ngbDropdownToggle>
+                      <i class="icon-edit fas fa-edit"></i>
+                    </div>
+                    <div ngbDropdownMenu aria-labelledby="cell-edit">
+                      <div>
+                        <ul class="list-unstyled">
+                          <!--Loding icon-->
+                          <li [hidden]="!(!DMOData[colIndex.datafield])" class="dropdown-item text-center">
+                            <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i>
+                          </li>
+                          <li *ngFor="let name of DMOData[colIndex.datafield]; let i = index">
+                            <div class="form-check">
+                              <input type="{{colIndex.dataType==='RadioButtonList' ? 'radio' :'checkbox'}}" name="radio"
+                                class="form-check-input"
+                                [checked]="CheckedSelected(newRow.edit_value[colIndex.datafield], name.DataValue)"
+                                class="{{'check_'+i}}">
+                              <label class="form-check-label" for="{{'check_'+i}}">{{name.DataValue}}</label>
+                            </div>
+                          </li>
+                          <li>
+                            <div>
+                              <button class="btn btn-primary btn-sm"
+                                (click)="changeEditValue($event, newRow, colIndex); myDrop.close()">Apply</button>
+                              <button class="btn btn-secondary btn-sm float-right"
+                                (click)="myDrop.close()">Cancel</button>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="content-text">{{ newRow.edit_value[colIndex.datafield] }}</div>
+                </div>
+                <!-- DateEditBox, DateWithCalendar -->
+                <div *ngSwitchCase="calender.indexOf(colIndex.dataType)>-1 ? colIndex.dataType:'' " class="cell-date">
+                  <input type="hidden" ngbDatepicker (dateSelect)="changeEditValue($event, newRow, colIndex)" placeholder="dateFormat" name="dp" #d="ngbDatepicker" />
+                  <i aria-hidden="true"
+                    class="icon-edit fas fa-edit"
+                    (click)="d.toggle();d.navigateTo(getDateForCalender(newRow.edit_value[colIndex.datafield]));">
+                  </i>
+                  <div class="content-text">
+                    {{ convertToLocalDataAndTime(newRow.edit_value[colIndex.datafield], dateFormat) }}
+                  </div>
+                </div>
+                <!--RoleType-->
+                <div *ngSwitchCase="roleType.indexOf(colIndex.dataType)>-1? colIndex.dataType:'' ">
+                  <div ngbDropdown class="grid-wrap" tabIndex="0" #myDrop="ngbDropdown" (focus)="myDrop.open()"
+                    (openChange)="getDropDownData(colIndex.datafield, true)">
+                    <div id="cell-edit" ngbDropdownToggle>
+                      <i class="icon-edit fas fa-edit"></i>
+                    </div>
+                    <div ngbDropdownMenu aria-labelledby="cell-edit">
+                      <div>
+                        <ul class="list-unstyled">
+                          <!--Loding icon-->
+                          <li [hidden]="!(!DMOData[colIndex.datafield])" class="dropdown-item text-center">
+                            <i class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i>
+                          </li>
+                          <li *ngFor="let name of DMOData[colIndex.datafield]; let i = index">
+                            <div class="form-check">
+                              <input type="radio" name="radio" class="form-check-input"
+                                [checked]="CheckedSelected(newRow.edit_value[colIndex.datafield], name.DataValue.key)"
+                                value="{{name.DataValue.key}}" class="{{'check_'+i}}">
+                              <label class="form-check-label" for="{{'check_'+i}}">{{name.DataValue.value}}</label>
+                            </div>
+                          </li>
+                          <li>
+                            <div>
+                              <button type="button" class="btn btn-primary btn-sm"
+                                (click)="changeEditValue($event, newRow, colIndex); myDrop.close()">Apply</button>
+                              <button class="btn btn-secondary btn-sm float-right"
+                                (click)="myDrop.close()">Cancel</button>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="content-text">{{ newRow.edit_value[colIndex.datafield] }}</div>
+                </div>
+                <!-- Others -->
+                <div *ngSwitchDefault>
+                  <div class="content-text">{{ newRow.edit_value[colIndex.datafield] }}</div>
+                </div>
+              </td>
+
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+      <section id="metrics">
+        <div>Totals</div>
+        <div *ngFor="let item of metricsMap">
+            <span *ngIf="columnMap.indexOf(item.objectKey) == -1; else other1">
+              <span *ngIf="['TotalLOT', 'TotalQuantity'].indexOf(item.objectKey) == -1; else other2">
+                <span *ngIf="'TotalCPerKg' == item.objectKey">
+                  {{metricsData[item.objectKey]  | number:'1.4-4'}}
+                </span>
+                <span *ngIf="'TotalCPerKg' != item.objectKey">
+                  {{metricsData[item.objectKey]  | number:'1.2-2'}}
+                </span>
+              </span>
+            
+              <ng-template #other2>
+                <span>{{metricsData[item.objectKey]}}</span>
+              </ng-template>
+            </span>
+            <ng-template #other1>          
+              <span>${{metricsData[item.objectKey]  | number:'1.2-2'}}</span>
+            </ng-template>
+            <span>{{item.displayName}}</span>
+        </div>
+      </section>
+      <!--Grid Footer-->
+      <nav aria-label="Page navigation" [hidden]='!hideFooter'>
+        <div class="filter_pagination justify-content-end">
+          <div [ngClass]="TableInfo.PageNumber==1?'disabled':''">
+            <div class="input-group">
+              <div>Go to page :</div>
+              <input class="gotoPage" #pageSelect type="number" [value]="TableInfo.PageNumber" min="1"
+                (change)="goToPage(pageSelect)">
+
+            </div>
+          </div>
+          <div class="selectListing" [ngClass]="TableInfo.PageNumber==1?'disabled':''">
+            <div class="input-group">
+              <div>Show Rows:</div>
+              <div ngbDropdown>
+                <button class="btn btn-outline-primary" ngbDropdownToggle>{{_bodyData.PageSize}}</button>
+                <ul ngbDropdownMenu aria-labelledby="dropdownCustomFilter">
+                  <li ngbDropdownItem (click)="changePageSize(10)">10</li>
+                  <li ngbDropdownItem (click)="changePageSize(20)">20</li>
+                  <li ngbDropdownItem (click)="changePageSize(30)">30</li>
+                  <li ngbDropdownItem (click)="changePageSize(40)">40</li>
+                  <li ngbDropdownItem (click)="changePageSize(50)">50</li>
+                  <li ngbDropdownItem (click)="changePageSize(100)">100</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div [ngClass]="TableInfo.PageNumber==1?'disabled':''">
+            <div class="input-group">
+              <!-- <div style="padding-right:0px;"> {{TableInfo.Start}} - {{TableInfo.End}} of {{TableInfo.Recordes}}</div> -->
+              <div *ngIf="TableInfo.Recordes !== -1 && IsCoutLoad" style="padding-right:0px;"> {{TableInfo.Start}} - {{TableInfo.End}} of               
+                <span>{{TableInfo.Recordes}}</span>               
+              </div> 
+              <img *ngIf="!IsCoutLoad" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+            </div>
+          </div>
+          <!--Next Button-->
+          <div class="nxt_prvWrap" [ngClass]="TableInfo.PageNumber==1?'disabled':''">
+            <a (click)="onPageChange('prev')" tabindex="-1"><i aria-label="Left arrow" class="fas fa-angle-left"
+                role="img"></i></a>
+          </div>
+          <!--Previous button-->
+          <div class="nxt_prvWrap" [ngClass]="(TableInfo.PageNumber+1)>=TableInfo.PageCount?'disabled':''">
+            <a (click)="onPageChange('next')" tabindex="-1"><i aria-label="Right arrow" class="fas fa-angle-right"
+                role="img"></i></a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <ng-template #bulkUpload let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Upload file</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          <!-- <a href="">Sample</a> -->
+          <div class="custom-file">
+            <input type="file" (change)="handleFileInput($event.target.files)" id="fileupload" class="custom-file-input"
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+            <label class="custom-file-label" for='fileupload'></label>
+          </div>
+          <div class="input-group">
+            <span>{{fileName}}</span>
+          </div>
+          <div class="input-group">
+            <span style="color: #dc3545;" *ngIf="IsValidFile">{{errorMsg}}</span>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary btn-sm" [disabled]="IsValidFile" (click)="upload()">Upload</button>
+    </div>
+  </ng-template>
+</div>

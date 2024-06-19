@@ -1,0 +1,26 @@
+// // This is temporary solution till database changes
+
+// export const productsCategories = [
+//   {value: "All", text: "All"},
+//   {value: "ALP", text: "Alpaca"},
+//   {value: "AS", text: "Wool - Australian Superfine"},
+//   {value: "BY", text: "ByProducts"},
+//   {value: "CA", text: "Cattle"},
+//   {value: "D", text: "Wool - Downs"},
+//   {value: "DE", text: "Deer"},
+//   {value: "DP", text: "Dairy Product"},
+//   {value: "EXOT", text: "Exempt Other"},
+//   {value: "FE", text: "Fees & Charges"},
+//   {value: "GO", text: "Goat"},
+//   {value: "HF", text: "Hay & Feed"},
+//   {value: "HO", text: "Horse"},
+//   {value: "IN-WFI", text: "Insurance WFI"},
+//   {value: "M", text: "Wool - Merino"},
+//   {value: "OT", text: "Other Special Live Stock"},
+//   {value: "PI", text: "Pig"},
+//   {value: "R", text: "Wool - Sheds Fibre"},
+//   {value: "SH", text: "Sheep"},
+//   {value: "SU", text: "Other"},
+//   {value: "T", text: "Wool - Carpet"},
+//   {value: "X", text: "Wool - Crossbred"},
+// ]

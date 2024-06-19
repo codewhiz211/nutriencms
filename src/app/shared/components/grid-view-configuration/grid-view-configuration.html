@@ -1,0 +1,426 @@
+
+<section class="configurePop">
+  <div class="pop_box largePop">
+    <section class="modal-header">
+      <h3 class="FR22 padding-0">Configure View</h3>
+      <div *ngIf="OldViewName != '' " class="configPopTlinks">
+        <a href="JavaScript:void(0);" (click)="duplicateView()"><i class="fas fa-copy"></i> Duplicate View</a>
+        <a class="delete-view" *ngIf="!this.gridConfigJson.IsDefaultView" href="JavaScript:void(0);" (click)="deleteGridConfig()"><i class="far fa-trash-alt"></i> Delete View</a>
+      </div>
+      <div class="corner-button">
+      <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false); clearOldValue()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+    </section>
+    <section aria-label="Modal heading text content" class="modal-body" role="document">
+      <div class="fWrap sections">
+        <div class="heading FR22" [ngClass]="getToggle('SectionEditView') ? 'Hide' : ''">Edit View
+          <a href="JavaScript:void(0);" (click)="clickEvent('SectionEditView')" title="Show Hide"><i aria-label="close/open" class="fa fa-chevron-up"
+              role="img"></i></a>
+        </div>
+        <!---------------------View Name Section--------------------->
+        <div class="showHide">
+          <div class="form-row nomar">
+            <label for="">Name</label>
+            <div class="field-group">
+              <div class="grid grid-m break-grid-2">
+                <div><input class="span12" id="txtDefView" placeholder="Name" type="text" value="Default" [(ngModel)]="gridConfigJson.ViewName"></div>
+                <div>
+                  <label class="checkbox" for="defaultView" style="margin-top:5px">
+                    <input id="defaultView" [disabled]='disableIsDefaultView' type="checkbox" value="" [checked]="gridConfigJson.IsDefaultView" (click)="setIsDefaultView()">
+                    <i class="skin"></i>
+                    <span>Is this the default view?</span>
+                  </label>
+                </div>
+                <div class="d-flex align-items-center">
+                  <label class="mb-0 pr-3">Page Size</label>
+                  <input type="text" (keypress)="validatePageSize($event)" [(ngModel)]="gridConfigJson.PageSize">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!---------------------End View Name Section--------------------->
+      </div>
+      
+      <!---------------------Customize Grid columns Section--------------------->
+      <div class="fWrap sections">
+        <div class="heading FR22" [ngClass]="getToggle('SectionGridColumn') ? 'Hide' : ''">Grid
+          <a href="JavaScript:void(0);" (click)="clickEvent('SectionGridColumn')" title="Show Hide">
+            <i aria-label="close/open" class="fa fa-chevron-up" role="img"></i>
+          </a>
+        </div>
+        <div class="showHide">
+          <div class="custom_wrap">
+            <div class="paddingBottom-xxs">Customize Columns</div>
+            <div class="drag_grid">
+              <div class="row">
+                <div class="left_cell">
+                  <div class="wfMainGSearch">
+                    <div class="globalSearchWrap">
+                      <div class="field-group">
+                        <input class="span12" name="txtColSearch" id="txtColSearch" placeholder="Search Term" type="search" [(ngModel)]="columnName">
+                        <button aria-label="Search" class="btn-search" routerlink="" style="z-index: 1;" tabindex="0"
+                          type="button">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-right paddingTop-xs">
+                    <a id="aAddAllColumns" (click)="AddALLGridColumn()" href="javascript:void(0)">Add all columns</a>
+                  </div>
+                </div>
+                <div class="right_cell">
+                  <div class="text-right"><a (click)="DeleteAllGridColumn(GridColumnList)" href="javascript:void(0)">Clear All</a></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="left_cell">
+                  <div class="scroll_wrap">
+                    <ul>
+                      <li *ngFor="let column of ColumnList | searchColumn:columnName:'DisplayName'; let i=index">
+                        <span>{{column.DataModelObjectGroup === undefined ? '': column.DataModelObjectGroup.Name + '>'}} {{column.DisplayName}}</span>
+                        <span><a *ngIf="GridColumns[column.GUID]==undefined ? 'Add' : 'Added'  as btnColumnText" 
+                          (click)="AddGridColumn(column)" href="javascript:void(0)">{{btnColumnText}}</a></span></li>   
+                    </ul>
+                  </div>
+                </div>
+                <div class="right_cell">
+                  <div class="scroll_wrap"> 
+                    <ul cdkDropList (cdkDropListDropped)="dropColumn($event)">
+                    <li class="pop" cdkDrag *ngFor="let column of GridColumnList; let i = index">
+                      <span>{{column.DataModelObjectGroup === undefined ? '': column.DataModelObjectGroup.Name + '>'}} {{column.DisplayName}}</span>
+                      <span><a (click)="DeleteGridColumn(column)" href="javascript:void(0)">Remove</a></span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row form-row-new">
+          <label for="">Default Sorting</label>
+          <div class="field-group">
+            <div class="grid grid-m break-grid-3">
+              <div class="df-sorting">
+                <div class="field-group">
+                    <div class="selectListing fullWidth widBrdr">
+                        <div ngbDropdown>
+                          <button class="btn btn-outline-primary" ngbDropdownToggle>{{gridConfigJson.SortColumnCaption}}</button>
+                          <ul ngbDropdownMenu aria-labelledby="dropdownConfig">
+                            <li ngbDropdownItem value="" (click)="setSortColumn({GUID:'',DisplayName:'Select...'})">Select...</li>
+                            <li ngbDropdownItem *ngFor="let option of GridColumnList" value="{{option.GUID}}" (click)="setSortColumn(option)">
+                              {{option.DataModelObjectGroup === undefined ? '': option.DataModelObjectGroup.Name + '>'}} {{option.DisplayName}}
+                            </li>
+                          </ul>
+                      </div>
+                </div>
+                </div>
+              </div>
+              <div class="df-sorting">
+                <div class="field-group">
+                    <div class="selectListing fullWidth widBrdr">
+                        <div ngbDropdown>
+                          <button class="btn btn-outline-primary" ngbDropdownToggle>{{gridConfigJson.SortDirectionCaption | titlecase }}</button>
+                          <ul ngbDropdownMenu aria-labelledby="dropdownConfig">
+                            <li ngbDropdownItem value="" (click)="setSortOrder({Value:'',Text:'Select...'})">Select...</li>
+                            <li ngbDropdownItem *ngFor="let option of lstSortOrder" value="{{option.Value}}" (click)="setSortOrder(option)">{{option.Text}}</li>
+                          </ul>
+                      </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!---------------------End Customize Grid columns Section--------------------->
+    
+    <div class="fWrap sections">
+      <div class="heading FR22" [ngClass]="getToggle('SectionDmoColumn') ? 'Hide' : ''">DMO Filters 
+        <a href="JavaScript:void(0);" (click)="clickEvent('SectionDmoColumn')" title="Show Hide"><i aria-label="close/open"
+            class="fa fa-chevron-up" role="img"></i></a></div>
+      <div class="showHide">
+        <!---------------------DMO Filter Bar Section--------------------->
+        <div class="form-row nomar"><label for="">DMO Filter Bar</label>
+          <div class="drag_grid">
+              <div class="row">
+                <div class="left_cell">
+                  <div class="wfMainGSearch">
+                    <div class="globalSearchWrap">
+                      <div class="field-group">
+                        <input class="span12" name="dmoSearch" id="dmoSearch" placeholder="Search Term" type="search" [(ngModel)]="columnName1">
+                        <button aria-label="Search" class="btn-search" routerlink="" style="z-index: 1;" tabindex="0"
+                          type="button">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-right paddingTop-xs">
+                    <a id="aAddAllColumns" (click)="AddALLDMOColumnFilter()" href="javascript:void(0)">Add all DMO</a>
+                  </div>
+                </div>
+                <div class="right_cell">
+                  <div class="text-right"><a (click)="DeleteAllColumnFilter(GridColumnFilterList)" href="javascript:void(0)">Clear All</a></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="left_cell">
+                  <div class="scroll_wrap">
+                    <ul>
+                      <li *ngFor="let column of getDMOListOnly(DMOColumnList) | searchDMO:columnName1:'DisplayName'; let i=index" >
+                        <span>
+                          {{column.DataModelObjectGroup === undefined ? '': column.DataModelObjectGroup.Name + '>'}} {{column.DisplayName}}
+                        </span>
+                        <span>
+                        <a *ngIf="GridColumnFilters[column.GUID]==undefined ? 'Add' : 'Added'  as btnDmoFilterText"
+                      (click)="AddColumnFilter(column)" href="javascript:void(0)">{{btnDmoFilterText}}</a></span>                    
+                    </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="right_cell">
+                  <div class="scroll_wrap">
+                    <ul>
+                      <li *ngFor="let column of GridColumnFilterList; let i = index">                        
+                        <span>{{column.DataModelObjectGroup === undefined ? '': column.DataModelObjectGroup.Name + '>'}} {{column.DisplayName}}</span>
+                        <span><a (click)="DeleteColumnFilter(column)" href="javascript:void(0)">Remove</a></span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <!---------------------End DMO Filter Bar Section--------------------->
+      </div>
+    </div>
+
+    <div class="fWrap sections" *ngIf="ProcessName !== 'LMKCRMCommissionAdjustment'">
+        <div class="heading FR22" [ngClass]="getToggle('SectionStateFilter') ? 'Hide' : ''">Stage/State Filters 
+          <a href="JavaScript:void(0);" (click)="clickEvent('SectionStateFilter')" title="Show Hide"><i aria-label="close/open"
+              class="fa fa-chevron-up" role="img"></i></a></div>
+        <div class="showHide">
+          <!---------------------State Filter Bar Section--------------------->
+        <div class="form-row nomar">
+          <div class="selectFilter">
+            <div class="form-check form-check-inline">
+              <input [checked]="(stageState=='Stage'? true : false)" class="form-check-input" id="inlineRadio2" type="radio" name="inlineRadioOptions" value="Stage" (change)="setFilterConditional('Stage')">
+              <label class="form-check-label" for="inlineRadio2">Stage</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input [checked]="(stageState=='State'? true : false)" class="form-check-input" id="inlineRadio1" type="radio" name="inlineRadioOptions" value="State" (change)="setFilterConditional('State')">
+                <label class="form-check-label" for="inlineRadio1">State</label>
+            </div>
+          </div>
+          <div class="drag_grid state-filter-wrap" *ngIf ="(stageState == 'State')">
+              <div class="row">
+                <div class="left_cell">
+                  <div class="scroll_wrap">
+                    <ul>
+                      <li *ngFor="let state of StateList">
+                        <span>{{state.DisplayName}}</span>
+                        <span><a *ngIf="GridStateFilter[state.GUID]==undefined ? 'Add' : 'Added'  as btnStateFilterText" (click)="AddStateFilter(state)" href="javascript:void(0)">{{btnStateFilterText}}</a></span></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="right_cell">
+                  <div class="scroll_wrap">
+                    <ul cdkDropList (cdkDropListDropped)="dropState($event)">
+                      <li class="pop" cdkDrag *ngFor="let state of StateFilterList; let i = index">
+                        <span>{{state.DisplayName}}</span>
+                        <span><a (click)="DeleteStateFilter(state)" href="javascript:void(0)">Remove</a></span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="drag_grid state-filter-wrap" *ngIf ="(stageState == 'Stage')">
+                <div class="row">
+                  <div class="left_cell">
+                    <div class="scroll_wrap">
+                      <ul>
+                        <li *ngFor="let stage of StageList">
+                          <span>{{stage.DisplayName}}</span>
+                          <span><a *ngIf="GridStageFilter[stage.GUID]==undefined ? 'Add' : 'Added'  as btnStageFilterText" (click)="AddStageFilter(stage)" href="javascript:void(0)">{{btnStageFilterText}}</a></span></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="right_cell">
+                    <div class="scroll_wrap">
+                      <ul cdkDropList (cdkDropListDropped)="dropState($event)">
+                        <li class="pop" cdkDrag *ngFor="let stage of StageFilterList; let i = index">
+                          <span>{{stage.DisplayName}}</span>
+                          <span><a (click)="DeleteStageFilter(stage)" href="javascript:void(0)">Remove</a></span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <!---------------------End State Filter Bar Section--------------------->
+          </div>
+    </div>
+    <div class="fWrap sections">
+      <div class="heading FR22" [ngClass]="getToggle('SectionCustomFilter') ? 'Hide' : ''">Custom Filters 
+        <a href="JavaScript:void(0);" (click)="clickEvent('SectionCustomFilter')" title="Show Hide"><i
+            aria-label="close/open" class="fa fa-chevron-up" role="img"></i>
+        </a>
+      </div>
+      <div class="showHide">
+        <div class="form-row nomar">
+          <button class="btn btn-primary-special btn-small" type="button" (click)="showCustomBar()">Create New +</button>
+        </div>
+        <div class="custm_filter" *ngIf="showCustomeBar">
+          <form #userForm="ngForm" novalidate autocomplete="off" (ngSubmit)="onSubmit(userForm.valid,userForm);false">
+            <div class="grid grid-m break-grid-3">
+              <div class="form-row midmar">
+                <input class="span12" (blur)="isNameDuplicate(customFilter.FilterName)" placeholder="Filter Name" type="text" value="" name="filterName"
+                [(ngModel)]="customFilter.FilterName" #fName="ngModel" required>
+                <div *ngIf="fName.invalid && ((fName.dirty || fName.touched)||(userForm.submitted && formVal))">
+                    <span class="err_message" *ngIf="fName.errors.required">Filter name required</span>
+                </div>
+              </div>
+            </div>
+            <div class="span12 cFilterGrid">
+              <div class="cFilterLeft">
+                <div class="grid grid-s break-grid-3">
+                    <div class="field-group">
+                    <ng-container>
+                      <ng-select
+                      [searchable]="true"
+                      (change)="filterColumnName($event)"
+                      name="test1"  
+                      [(ngModel)]="customFilter.ColumnName" 
+                      #columnName="ngModel" 
+                      required
+                      [items]="ColumnListForDDL"
+                      bindValue="ValueField"
+                      bindLabel="TextField"
+                      groupBy="DMOG"
+                    >
+                      <ng-template ng-option-tmp let-item="item">
+                        <div title="{{item.TextField}}">{{item.TextField}}</div>
+                      </ng-template>
+                    </ng-select>
+                    <div *ngIf="columnName.invalid && ((columnName.dirty || columnName.touched)||(userForm.submitted && formVal))">
+                      <span class="err_message" *ngIf="columnName.errors.required">Column name required</span>
+                  </div>
+                        <!-- <ng-select placeholder="Select Column" [searchable]="true" (change)="filterColumnName($event)" name="test1" groupBy="GroupName" [(ngModel)]="customFilter.ColumnName" #columnName="ngModel" required>
+                          <ng-option aria-selected="true" value="">Select Column...</ng-option>
+                          <ng-option *ngFor="let column of getDMOListOnly(ColumnList)" [value]="column" title="column.DisplayName">{{column.DisplayName}}</ng-option>
+                        </ng-select>
+                        <div *ngIf="columnName.invalid && ((columnName.dirty || columnName.touched)||(userForm.submitted && formVal))">
+                            <span class="err_message" *ngIf="columnName.errors.required">Column name required</span>
+                        </div> -->
+                      </ng-container>
+                    </div>
+                    <div class="field-group">
+                        <ng-container>
+                            <ng-select placeholder="Select Condition" [searchable]="true" (change)="conditionKeys($event)" name="test2" [(ngModel)]="customFilter.Condition"  #condition="ngModel" required>
+                              <ng-option aria-selected="true" value="">Select Condition...</ng-option>
+                              <ng-option *ngFor="let cop of TextboxTypes" [value]="cop">{{cop.value}}</ng-option>
+                              <!-- <ng-option *ngFor="let cop of columnFilter.GetFilterByDataType(ColumnType)" [value]="cop">{{cop.value}}</ng-option> -->
+                            </ng-select>
+                            <div *ngIf="condition.invalid && ((condition.dirty || condition.touched)||(userForm.submitted && formVal))">
+                              <span class="err_message" *ngIf="condition.errors.required">Condition required</span>
+                            </div>
+                          </ng-container>
+                  </div>
+                  <div>
+                    <div class="addLanRowWrap">
+                        <div class="form-row nomar" *ngIf="comparisonField">
+                        <input class="span12" type="text" name="comparisionValue" placeholder="Comparison Value"
+                        [(ngModel)]="customFilter.ConditionValue" #comparisonValue="ngModel" [required]="comparisonField">
+                        <div
+                          *ngIf="comparisonValue.invalid && ((comparisonValue.dirty || comparisonValue.touched)||(userForm.submitted && formVal))">
+                          <span class="err_message" *ngIf="comparisonValue.errors.required">Value required</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="editDeleteWrap">
+                      <button class="setf_data" type="submit"><i class="fas fa-plus"></i></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="padding-xxs"></div>
+                <div class="tableWrap" style="margin-bottom:0;" *ngIf="customFilter?.Conditions.length>=1">
+                  <table class="basicTable" style="min-width:450px;">
+                    <tbody>
+                      <tr *ngFor="let currFilter of customFilter.Conditions let i = index">
+                        <td style="width:32%">{{getColumn(currFilter.ColumnName) + '>'}} {{currFilter.ColumnDisplayName}}</td>
+                        <td> {{currFilter.ConditionVal}} </td>
+                        <td> {{currFilter.ConditionValue}} </td>
+                        <td style="width:80px;">
+                          <a class="colorRed" href="JavaScript:void(0);" (click)="deletecDataRow(i)">Remove</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="cFilterRight">
+                <div class="field-group">
+                  <form #filterForm="ngForm" novalidate autocomplete="off"
+                  (ngSubmit)="saveFilter(filterForm.valid,filterForm);false">
+                  <ng-container *ngIf="customFilter?.Conditions.length>1">
+                    <ng-select [searchable]="true"  name="operator" [(ngModel)]="customFilter.LogicalOperator" #operator="ngModel" [required]="customFilter.Conditions"  style="margin-top: -85px;">
+                      <ng-option aria-selected="true" value="">Select Operator...</ng-option>
+                      <ng-option *ngFor="let operatortext of fConditionOperator" [value]="operatortext.value">{{operatortext.value}}</ng-option>
+                    </ng-select>
+                    <div *ngIf="operator.invalid && ((operator.dirty || operator.touched)||(filterForm.submitted && formValue))">
+                      <span class="err_message" *ngIf="operator.errors.required">Operator required</span>
+                    </div>
+                  </ng-container>
+                  
+                  <div class="cta-button-group nodots">
+                      <button (click)="showCustomBar()" class="btn btn-secondary btn-small" type="button">Cancel</button>
+                      <button *ngIf="isDuplicate === false" class="btn btn-secondary btn-small" type="submit">Save</button>
+                    </div>
+                </form>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div *ngIf="ErrorMessage !== ''">
+                <span class="err_message">{{ErrorMessage}}</span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="created-filter" [hidden]="IsEmptyObject(gridConfigJson.CustomFilters)" >
+          <div class="padding-xxs"><strong>My Created Filter</strong></div>
+          <div class="crtdFilter">
+            <div class="tableWrap" style="margin-bottom:0;">
+              <table class="basicTable" style="min-width:450px;">
+                <tbody>
+                  <tr *ngFor="let item of gridConfigJson.CustomFilters | keyvalue" let i = index>
+                    <td> {{item.key}} </td>
+                    <td style="width:180px;">
+                      <div class="editDelWrap">
+                        <a href="javascript:void(0)" (click)="EditCustomFilter(item)" title="Edit">Edit</a>
+                        <a href="javascript:void(0)" (click)="DeleteCustomFilter(item.key)" title="Delete">Delete</a>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-button-group">
+      <button class="btn btn-warning btn-sm text-white" data-dismiss="modal" type="button" (click)="setGridConfigData()">Save &amp; Update</button>
+      <button class="btn btn-clear btn-small" (click)="ResetConfig()" data-dismiss="modal" type="button">Reset Grid</button>
+      <button class="btn btn-clear btn-small" (click)="activeModal.close(false); clearOldValue()" data-dismiss="modal" type="button">Cancel</button>
+    </div>
+  </section>
+</div>
+</section>

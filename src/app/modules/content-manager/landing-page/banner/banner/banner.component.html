@@ -1,0 +1,68 @@
+<div class="breadcrumbs">
+  <a routerLink="/Banner"><i class="fas fa-home"></i></a> <span><i class="fas fa-chevron-right"></i></span> Landing Page
+  <span><i class="fas fa-chevron-right"></i></span> Banner
+</div>
+
+<div class="p-1"></div>
+<!--Gloabl Search-->
+<form class="position-relative text-center" (ngSubmit)="globalSearch(txtGlobal.value)">
+  <div class="p-2">
+    <div class="wfMainGSearch">
+      <div class="globalSearchWrap">
+        <div class="position-relative">
+          <input id="globalSearch" #txtGlobal placeholder="Global Search" type="search">
+          <button aria-label="Search" class="btn-search" routerlink="" style="z-index: 1;" tabindex="0" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div></div>
+<div class="p-1"></div>
+<div class="table-filters-group">
+  <div class="button-group" style="padding: 3px 5px;">
+    <div  *ngIf="isBuyerAccess">
+    <button class="btn btn-primary-special btn-small" type="button" (click)="openAddEditPopup(null)">Add Banner</button>
+    <button class="btn btn-primary-special btn-small" type="button" (click)="openStatus()">Change Status</button>
+  </div>
+  </div>
+</div>
+
+<div class="p-1"></div>
+<div class="grid">
+  <generic-grid 
+    [BuyerAccessRole]="isBuyerAccess" 
+    [FromDateobj]="FromDateobj"
+    [ToDateobj]="ToDateobj"
+    [filterValue1]="filterValue1" [filterValue2]="filterValue2" [ConditionOpt1]="ConditionOpt1"
+    [ConditionOpt2]="ConditionOpt2" [logicalOpt]="logicalOpt" [dataSource]="dataSource" [headerMap]="HeaderMap"
+    [itemsCount]="itemsCount" [sNo]="false" [pageNum]="pageNum" (pageChange)="pageChange($event)"
+    (actionClick)="actionClick($event, content)" #genericgridcomponent></generic-grid>
+    <a class="btnFltr" href="javascript:void(0);" title="Remove Filter" (click)="genericgridcomponent.OnRemoveFilterClick();removeFilter(txtGlobal)">Remove
+      Filter</a>
+  <!-- <a href="javascript:void(0);" title="Remove Filter" (click)="openModal(content)">Open popup</a> -->
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Preview Banner</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+      <div class="modal-body" role="document" aria-label="Modal heading text content">
+          <div class="videoWrap">
+            <img [src]="this.sanitizer.bypassSecurityTrustUrl(imageToShow)"
+            alt="Place image title">
+          </div>
+      </div>
+      <div class="modal-footer">
+          <div class="cta-button-group">
+            <button class="btn btn-clear btn-small" (click)="modal.dismiss('Cross click')" type="button" data-dismiss="modal">Close</button>    
+            <button class="btn btn-primary btn-small" (click)="openAddEditPopup(rowIndex)" type="button" data-dismiss="modal">Edit</button> 
+          </div>
+      </div>
+</ng-template>

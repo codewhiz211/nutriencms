@@ -1,0 +1,73 @@
+<!-- Modals -->
+<form *ngIf="form" [formGroup]="form">
+  <div class="modal-header">
+    <h4 class="modal-title">Create Copy Record</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-tabs>
+      <app-tab *ngFor="let bmoGuid of BMJSON.List" [title]="BMJSON.BusinessModelObjects[bmoGuid].DisplayName"
+        [bmodisplay]="bmogCondJson[bmoGuid] == null ? true :bmogCondJson[bmoGuid].IsVisible==true?true:false">
+        <div *ngIf="BMJSON.BusinessModelObjects[bmoGuid] as objBMO" id='{{"div"+bmoGuid}}'>
+                      <div *ngFor="let dmogGuid of objBMO.List" id='{{"DmgTable"+dmogGuid}}'
+                        [hidden]="!bmogCondJson[bmoGuid][dmogGuid].IsVisible" class="p-3">
+                        <app-accordion *ngIf="objBMO.DataModelObjectGroups[dmogGuid] as objDMOG">
+                          <app-accordion-item [isOpen]="objDMOG.DefaultCollapsed == 0">
+                            <div class="accordion-item-header">
+                              {{objDMOG.DisplayName}}
+                              <ng-template #dmogTipContent>
+                                <div [innerHTML]="objDMOG.LongDescription"></div>
+                              </ng-template>
+                              <a *ngIf="objDMOG.IsTooltip" class="dmog-tooltip" placement="bottom"
+                                [ngbTooltip]="dmogTipContent" tooltipClass="tooltip-class">
+                                <i class="far fa-question-circle"></i>
+                              </a>
+                            </div>
+                            <div class="accordion-item-content">
+                              <div id='{{dmogGuid}}' class="drow" *ngIf="bmogCondJson[bmoGuid][dmogGuid].IsVisible">
+                                <ng-container *ngFor="let rowID of objDMOG.List">
+                                  <ng-container *ngIf="objDMOG.Rows[rowID] as objROW">
+
+                                    <ng-container *ngFor="let objCOLUMN of objROW.Columns">
+                                      <ng-container *ngFor="let dmoGUID of objCOLUMN.List">
+                                        <div class="dcolumns" *ngIf="bmogCondJson[bmoGuid][dmogGuid][dmoGUID].IsVisible">
+                                          <ng-container *ngIf="objCOLUMN.DataModelObjects[dmoGUID] as objectDMO">
+                                            <app-dmo *ngIf="objectDMO"
+                                              [dmo]="objectDMO"
+                                              [transactionID]="transactionId" [tempTransactionID]="tempTransactionID"
+                                              [dmoGUID]="dmoGUID" [bmoGUID]="bmoGuid" [dmogGUID]="dmogGuid"
+                                              [parentForm]="form" [submitted]="formSubmitted"
+                                              [triggered]="formTriggered" [bmogCondJson]="bmogCondJson"
+                                              [currentStageGuid]="currentStageGuid"
+                                              [currentStateGuid]="currentStateGuid" [BMId]="BMId"
+                                              [fileList]="getDMOFileData(dmoGUID)"
+                                              [isCopy]="true"></app-dmo>
+                                          </ng-container>
+                                        </div>
+                                      </ng-container>
+                                    </ng-container>
+
+                                  </ng-container>
+                                </ng-container>
+                              </div>
+                            </div>
+                </app-accordion-item>
+              </app-accordion>
+          </div>
+        </div>
+      </app-tab>
+    </app-tabs>
+    <div class="d-flex align-items-center justify-content-end mb-4" *ngIf="triggers">
+      <ng-container *ngFor="let objTrig of triggers">
+        <ng-container *ngIf="objTrig.Type=='Action'">
+          <button type="button" class="btn btn-primary mr-2" [hidden]="!isTriggerVisible(objTrig)"
+            [disabled]="!isTriggerEnable(objTrig)" (click)="triggerSubmit(objTrig)">{{objTrig.DisplayName}}</button>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</form>
+
+<!-- End Modals -->

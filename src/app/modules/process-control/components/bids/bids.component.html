@@ -1,0 +1,14 @@
+<generic-grid 
+[rowState]="rowState"
+[FromDateobj]="FromDateobj"
+[ToDateobj]="ToDateobj"
+[filterValue1]="filterValue1"
+[filterValue2]="filterValue2"
+[ConditionOpt1]="ConditionOpt1"
+[ConditionOpt2]="ConditionOpt2"
+[logicalOpt]="logicalOpt"
+[dataSource]="dataSource" [headerMap]="HeaderMap" [itemsCount]="itemsCount" [sNo]="false" [pageNum]="pageNum" [isExport]="true"
+(pageChange)="pageChange($event)" (actionClick)="actionClick($event)" #genericgridcomponent></generic-grid>
+<a class="btnFltr" href="javascript:void(0);" title="Remove Filter" 
+      (click)="genericgridcomponent.OnRemoveFilterClick();removeFilter()">Remove Filter</a>      
+  

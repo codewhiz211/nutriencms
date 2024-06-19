@@ -1,0 +1,60 @@
+<section>
+    <div class="d-flex justify-content-between flex-column flex-md-row pt-2 px-3">
+        <div class="display-name">Sale GL XML log</div>
+    </div>
+</section>
+<div>
+   
+    <div id="glxml-search">
+        <div class="pt-2 px-3">
+       
+            <a href="javascript:void(0)" title="Clear All" style="font-size: 14px;" (click)="clear_all()">Clear All</a>
+        </div>
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col-12 sales-search" [ngClass]="{'margin-top-20': !isSearched}">
+                    <div class="sales-search-box">
+                        <div class="selectListing">
+                            <div ngbDropdown>
+                                <button class="btn btn-outline-primary" ngbDropdownToggle>Sale GLXML</button>
+                                <ul ngbDropdownMenu aria-labelledby="dropdownCustomFilter">
+                                    <li ngbDropdownItem>
+                                        Sale GLXML
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control sales-search-box-input shadow-none" [(ngModel)]="globalSearchValue">
+                        <button class="btn btn-warning sales-search-box-btn" (click)="search()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div> 
+                </div>
+               
+            </div>
+        </div>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="search-results" *ngIf="isSearched">
+                    <div class="table-filters-group">
+                        <div class="export-btns-group">
+                            
+                        </div>
+                    </div>
+                    <app-customized-grid
+                        [dataSource]="dataSource"
+                        [headerMap]="headerMap"
+                        [itemsCount]="itemsCount"
+                        [pageIndex]="pageIndex"
+                        [tableCss]="true"
+                        [sNo]="false"
+                        (pageChange)="pageChange($event)"
+                        (actionClick)="actionClick($event)"
+                    ></app-customized-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+<!-- Modals -->
+<div class="modal-header">
+    <h4 class="modal-title">
+        <ng-container *ngIf="isSoldBale" >Bale Details</ng-container>
+        <ng-container *ngIf="isUnsoldBale" >Bale Details</ng-container>
+        <ng-container *ngIf="isRehandleBale">Re-Handle Bale Details</ng-container>
+        <ng-container *ngIf="isSoldRehandle">Bale Details</ng-container>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false)">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="table-filters-group">
+        <div class="export-btns-group">
+            <!-- <a href="javascript:void(0)" title="Excel"><i class="far fa-file-excel"></i>Excel</a> -->
+        </div>
+    </div>
+    <app-customized-grid
+        [dataSource]="dataSource"
+        [headerMap]="headerMap"
+        [itemsCount]="itemsCount"
+        [pageIndex]="pageIndex"
+        [sNo]="false"
+        (pageChange)="pageChange($event)"
+        (actionClick)="actionClick($event)"
+    ></app-customized-grid>
+
+    <div class="d-flex align-items-center justify-content-end my-3">
+        <button type="button" class="btn btn-clear cancel-btn" (click)="activeModal.close(false)">Cancel</button>
+    </div>
+</div>
+  
+  <!-- End Modals -->

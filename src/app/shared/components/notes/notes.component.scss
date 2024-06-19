@@ -1,0 +1,356 @@
+.notes_wrapper {
+    :host {
+        display: block;
+      }
+      .uploader-wrapper {
+        position: relative;
+        width: 100vw;
+        height: 80vh;
+        padding-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center
+      }
+
+    .message_wrapper {
+        background-color: #f6f7f8;
+        padding: 42px 36px 0;
+
+        @media (max-width: 575.98px) {
+            padding: 50px 16px 0;
+        }
+
+        .message_block {
+            min-height: 370px;
+            max-height: 560px;
+            overflow-y: auto;
+
+            .chat_block {
+                padding: 14px 46px;
+                background-color: #fff;
+                margin-bottom: 12px;
+                &:last-child {
+                    margin-bottom: 0px;
+                }
+
+                @media (max-width: 575.98px) {
+                    padding: 12px 24px;
+                }
+
+                h5 {
+                    font-size: 12px;
+                    color: #36424F;
+                    font-weight: 700;
+                    margin: 0px;
+                    letter-spacing: 0.36px;
+                    line-height: 17px;
+                    display: flex;
+                    justify-content: space-between;
+
+                    span {
+                        font-weight: normal;
+                        font-weight: 600;
+                        color: #80868D;
+                    }
+                }
+                p {
+                    margin: 0px;
+                    font-size: 12px;
+                    letter-spacing: 0.36px;
+                    line-height: 17px;
+                    color: #36424F;
+                }
+                pre {
+                    color: #36424F;
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+    .send_messages{
+        display: flex;
+        align-items: center;
+        background-color: #e5f2ec;
+        padding: 13px;
+
+        .add_pop{
+            margin: 4px 8px 4px 0;
+            span {
+                i {
+                    color: #00A660;
+                    font-size: 36px;
+                    stroke: 4px #e5f2ec;
+                    -webkit-text-stroke: 4px #e5f2ec;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .write_message{
+            flex-grow: 1;
+
+            .scrollable-menu {
+                position: absolute;
+                margin: 0px;
+                padding: 5px 0px;
+                border: solid 1px #dee2e6;
+                background-color: #fff;
+                li{
+                    list-style-type: none;
+                    padding: 8px 15px;
+                    color: #676767;
+                    &:hover{
+                        background-color: #f6f7f8;
+                        color: #333;
+                    }
+                }
+            }
+
+            input {
+                height: 40px;
+                border: 1px solid #727A83;	
+                border-radius: 3px;	
+                background-color: #FFFFFF;
+                width: 100%;
+                resize: none;
+                padding: 5px 10px;
+            }
+        }
+        .send_icon {
+            margin-left: 8px;
+
+            button {
+                background: transparent;
+                border: none;
+                border-radius: 50%;
+            }
+            button:disabled span {
+                background-color: #00a6609c;
+            }
+            span {
+                width: 43px;
+                height: 43px;
+                border-radius: 50%;
+                background-color: #00A660;
+                display: block;
+                padding: 7px;
+                cursor: pointer;
+                i{
+                    color: #fff;
+                    font-size: 26px;
+                }
+            }
+        }
+    }
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    outline: 0;
+}
+.modal {
+    z-index: 1072;
+}
+
+.fade:not(.show) {
+    opacity: 0;
+}
+.modal.show {
+    display: block;
+}
+.fade {
+    transition: opacity 1.5s;
+    background-color: rgba(0, 0, 0, 0.3)
+}
+
+.modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.file-upload-popup{
+    margin: 0;
+    padding: 0;
+    .modal-header{
+        padding: 26px 22px 0;
+        border-bottom: 0px;
+        position: relative;
+        h5{
+            font-size: 24px;
+            font-weight: 300;
+            color: black;
+            letter-spacing: 0.72px;
+            line-height: 33px;
+        }
+        .close{
+            position: absolute;
+            top:0;
+            right: 0;
+            font-size: 36px;
+            font-weight: 400;
+            color: #939393;
+            margin: 0px;
+            padding: 15px;
+            span{
+                line-height: 20px;
+                display: block;
+            }
+        }
+    }
+    .modal-content-body{
+        padding: 57px 69px 111px 59px;
+
+        @media (max-width: 575.98px) {
+            padding: 30px 20px;
+        }
+
+        textarea{
+            height: 91px;
+            resize: none;
+            font-style: italic;
+            font-weight: 200;
+        }
+        label{
+            font-size: 12px;
+            font-weight: bold;
+            color: #4D4D51;
+            // padding: 0px 0 5px;
+        }
+    }
+    .modal-footer{
+        border-top: 0px;
+        padding: 0px 47px 48px;
+
+        @media (max-width: 575.98px) {
+            padding: 30px 20px;
+        }
+
+        button{
+            float: right;
+            margin-right: 0;
+            background-color: #4C9E00;
+            padding: 7px 26px;
+            border: none;
+            font-size: 12px;
+            letter-spacing: 0.35px;
+            width: 150px;
+            border: solid 1px #4C9E00;
+            height: 35px;
+            &:last-child{
+                color: #4C9E00;
+                background-color: #fff;
+                margin-right: 20px;
+                &:hover{
+                    background-color:transparent;
+                    color: #4C9E00;
+                }
+                @media (max-width: 575.98px) {
+                    margin-right: 2px;
+                }
+            }
+            &:hover{
+                background-color: #3a7800;
+            }
+            @media (max-width: 575.98px) {
+                width: 130px;
+                padding: 7px 18px;
+            }
+        }
+    }
+}
+
+// .custom-file{
+//     label{
+//         width: calc(100% - 112px);
+//         border-radius: 0px;
+//         height: 36px;
+//         &::after{
+//             right: -115px;
+//             border-left: none;
+//             background-color: #4C9E00;
+//             color: #fff;
+//             border-radius: 5px;
+//             padding: 13px 30px;
+//             height: 35px;
+//             font-weight: 300;
+//         }
+//     }
+// }
+.custom-file {
+    .custom-file-label {
+        border: 1px solid #ccc;
+        height:38px;
+        overflow: hidden;
+        line-height: 27px;
+        padding-right: 110px;
+        cursor: pointer;
+        &::after {width: 100px;
+            content: "Browse";
+            color: white;text-align: center;
+            height:36px;
+            line-height:24px;
+            cursor: pointer;
+            background-color:#f3f3f3;
+            background-image:linear-gradient(to bottom, #fcfcfc 0%, #f3f3f3 100%);
+            border-color:#ccc;
+            border-left:1px solid #ccc;color:#333;display:inline-block;
+            transition-duration:.3s;transition-timing-function:linear;transition-delay:0s;
+        }
+    }
+}
+
+@media (min-width: 992px)
+{
+.modal-lg {
+    max-width: 733px;
+}
+}
+.showFile{
+    i{
+        font-size: 40px;
+        cursor: pointer;
+    }
+}
+
+.corner-button {
+    border-color: transparent;
+    border-style: solid;
+    border-width: 24px;
+    height: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0;
+    .close {
+        float: none;
+        height: 48px;
+        margin: 0;
+        position: absolute;
+        right: -12px;
+        top: -15px;
+        width: 48px;
+        font-size: 2.1rem !important;
+        font-weight: 600 !important;
+        line-height: 0px !important;
+        color: #939393 !important;
+        &:focus{
+            outline: 0;
+        }
+    }
+}
+.custom-file-input {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: calc(1.5em + 0.75rem + 2px);
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}

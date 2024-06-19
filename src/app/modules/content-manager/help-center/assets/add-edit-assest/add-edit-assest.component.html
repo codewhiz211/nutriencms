@@ -1,0 +1,99 @@
+<section class="listing_detail">
+  <h3>{{addEditAsset}}</h3>
+  <div class="corner-button">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="listing_detail_form">
+    <form #userForm="ngForm" novalidate autocomplete="off" (ngSubmit)="onSubmit(userForm.valid,userForm);false">
+      <input type="hidden" name="DataID" [(ngModel)]="addEditData.DataID" #QmindId="ngModel">
+      <div class="form-group">
+          <div class="row">
+        <div class="col-sm-6">
+          <label>Asset Name*</label>
+          <input type="text" class="form-control"  name="Name" [(ngModel)]="addEditData.Name"
+            #Name="ngModel" required>
+          <div *ngIf="Name.invalid && ((Name.dirty || Name.touched)||(userForm.submitted && formVal))">
+            <span class="err_message" *ngIf="Name.errors.required">Asset Name is required</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label>Status*</label>
+          <select type="text" class="form-control select"  name="Status" [(ngModel)]="addEditData.Status"
+            #Status="ngModel" required>
+          <option>Active</option>
+          <option>Inactive</option>
+          </select>
+          <div *ngIf="Status.invalid && ((Status.dirty || Status.touched)||(userForm.submitted && formVal))">
+            <span class="err_message" *ngIf="Status.errors.required">Status is required</span>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="form-group">
+        <div class="row">
+      <div class="col-sm-6">
+        <label>Category*</label>
+        <select type="text" class="form-control select"  name="Category" [(ngModel)]="addEditData.Category"
+        #Category="ngModel" required>
+      <option>How-To Guides</option>
+      <option>Terms and Conditions</option>
+      </select>
+      <div *ngIf="Category.invalid && ((Category.dirty || Category.touched)||(userForm.submitted && formVal))">
+        <span class="err_message" *ngIf="Category.errors.required">Category is required</span>
+      </div>
+      </div>
+      <div class="col-sm-6">
+        <label>Asset Type*</label>
+        <select type="text" class="form-control select"  name="AssetType" [(ngModel)]="addEditData.AssetType"
+          #AssetType="ngModel" required>
+          <option *ngFor="let item of assetList" [value]="item.AssetName">{{item.AssetName}}</option>
+        </select>
+        <div *ngIf="AssetType.invalid && ((AssetType.dirty || AssetType.touched)||(userForm.submitted && formVal))">
+          <span class="err_message" *ngIf="AssetType.errors.required">Asset Type is required</span>
+        </div>
+      </div>
+    </div>
+    </div>
+    
+
+    <div class="form-group" *ngIf="(addEditData.AssetType == 'Document')">
+      <label>Upload Document*</label>
+      <div class="custom-file">
+        <input type="file" (change)="handleFileInput($event.target.files)" id="fileupload" class="custom-file-input">
+      <label class="custom-file-label" for='fileupload'>{{fileName}}</label>
+      </div>
+      <div class="p-small paddingTop-xxs">
+        <span class="filemessage">Documents supported are .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .vsd, .vsdx and they must be under 50GB.</span>
+      </div>
+      <div class="p-small paddingTop-xxs" *ngIf="errorMsg !== ''">
+        <span class="err_message">{{errorMsg}}</span>
+      </div>       
+        <a class="filemessage" *ngIf="(FileID !== '')" href="javascript:void(0)" (click)="downloadFile()">Click to download file</a>
+    </div>
+    <div class="form-group" *ngIf="(addEditData.AssetType == 'Link')">
+      <label>URL*</label>
+      <input type="text" placeholder="http://" class="form-control"  name="Document" pattern="https?://.+" [(ngModel)]="addEditData.Document"
+      #Document="ngModel" required>
+      <div *ngIf="Document.invalid && ((Document.dirty || Document.touched)||(userForm.submitted && formVal))">
+        <span class="err_message" *ngIf="Document.errors.required">URL is required</span>
+        <span class="err_message" *ngIf="Document.errors.pattern">Must be a valid URL</span>
+      </div>
+    </div>
+
+      <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control  h-100" rows="4"  name="Description" [(ngModel)]="addEditData.Description"
+            #Description="ngModel">
+          </textarea>
+        </div>
+  
+      <div class="update_detail" *ngIf="isShowSave">
+        <button type="button" class="btn btn-primary" (click)="activeModal.close(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary">{{addEditData.DataID == '' ? 'Save & Publish' : 'Save & Publish'}} </button>
+      </div>
+    </form>
+  </div>
+</section>

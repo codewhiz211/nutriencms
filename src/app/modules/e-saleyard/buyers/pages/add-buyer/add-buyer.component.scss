@@ -1,0 +1,97 @@
+label[for='accountStatus']:before,
+label[for='firstName']:before,
+label[for='lastName']:before,
+label[for='email']:before,
+label[for='phone']:before,
+label[for='password']:before,
+label[for='confirmPassword']:before {
+  content: '*';
+  color: #4C9E00;
+  ;
+}
+
+.landmark-acc {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.landmark-acc>button {
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.landmark-acc>input {
+  margin-right: -32px;
+}
+
+.contents {
+  width: 70%;
+  margin: auto
+}
+
+.contents-title {
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 32px;
+}
+
+.contents-title>h4 {
+  margin: 1px;
+}
+
+h3,
+h4 {
+  color: grey;
+}
+
+
+.form-control {
+  height: 24px;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 2px 12px;
+}
+
+label {
+  color: #4D4D51;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+table {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+td {
+  vertical-align: middle;
+}
+
+.display-name {
+  color: #4c9e00;
+  font-size: 18px;
+  margin-left: 20px;
+}
+.passtoggle{
+  position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    height: 24px;
+    cursor: pointer;
+}

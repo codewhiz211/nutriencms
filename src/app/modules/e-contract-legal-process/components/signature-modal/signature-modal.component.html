@@ -1,0 +1,67 @@
+<div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="sign-header">Add Your Signature</div>
+    <app-tabs>
+        <app-tab [title]="'Type'" [bmodisplay]="true">
+            <div style="text-align: center;">
+                <div id="text-input">
+                    <label id="text-input-label">Enter Name</label>
+                    <input type="text" [(ngModel)]="signText" (ngModelChange)="drawTextToCanvas()" name='signText' class="form-control" />
+                </div>
+                <div class="text1-label">Signature Appearance</div>
+                <div class="text1">
+                    <canvas id="textCanvas1" [height]="signatureHeight"></canvas>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-clear cancel-btn" (click)="activeModal.dismiss()">Cancel</button>
+                    <button type="button" class="btn btn-secondary clear-btn" (click)="clear()">Clear</button>
+                    <button type="button" class="btn btn-primary submit-btn" (click)="apply('text')">Save & Sign</button>
+                </div>
+            </div>
+        </app-tab>
+        <app-tab [title]="'Draw'" [bmodisplay]="true">
+            <div style="text-align: center;">
+                <br>
+                <p class="signature-pad-label">Using the mouse, stylist or your finger draw your signature in the box below</p>
+                <div id="signature-pad-container">
+                    <signature-pad
+                        #signaturePad
+                        fxFlex="1 1 50"
+                        fxFlexAlign.xs="center"
+                        (window:resize)="resizeSignaturePad()"
+                        (onEndEvent)="drawComplete()"
+                        id="sign_canvas"
+                        [options]="signaturePadOptions"
+                    >
+                    </signature-pad>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-clear cancel-btn" (click)="activeModal.dismiss()">Cancel</button>
+                    <button type="button" class="btn btn-secondary clear-btn" (click)="clear()">Clear</button>
+                    <button type="button" class="btn btn-primary submit-btn" (click)="apply('sign')">Save & Sign</button>
+                </div>
+            </div>
+        </app-tab>
+        <app-tab [title]="'Image'" [bmodisplay]="true">
+            <div style="text-align: center;">
+                <br>
+                <p class="fileInput-label">Insert your digital signature below</p>
+                <input id="fileInput" type="file" #fileInput class="d-none" (change)="handleInputChange($event)" />
+                <button class="btn btn-sm btn-light" type="button" (click)="fileInput.click();">Select Image</button>
+                <div class="image-preview">
+                    <img *ngIf="previewUrl" class="uploadImg" [src]="previewUrl" />
+                </div>
+                <br>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-clear cancel-btn" (click)="activeModal.dismiss()">Cancel</button>
+                    <button type="button" class="btn btn-secondary clear-btn" (click)="clear()">Clear</button>
+                    <button type="button" class="btn btn-primary submit-btn" (click)="apply('image')">Save & Sign</button>
+                </div>
+            </div>
+        </app-tab>
+    </app-tabs>
+</div>

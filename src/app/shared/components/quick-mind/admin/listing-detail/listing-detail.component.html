@@ -1,0 +1,46 @@
+
+  <section class="listing_detail">
+  <h3>Add New Question</h3>
+  <div class="corner-button">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="listing_detail_form">
+    <form #userForm="ngForm" novalidate autocomplete="off" (ngSubmit)="onSubmit(userForm.valid,userForm);false">
+        <input type="hidden" name="QmindId" [(ngModel)]="questionDetail.QmindId" #QmindId = "ngModel">
+      <div class="form-group">
+        <label>Title*</label>
+        <input type="text" class="form-control" placeholder="" name="Question" [(ngModel)]="questionDetail.Question" #Title = "ngModel" required>
+        <div *ngIf="Title.invalid && ((Title.dirty || Title.touched)||(userForm.submitted && formVal))">
+          <span class="err_message" *ngIf="Title.errors.required">Title is required</span>
+      </div>
+      </div>
+      <div class="form-group">
+        <label>Tag*</label>
+        <input type="text" class="form-control" placeholder="" name="Tag" [(ngModel)]="questionDetail.Tag" #Tag = "ngModel" required>
+        <div *ngIf="Tag.invalid && ((Tag.dirty || Tag.touched)||(userForm.submitted && formVal))">
+          <span class="err_message" *ngIf="Tag.errors.required">Tag is required</span>
+      </div>
+      </div>
+      <div class="form-group">
+        <label>Answer this Question*</label>
+        <ckeditor
+          [editor]="Editor"
+          (ready)="onReady($event)"
+          [(ngModel)]='questionDetail.Answer'
+          #Answer='ngModel'
+          name="Answer"
+          required>
+        </ckeditor>
+        <div *ngIf="Answer.invalid && ((Answer.dirty || Answer.touched)||(userForm.submitted && formVal))">
+          <span class="err_message" *ngIf="Answer.errors.required">Answer is required</span>
+        </div>
+      </div>
+      <div class="update_detail">
+        <button type="button" class="btn btn-primary" (click)="activeModal.close(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary">{{questionDetail.QmindId == 0 ? 'Add' : 'Update'}} </button>
+      </div>
+    </form>
+  </div>
+</section>

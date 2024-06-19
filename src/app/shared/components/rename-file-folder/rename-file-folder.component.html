@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h5>Edit Attachment</h5>
+    <button type="button" class="close" aria-label="Close" (click)="Close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" role="document" aria-label="Modal heading text content">
+    <div class="p-3" style="max-height:400px;overflow:auto;">      
+      <form class="" action="" #Form>
+        <label for="folderName"> {{row.type === '0' ? 'Folder Name' : 'File Name'}} </label>
+        <input type="text" class="form-control" #txtFolder id="folderName" [value]="row.name">
+      <br/>
+        <div *ngIf="row.type === '1' " >
+        <label for="documentType"> Document Type </label>
+        <select class="form-control" #documentType id="documentType" [value]="row.documentType">
+          <option value="General">General</option>
+          <option value="Feedback Sheet">Feedback Sheet</option>
+          <option value="Paper Contract">Paper Contract</option>
+        </select>
+      </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="cta-button-group">
+      <button class="btn btn-sm btn-primary text-white" (click)="RenameFileFolder(Form);" type="submit" data-dismiss="modal">Rename</button>
+      <button class="btn btn-clear btn-sm" (click)="Close();" type="button"
+        data-dismiss="modal">Cancel</button>
+    </div>
+  </div>
+      
+  

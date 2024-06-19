@@ -1,0 +1,25 @@
+.modal-header {
+    border-bottom: none !important;
+    padding: 24px 16px 0 34px;
+
+    .modal-title {
+        color: #007E48;
+        font-family: "Open Sans";
+        font-size: 24px;
+        font-weight: 300;
+        letter-spacing: 0.72px;
+        line-height: 33px;
+    }
+}
+.modal-body {
+
+    button {
+        font-size: 13px;
+    }
+    .modal-content{border-radius: 0px;}
+@media (min-width: 992px){
+    .modal-lg{max-width: 1025px !important;}
+    }
+}
+
+  

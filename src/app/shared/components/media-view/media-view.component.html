@@ -1,0 +1,89 @@
+<div class="padding-xs">
+    <!-- <div class="padding-xs"></div>
+    <div  class="accordion-item__header">
+        <div  class="accordion-item-header"> Attachments
+        </div>
+    </div> -->
+    <div class="mInfoContWRap">
+        <div class="smallCenteredContainer" style="max-width:700px">
+            <!-- <div *ngIf="!isProcess" class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width.%': 0.5}" >
+                 10
+                </div>
+              </div> -->
+            <div>
+                <ul class="sFilesList">
+                    <li>
+                       <div class="uploadFiles">
+                           <i class="fas fa-plus"></i>
+                           <input type="file" *ngIf="isProcess" class="custom-file-input" (change)="fileChangeEvent($event, content, 500, 500)">
+                           <div *ngIf="!isProcess" class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width.%': processCompleted}" >
+                                  {{processCompleted}}%
+                                </div>
+                              </div>
+                       </div>
+                    </li>
+                    <li *ngFor="let item of listData" [ngClass]="{'featured': item.Featured === 'Featured'}"><span>FEATURED</span>
+                        <div class="thumbWrap"><i class="far fa-times-circle" (click)="Delete(item)"></i>
+                            <i class="far fa-star" (click)="setFeatured(item)"></i>
+                            <span class="check-box">
+                                <label class="inline-checkbox ml-2">
+                                    <input name="chkboxlist" type="checkbox"
+                                    (click)="setStatus(item)"  value="{{item.Status}}"
+                                    checked="{{item['Status'] === 'Active' ?'checked':''}}">
+                                    <i class="skin"></i>
+                                </label>
+                            </span>
+                            <img *ngIf="item.MediaType === 'image'" alt="{{item.FileName}}" [src]="ImageList[item.MediaID]">
+                            <img *ngIf="item.MediaType !== 'image'" style="height: 131px;" alt="{{item.FileName}}" src="assets/styles/images/video-thumb-square.jpg"></div>
+                            <span>{{item.FileName}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="padding-s"></div>
+    </div>
+    <div class="padding-xs"></div>
+</div>
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Crop Image</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+        <div class="modal-body" role="document" aria-label="Modal heading text content">
+          <div class="filemessage">Max image size will be Height : {{height}}px and Width : {{width}}px</div>
+            <div class="videoWrap">
+                <image-cropper
+                    [imageChangedEvent]="imageChangedEvent"
+                    [maintainAspectRatio]="true"
+                    [onlyScaleDown]="true"          
+                    [aspectRatio]="width / height"
+                    [cropperMinWidth]="width"
+                    [cropperMinHeight]="height"
+                    [resizeToWidth]="width"
+                    [transform]="transform"
+                    format="png"
+                    (imageCropped)="imageCropped($event)">
+                </image-cropper>
+                <div class="input-range" style="float: right;">
+                  <!-- <label for="">Zoom</label> -->
+                  <div class="zoom">
+                    <button class="btn btn-secondary btn-sm" (click)="onZoomOut()"><i class="fas fa-search-minus"></i></button>
+                    <!-- <input type="range" (input)="onZoomChange($event)"> -->
+                    <button class="btn btn-secondary btn-sm" (click)="onZoomIn()"><i class="fas fa-search-plus"></i></button>
+                  </div>
+                </div>
+<img height="200px" width="200px" [src]="croppedImage.base64"/>
+<div>Image Size Height : {{Croppedheight}}px, Width : {{Croppedwidth}}px</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="cta-button-group">
+              <button class="btn btn-clear btn-small" (click)="modal.dismiss('Cross click')" type="button" data-dismiss="modal">Close</button>    
+              <button class="btn btn-primary btn-small" (click)="Cropped()" type="button" data-dismiss="modal">Crop & Close</button> 
+            </div>
+        </div>
+  </ng-template>

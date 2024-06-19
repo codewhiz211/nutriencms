@@ -1,0 +1,30 @@
+.forgotpwd_wrapper{
+    padding: 15px;
+    .whiteBgSection{
+        padding: 20px 46px 20px 20px;
+        .smallCenteredContainer{
+            h1{
+                font-size: 2.2rem;
+                color: #333;
+            }
+        }
+    }
+    .corner-button{
+        right: 16px;
+        top: 12px;
+        position: absolute;
+    }
+    .forgotpwd_content{
+        padding: 0px 20px 20px;
+        p{
+            font-size: 1.6rem;
+            margin: 0px;
+        }
+        .cta-button-group{
+            padding-bottom: 0px;
+        }
+        .form-row{
+            margin-left: 0px;
+        }
+    }
+}

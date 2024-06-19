@@ -1,0 +1,130 @@
+<div class="vendor-terms">
+    <div class="vendor-terms-header section-header">
+        <span> Vendor </span>
+        <button class="btn update-btn" [disabled]="dataSource && !isSelected()"  (click)="openBulkUpdate(bulkUpdate)">Bulk Update</button>
+    </div>
+    <div class="vendor-terms-grid">
+        <!-- <table class="basicTable bordered stripped" style="border-top:0;border-right:0;border-left:0;">
+          <thead cdkDropListGroup>
+            <tr>
+              <th style="width: 40px" >
+                <label class="inline-checkbox ml-2 mt-1" [style.width.%]="'1%'">
+                  <input type="checkbox" [(ngModel)]="selectedAll" (ngModelChange)="SelectAllCheckBox($event)">
+                  <i class="skin"></i>
+                </label>
+              </th>
+              <th *ngFor="let key of headerColumns; let i = index">
+                <span class="colHead">{{key}}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="vendorTermsData?.salesVendorTerms?.length == 0">
+            <tr>
+              <td [colSpan]="5" class="text-center">No Data Found</td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="vendorTermsData?.salesVendorTerms?.length>0">
+            <tr *ngFor="let item of vendorTermsData?.salesVendorTerms; let i = index">
+              <td>
+                <label class="inline-checkbox ml-2 mt-1">
+                  <input type="checkbox" [(ngModel)]="item.checked">
+                  <i class="skin"></i>
+                </label>
+              </td>
+              <td>
+                <span>{{item.ID}}</span>
+              </td>
+              <td>
+                <span>{{item.Name}}</span>
+              </td>
+              <td>
+                <span>{{item.Terms}}</span>
+              </td>
+              <td>
+                <span>{{item.DueDate}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table> -->
+          
+        <!--Grid Paging-->
+        <!-- <nav aria-label="Page navigation" *ngIf="vendorTermsData?.itemCount.count != 0">
+          <div class="filter_pagination justify-content-end">
+            <div>
+              <div class="input-group">
+                <div>Go to page :</div>
+                <input class="gotoPage" #pageSelect type="number" min="1" [id]="gotoName"
+                  (change)="goToPage(pageSelect.value)" [value]="this.currentPage">
+              </div>
+            </div>
+            <div class="selectListing">
+              <div class="input-group">
+                <div>Show Rows:</div>
+                <div ngbDropdown>
+                  <button class="btn btn-outline-primary" ngbDropdownToggle
+                    id="AllMyRecordFilter">{{itemsPerPage > 0 ? itemsPerPage : this.pageSizeOptions[0]}}</button>
+                  <ul ngbDropdownMenu aria-labelledby="dropdownCustomFilter">
+                    <li *ngFor="let item of pageSizeOptions;let i = index" ngbDropdownItem value={{item}}
+                      id="pageSizeOptionsName" (click)="pageChangeClick(item)">{{item}}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="input-group">
+                <div style="padding-right:0px;"> {{first}} - {{last}} of {{itemsCount}}</div>
+              </div>
+            </div>
+            <div class="nxt_prvWrap">
+              <a [id]="prevName" tabindex="-1" title="Previous" (click)="previousPage($event)"
+                [ngClass]="{ 'not-active': first == 1}"><i aria-label="Left arrow" class="fas fa-angle-left"
+                  role="img"></i></a>
+            </div>
+        
+            <div class="nxt_prvWrap">
+              <a [id]="nextName" title="Next" (click)="nextPage($event)" tabindex="-1"
+                [ngClass]="{ 'not-active': TotalPage == this.currentPage}"><i aria-label="Right arrow"
+                  class="fas fa-angle-right" role="img"></i></a>
+            </div>
+          </div>
+        </nav>  -->
+        <a *ngIf="hasFilter" class="remove-filter" href="javascript:void(0);" title="Remove Filter" (click)="genericgridcomponent.OnRemoveFilterClick();removeFilter()">Remove Filter</a>
+        <generic-grid [dataSource]="dataSource" [headerMap]="HeaderMap" [itemsCount]="itemsCount" [sNo]="false" [pageNum]="pageNum"
+    (pageChange)="pageChange($event)" (actionClick)="actionClick($event)"></generic-grid>
+    </div>
+</div>
+
+<ng-template #bulkUpdate let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Bulk Update</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <!-- <a href="">Sample</a> -->
+        <div class="input-group">
+          <input class="form-control" rInputMask="99/99/9999"
+          placeholder="dd/mm/yyyyy" name="dp" ngbDatepicker [(ngModel)]="datemodel"
+            #d="ngbDatepicker" #filterValue1  (ngModelChange)="ValidateDueDate(datemodel)">
+          <div class="input-group-append">
+            <button class="btn btn-sm btn-outline-secondary calendar" (click)="d.toggle()" type="button">
+              <i class="far fa-calendar-alt"></i></button>
+          </div>
+        </div>
+        <div><span *ngIf="errorMessage!=''" style="color:red;">{{errorMessage}}</span></div>
+        <!-- <div class="input-group">
+          <span>{{fileName}}</span>
+        </div> -->
+        <!-- <div class="input-group">
+          <span style="color: #dc3545;" *ngIf="IsValidFile">{{errorMsg}}</span>
+        </div> -->
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-sm"  [disabled]="errorMessage!=''" (click)="updateDueDate()">Save</button>
+  </div>
+</ng-template>

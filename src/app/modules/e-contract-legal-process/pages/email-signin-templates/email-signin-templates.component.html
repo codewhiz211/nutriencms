@@ -1,0 +1,43 @@
+<div id="signature-header">
+    <span>Review Contract & Sign</span>
+    <button *ngIf="showSubmitBtn" type="button" id='submit-btn' (click)='onsubmit(alertModal)' class="btn btn-primary">Submit</button>
+</div>
+
+<div id="email-signin-template">
+    <div class="copy-type">{{copyType}}</div>
+    <div class="signed-notification" *ngIf="submitFlag">
+        <label *ngIf="!isForwardSupplier">
+            Thank you for submitting your signature, you will receive an executed version of the contract once we've collected all required signatures. You can now close this window.
+        </label>
+        <label *ngIf="isForwardSupplier">
+            Thank you for submitting your signature, contract will be sent to Vendor and Buyer for signature. You can now close this window.
+        </label>
+
+    </div>
+    <!-- Keeping safe pipe here, since it's a response from LegalDocument/GetLegalDoc api -->
+    <div id="maindivtemplates" [innerHTML]="resultstr | safe: 'html'" *ngIf="resultstr"></div>
+</div>
+
+<!-- Alert Modal -->
+<ng-template #alertModal>
+    <div class="modal-header">
+        <h5 class="modal-title">Please sign at specified place.</h5>
+        <button type="button" class="close" aria-label="Close" (click)="alertModalRef.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-end">
+            <button class="btn btn-primary" (click)="alertModalRef.hide()">
+                OK
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Image Preview Modal -->
+<div id="previewModal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+</div>

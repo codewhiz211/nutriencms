@@ -1,0 +1,232 @@
+<!-- Modals -->
+<form *ngIf="isDoneLoading" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <span>Create New Record</span>
+      </h4>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <app-accordion>
+          <app-accordion-item [isOpen]="headerInformationDmog.DefaultCollapsed == 0">
+            <div class="accordion-item-header">
+              {{headerInformationDmog.DisplayName}}
+              <ng-template #dmogTipContent>
+                <div [innerHTML]="headerInformationDmog.LongDescription"></div>
+              </ng-template>
+              <a *ngIf="headerInformationDmog.IsTooltip" class="dmog-tooltip" placement="bottom" [ngbTooltip]="dmogTipContent"
+                tooltipClass="tooltip-class">
+                <i class="far fa-question-circle"></i>
+              </a>
+            </div>
+            <div class="accordion-item-content">
+              <div class="drow">
+                <ng-container *ngFor="let rowID of headerInformationDmog.List">
+                  <ng-container *ngIf="headerInformationDmog.Rows[rowID] as objROW">
+                    <ng-container *ngFor="let objCOLUMN of objROW.Columns">
+                      <ng-container *ngFor="let dmoGUID of objCOLUMN.List">
+                        <div class="dcolumns">
+                          <ng-container *ngIf="objCOLUMN.DataModelObjects[dmoGUID] as objectDMO">
+                            <ng-container [ngSwitch]="dmoGUID">
+                              <ng-container *ngSwitchCase="'dmocommadjbranch'">
+                                <div class="form-group" style="min-width: 200px;" id="FriendlyNameLabel_dmocommadjbranch">
+                                  <label class="input-label" id="FriendlyNameLabel_dmocommadjbranch">Branch*</label>
+                                  <input
+                                    type="text"
+                                    id="TextBox_dmocommadjbranch"
+                                    class="form-control"
+                                    formControlName="DMOCommAdj_Branch"
+                                    [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_Branch.errors}"
+                                    [ngbTypeahead]="branchSearch"
+                                    [editable]='false'
+                                    [inputFormatter]="formatterbranch"
+                                    [resultFormatter]="formatterbranch"
+                                    (selectItem)="selectitem($event, 'dmocommadjbranch')"
+                                    (blur)="clearData($event)"
+                                  />
+                                  <div *ngIf="submitted && f.DMOCommAdj_Branch.errors?.required" class="invalid-feedback">This field is required</div>
+                                </div>
+                            </ng-container>
+                              <ng-container *ngSwitchCase="'dmocommadjsaledate'">
+                                <div class="form-group" style="min-width: 200px;" id="FriendlyNameLabel_dmocommadjsaledate">
+                                  <label class="input-label" id="FriendlyNameLabel_dmocommadjsaledate">Sale Date*</label>
+                                  <input
+                                  type="text"
+                                  [textMask]="{mask: dateMask, keepCharPositions: true, pipe: autoCorrectedDatePipe}"
+                                  pattern="\d{2}/\d{2}/\d{4}"
+                                  id="TextBox_dmocommadjsaledate"
+                                  class="form-control"
+                                  formControlName="DMOCommAdj_SaleDate"
+                                  [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_SaleDate.errors}"
+                                />
+                                  <div *ngIf="submitted && f.DMOCommAdj_SaleDate.errors?.required" class="invalid-feedback">This field is required</div>
+                                </div>
+                            </ng-container>
+                              <ng-container *ngSwitchCase="'dmocommadjsateid'">
+                                  <div class="form-group" style="min-width: 200px;" id="MyTr_dmocommadjsateid">
+                                    <label class="input-label" id="FriendlyNameLabel_dmocommadjsateid">Sale ID*</label>
+                                    <input
+                                    *ngIf="ActivityType == 'Livestock'"
+                                      type="text"
+                                      id="TextBox_dmocommadjsateid"
+                                      class="form-control"
+                                      formControlName="DMOCommAdj_SateID"
+                                      [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_SateID.errors}"
+                                      [ngbTypeahead]="saleIdSearch"
+                                      [editable]='false'
+                                      [inputFormatter]="formatter"
+                                      [resultFormatter]="formatter"
+                                      (selectItem)="selectitem($event, 'dmocommadjsateid')"
+                                    />
+                                    <input
+                                    *ngIf="ActivityType != 'Livestock'"
+                                    type="text"
+                                    id="TextBox_dmocommadjsateid"
+                                    class="form-control"
+                                    formControlName="DMOCommAdj_SateID"
+                                    [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_SateID.errors}"
+                                  />
+                                    <div *ngIf="submitted && f.DMOCommAdj_SateID.errors?.required" class="invalid-feedback">This field is required</div>
+                                  </div>
+                              </ng-container>
+
+                              <ng-container *ngSwitchCase="'dmocommadjagencysapno'">
+                                <div class="form-group" style="min-width: 200px;" id="FriendlyNameLabel_dmocommadjagencysapno">
+                                  <label class="input-label" id="FriendlyNameLabel_dmocommadjagencysapno">Agency SAP Number*</label>
+                                  <input
+                                    type="text"
+                                    id="TextBox_dmocommadjagencysapno"
+                                    class="form-control"
+                                    formControlName="DMOCommAdj_AgencySapNo"
+                                    [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_AgencySapNo.errors}"
+                                    [ngbTypeahead]="agencySearch"
+                                    [editable]='false'
+                                    [inputFormatter]="formattersapno"
+                                    [resultFormatter]="formattersapno"
+                                    (selectItem)="selectitem($event, 'dmocommadjagencysapno')"
+                                    (blur)="clearData($event)"
+                                  />
+                                  <div *ngIf="submitted && f.DMOCommAdj_AgencySapNo.errors?.required" class="invalid-feedback">This field is required</div>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'dmocommadjagencyname'">
+                              <div class="form-group" style="min-width: 200px;" id="FriendlyNameLabel_dmocommadjagencyname">
+                                <label class="input-label" id="FriendlyNameLabel_dmocommadjagencyname">Agency Name*</label>
+                                <input
+                                  type="text"
+                                  id="TextBox_dmocommadjagencyname"
+                                  class="form-control"
+                                  formControlName="DMOCommAdj_AgencyName"
+                                  [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_AgencyName.errors}"
+                                  [ngbTypeahead]="agencySearch"
+                                  [editable]='false'
+                                  [inputFormatter]="formatteragencyname"
+                                  [resultFormatter]="formatteragencyname"
+                                  (selectItem)="selectitem($event, 'dmocommadjagencyname')"
+                                  (blur)="clearData($event)"
+                                />
+                                <div *ngIf="submitted && f.DMOCommAdj_AgencyName.errors?.required" class="invalid-feedback">This field is required</div>
+                              </div>
+                          </ng-container>
+                            <ng-container *ngSwitchCase="'dmocommadjagentname'">
+                                <div class="form-group" style="min-width: 200px;" id="TextBox_dmocommadjagentname">
+                                  <label class="input-label" id="FriendlyNameLabel_dmocommadjagentname">Agent Name*</label>
+                                  <input
+                                    type="text"
+                                    id="TextBox_dmocommadjagentname"
+                                    class="form-control"
+                                    [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_AgentName.errors}"
+                                    formControlName="DMOCommAdj_AgentName"
+                                    [ngbTypeahead]="agentSearch"
+                                    [editable]='false'
+                                    [inputFormatter]="formatteragent"
+                                    [resultFormatter]="formatteragent"
+                                    (selectItem)="selectitem($event, 'dmocommadjagentname')"
+                                  />
+                                  <div *ngIf="submitted && f.DMOCommAdj_AgentName.errors?.required" class="invalid-feedback">This field is required</div>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'dmocommadjcustomerid'">
+                              <div class="form-group" style="min-width: 200px;" id="TextBox_dmocommadjcustomerid">
+                                <label class="input-label" id="FriendlyNameLabel_dmocommadjcustomerid">Customer ID*</label>
+                                <input
+                                  type="text"
+                                  id="TextBox_dmocommadjcustomerid"
+                                  class="form-control"
+                                  [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_CustomerID.errors}"
+                                  formControlName="DMOCommAdj_CustomerID"
+                                  [ngbTypeahead]="CustomerSearchById"
+                                  [editable]='false'
+                                  [inputFormatter]="formattercustomersapno"
+                                  [resultFormatter]="formattercustomersapno"
+                                  (selectItem)="selectitem($event, 'dmocommadjcustomerid')"
+                                />
+                                <div *ngIf="submitted && f.DMOCommAdj_CustomerID.errors?.required" class="invalid-feedback">This field is required</div>
+                              </div>
+                          </ng-container>
+                          <ng-container *ngSwitchCase="'dmocommadjcustomername'">
+                            <div class="form-group" style="min-width: 200px;" id="TextBox_dmocommadjcustomername">
+                              <label class="input-label" id="FriendlyNameLabel_dmocommadjcustomername">Customer Name*</label>
+                              <input
+                                type="text"
+                                id="TextBox_dmocommadjcustomername"
+                                class="form-control"
+                                [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_CustomerName.errors}"
+                                formControlName="DMOCommAdj_CustomerName"
+                                [ngbTypeahead]="CustomerSearchByName"
+                                [editable]='false'
+                                [inputFormatter]="formattercustomername"
+                                [resultFormatter]="formattercustomername"
+                                (selectItem)="selectitem($event, 'dmocommadjcustomername')"
+                              />
+                              <div *ngIf="submitted && f.DMOCommAdj_CustomerName.errors?.required" class="invalid-feedback">This field is required</div>
+                            </div>
+                        </ng-container>
+                            <!-- <ng-container *ngSwitchCase="'dmocommadjglaccount'">
+                              <div class="form-group" style="min-width: 200px;" id="TextBox_dmocommadjglaccount">
+                                <label class="input-label" id="FriendlyNameLabel_dmocommadjglaccount">GL Account*</label>
+                                <ng-select
+                                      [items]="optionListGL"
+                                      bindValue="dmoglcodeglcode"
+                                      bindLabel="dmoglcodegldscr"
+                                      class="form-control"
+                                      [ngClass]="{'is-invalid': submitted && f.DMOCommAdj_GLAccount.errors}"
+                                      id="DropDownList_dmocommadjglaccount"
+                                      formControlName="DMOCommAdj_GLAccount"
+                                    >
+                                    </ng-select>
+                                    <div *ngIf="submitted && f.DMOCommAdj_GLAccount.errors?.required" class="invalid-feedback">This field is required</div>
+                              </div>
+                          </ng-container> -->
+                              <ng-container *ngSwitchDefault>
+                                <app-dmo
+                                  *ngIf="objectDMO"
+                                  [dmo]="objectDMO"
+                                  [dmoGUID]="dmoGUID"
+                                  [parentForm]="form"
+                                  [submitted]="submitted"
+                                  [ngClass]="{'d-none': objectDMO.Type == 'ID'}">
+                                </app-dmo>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </app-accordion-item>
+        </app-accordion>
+  
+        <div class="d-flex align-items-center justify-content-end my-3">
+          <button type="button" class="btn btn-clear cancel-btn" (click)="activeModal.close(false)">Cancel</button>
+          <button type="submit" [disabled]="isFinilised" class="btn btn-primary mr-2 submit-btn">Submit</button>
+        </div>
+      </div>
+  </form>
+  
+  <!-- End Modals -->

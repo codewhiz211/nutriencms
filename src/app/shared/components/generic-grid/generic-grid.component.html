@@ -1,0 +1,396 @@
+<div *ngIf="dataSource">
+  <div class="table-filters-group" *ngIf="isExport === true">
+    <div class="export-btns-group">
+      <a href="javascript:void(0)" (click)="onAction(0,'Export Excel','')" title="Excel"><i class="far fa-file-excel"
+          role="img" aria-label="Excel"></i>Excel</a>
+      <a href="javascript:void(0)" (click)="onAction(0,'Export PDF','')" title="PDF"><i class="far fa-file-pdf"
+          role="img" aria-label="PDF"></i>PDF</a>
+    </div>
+  </div>
+
+  <ng-container *ngIf="Change_Log == true ; else defaultGrid;">
+    <table class="basicTable stripped change-log-table"
+      style="border-top:0;border-right:0;border-left:0;border-bottom:0;">
+      <tr *ngIf="dataSource?.log?.length>0">
+        <app-accordion *ngFor="let log of dataSource.log;">
+          <app-accordion-item [isOpen]="defaultCollaps === log.DMOG_NAME" id="{{log.DMOG_NAME}}">
+            <div class="accordion-item-header">
+              {{log.DMOG_NAME}}
+            </div>
+            <div class="accordion-item-content">
+              <div class="text-right" style="margin-top: 5px;">
+                <div class="nxt_prvWrap">
+                  <a>{{first}} - {{last}} of {{itemsCount}}</a>
+                  <a [id]="prevName" tabindex="-1" title="Previous" (click)="previousPage($event,log.DMOG_NAME)"><i
+                      aria-label="Left arrow" class="fas fa-angle-left" role="img"></i></a>
+                  <a [id]="nextName" title="Next" (click)="nextPage($event,log.DMOG_NAME)" tabindex="-1"><i
+                      aria-label="Right arrow" class="fas fa-angle-right" role="img"></i></a>
+                </div>
+              </div>
+              <table style="width:100%;">
+                <thead>
+                  <tr>
+                    <th>FieldName</th>
+                    <!-- //MD Changes - #444 & CRM #961 // MD Internal Tickets - #1081 -->
+                    <th *ngFor="let value of log[log.DMOG_NAME]; let i=index">
+                      {{ convertToUTCDataAndTime(value.Date_Time, dateTimeFormatNoSeconds) }}<br>({{ value.Modified_By }})
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let dmo of log.DMO_LIST?.split('~')">
+                    <td style="width:15%;">
+                      {{(dmo.split('{|}')[2]).length>30? (dmo.split('{|}')[2] | slice:0:30)+'...':dmo.split('{|}')[2]}}
+                    </td>
+                    <td *ngFor="let value of log[log.DMOG_NAME]; let i=index" style="width:8.5%;">
+                      <div *ngIf="value[dmo]">
+                        <span *ngIf="!isDate(value[dmo]); else showDate" [ngClass]="{'nochange': value[dmo] === '~!~'}"
+                          title="{{value[dmo]  === '~!~' ? 'No Change' : addCommaSeparator(value[dmo])}}">{{(value[dmo] === '~!~' ? 'No Change' :  (addCommaSeparator(value[dmo]).length>16 ? (addCommaSeparator(value[dmo]) | slice:0:16)+'...':addCommaSeparator(value[dmo])))}}
+                        </span>
+                        <ng-template #showDate>{{convertToUTCDataAndTime(value[dmo], dateTimeFormatNoSeconds)}}
+                        </ng-template>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </app-accordion-item>
+        </app-accordion>
+      </tr>
+    </table>
+  </ng-container>
+  <ng-template #defaultGrid>
+    <table class="basicTable stripped" style="border-top:0;border-right:0;border-left:0;">
+      <thead cdkDropListGroup>
+        <tr>
+          <th *ngIf="headerMap?.config.header.action.Checkbox" style="width:30px">
+            <label class="inline-checkbox ml-2" [style.width.%]="'1%'">
+              <input type="checkbox" name="chkboxlist" id="selectAll" [(ngModel)]="selectedAll"
+                (ngModelChange)="selectAllCheckBox()">
+              <i class="skin"></i>
+            </label>
+          </th>
+          <!-- All Action Buttons (Edit, Delete, Copy) -->
+          <th *ngIf="headerMap?.config.header.action.Edit || headerMap?.config.header.action.Delete"
+            [ngStyle]="{'width.px': actionWidth}">
+            <span class="colHead">Actions</span>
+          </th>
+          <!-- Close All Action Buttons (Edit, Delete, Copy) -->
+          <th *ngIf="sNo" style="width: 40px">
+            <span class="colHead">S. No.</span>
+          </th>
+          <th
+            *ngIf="((headerMap?.config.header.action.Link || headerMap?.config.header.action.DropDown) &&
+                   (!headerMap?.config.header.action.Link.Placement || headerMap?.config.header.action.Link.Placement=='Left' || !headerMap?.config.header.action.DropDown.Placement || headerMap?.config.header.action.DropDown.Placement=='Left'))"
+            style="width: 50px">
+            <span>Action</span>
+          </th>
+          <th *ngFor="let key of headerMap?.config.header.columns; let i = index" width={{key.width}}>
+            <!-- <i class="fas fa-sort"></i> -->
+            <span class="colHead header" (click)="sort(i, sortType)">{{key.displayName}}</span>
+            <div *ngIf="headerMap?.config.header.columnFilter" ngbDropdown class="grid-filter-wrap"
+              #ColumnFilterDropdown="ngbDropdown">
+              <div class="" id="dropdownBasic1" ngbDropdownToggle>
+                <img (click)="bindColumnFilterDdl(i, tblFilterForm)" alt=""
+                  src="assets/styles/images/arrange-arrow.png">
+              </div>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <ul class="list-unstyled">
+                  <li>
+                    <a href="javasript: void(0)" (click)="sort(i, 'asc', ColumnFilterDropdown)">
+                      <div class="fas fa-sort-alpha-down"></div> Sort Ascending
+                    </a>
+                  </li>
+                  <li>
+                    <a href="javasript: void(0)" (click)="sort(i, 'desc', ColumnFilterDropdown)">
+                      <div class="fas fa-sort-alpha-up"></div> Sort Descending
+                    </a>
+                  </li>
+                  <li>
+                    <a href="javasript: void(0)" (click)="onAction(i, 'Remove Sort', ColumnFilterDropdown)">
+                      <div class="fas fa-random"></div> Remove Sort
+                    </a>
+                  </li>
+                  <li type="separator" class="li-separator" role="menuitem"></li>
+                  <li>
+                    <form #tblFilterForm #f="ngForm" id='frm_{{key.objectKey}}'
+                      (ngSubmit)="f.form.valid && onFilterClick(i, tblFilterForm, 'Filter_Click', ColumnFilterDropdown )">
+                      <div class="filter" style="height: 18px; margin-top: 3px; margin-bottom: 3px;">Show rows where:
+                      </div>
+                      <!-- Check box html code and condition -->
+                      <div *ngIf="key.dataType === 'Checkbox' else OtherColumnFilter">
+                        <input type="hidden" value="or" />
+                        <div class="list-group">
+                          <ul style="width: 200px;" class="list-unstyled list-group">
+                            <!-- <li [hidden]="showItemLoading" class="dropdown-item text-center" class="list-group-item"><i
+                                class="fas fa-circle-notch fa-spin nomar" style="font-size:18px"></i></li> -->
+                            <li *ngFor="let conditionType of headerMap?.config.header.columnFilter['colData_' +i]">
+                              <input type="checkbox" name="filterValue1" class="checkbox checkboxMargin"
+                                [value]="conditionType.key">
+                              <span>
+                                {{conditionType.value}}
+                              </span>
+                            </li>
+                            <li type="separator" class="li-separator" role="menuitem"></li>
+                          </ul>
+                        </div>
+                      </div>
+                      <!-- Check box html code and condition -->
+
+                      <ng-template #OtherColumnFilter>
+                        <div class="form-group">
+                          <select class="form-control" style="width: 200px;" name="ConditionOpt1" #ConditionOpt1
+                            [ngClass]="{ 'is-invalid': f.submitted && ConditionOpt1.value == ''}" required>
+                            <option *ngFor="let conditionType of headerMap?.config.header.columnFilter['colData_' +i]"
+                              [value]="conditionType.key">{{conditionType.value}}</option>
+                          </select>
+                        </div>
+                        <div class="form-group" *ngIf="key.dataType=='Date'">
+                          <div class="input-group">
+                            <input class="form-control" placeholder="Select Date" name="filterValue1" ngbDatepicker
+                              #d="ngbDatepicker" #FromDateobj
+                              [ngClass]="{ 'is-invalid': f.submitted  && FromDateobj.value == ''  }" required>
+                            <div class="input-group-append">
+                              <button class="btn btn-sm btn-outline-secondary calendar" (click)="d.toggle()"
+                                type="button">
+                                <i class="far fa-calendar-alt"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group" *ngIf="key.dataType != 'Date'">
+                          <input type="text" class="form-control" name="filterValue1" placeholder="Filter Value"
+                            [ngClass]="{ 'is-invalid': f.submitted  && filterValue1.value == ''  }" required
+                            style="width: 200px;" #filterValue1>
+                        </div>
+                        <div class="form-group">
+                          <!-- [ngClass]="{ 'is-invalid': f.submitted && logicalOpt.value == 'Select...' }" required -->
+                          <select class="form-control" style="width: 200px;" name="logicalOpt" #logicalOpt>
+                            <option value="">Select...</option>
+                            <option value="OR" selected>Or</option>
+                            <option value="AND">AND</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <select class="form-control" style="width: 200px;" name="ConditionOpt2" #ConditionOpt2>
+                            <option *ngFor="let conditionType of headerMap?.config.header.columnFilter['colData_' +i]"
+                              [value]="conditionType.key">{{conditionType.value}}</option>
+                          </select>
+                        </div>
+                        <div class="form-group" *ngIf="key.dataType=='Date'">
+                          <div class="input-group">
+                            <input class="form-control" name="filterValue2" placeholder="Select Date" ngbDatepicker
+                              #d="ngbDatepicker" #ToDateobj>
+                            <div class="input-group-append">
+                              <button class="btn btn-sm btn-outline-secondary calendar" (click)="d.toggle()"
+                                type="button">
+                                <i class="far fa-calendar-alt"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group" *ngIf="key.dataType != 'Date'">
+                          <input type="text" class="form-control" name="filterValue2" placeholder="Filter Value"
+                            style="width: 200px;" #filterValue2>
+                        </div>
+                      </ng-template>
+                      <div>
+                        <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                        <button type="reset" class="btn btn-secondary btn-sm float-right"
+                          (click)="onFilterClick(i, tblFilterForm,'FilterClear_Click', ColumnFilterDropdown)">Clear</button>
+                      </div>
+                    </form>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          <th
+            *ngIf="((headerMap?.config.header.action.Link || headerMap?.config.header.action.DropDown)  && ( headerMap?.config.header.action.Link.Placement=='Right' || headerMap?.config.header.action.DropDown.Placement=='Right'  ) )"
+            style="width: 50px">
+            <span class="colHead">Action</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="dataSource?.length == 0">
+        <tr>
+          <td [colSpan]="colSpan" class=" text-center">No Data Found</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="dataSource?.length>0">
+        <tr *ngFor="let data of dataSource; let i = index" class="table-row" [ngClass]="{
+          'active': data['selected'], 
+          'success': applyRowStateClass(data, 'success'),
+          'fail': applyRowStateClass(data, 'fail')
+        }">
+          <td *ngIf="headerMap?.config.header.action.Checkbox">
+            <label class="inline-checkbox ml-2">
+              <input type="checkbox" name="chkboxlist" [(ngModel)]="data.selected"
+                (ngModelChange)="checkIfAllSelected()">
+              <i class="skin"></i>
+            </label>
+          </td>
+          <!-- All Action Buttons (Edit, Delete, Copy) -->
+          <td
+            *ngIf="headerMap?.config.header.action.Edit || headerMap?.config.header.action.Copy || headerMap?.config.header.action.Delete">
+            <div class="action-btns">
+              <a href="javascript:void(0)" (click)="onAction(i, 'Edit')" *ngIf="headerMap?.config.header.action.Edit"
+                title="Edit">
+                <i class="fas fa-pencil-alt"></i>
+              </a>
+              <a href="javascript:void(0)" (click)="onAction(i, 'Copy')" *ngIf="headerMap?.config.header.action.Copy"
+                title="Copy">
+                <i class="far fa-copy"></i>
+              </a>
+              <a href="javascript:void(0)" (click)="onAction(i, 'Delete')"
+                *ngIf="headerMap?.config.header.action.Delete && BuyerAccessRole" title="Delete">
+                <i class="far fa-trash-alt"></i>
+              </a>
+            </div>
+          </td>
+          <!-- Close All Action Buttons (Edit, Delete, Copy) -->
+          <td *ngIf="sNo">{{ (((itemsPerPage > 0 ? itemsPerPage : pageSizeOptions[0]) * (currentPage-1)) + i) + 1 }}
+          </td>
+          <td
+            *ngIf="((headerMap?.config.header.action.Link || headerMap?.config.header.action.DropDown)  && (!headerMap?.config.header.action.Link.Placement || headerMap?.config.header.action.Link.Placement=='Left' || 
+          !headerMap?.config.header.action.DropDown.Placement || headerMap?.config.header.action.DropDown.Placement=='Left'))"
+            style="width: 40px">
+            <a href="javascript:void(0)" (click)="onRowClick(i, data)"
+              *ngIf="headerMap?.config.header.action.Link && (!headerMap?.config.header.action.Link.Placement || headerMap?.config.header.action.Link.Placement=='Left')">View</a>
+            <div
+              *ngIf="headerMap?.config.header.action.DropDown.Action && (!headerMap?.config.header.action.DropDown.Placement || headerMap?.config.header.action.DropDown.Placement=='Left')"
+              class="moreDots">
+              <div *ngIf="data['isShowDots'] === undefined || data['isShowDots']== false" ngbDropdown>
+                <button class="btn btn-outline-primary" ngbDropdownToggle>{{selectedAllMyRecordFilter}}</button>
+                <ul ngbDropdownMenu>
+                  <li ngbDropdownItem *ngFor="let actions of headerMap.config.header.action.DropDown.Action">
+                    <a ngbDropdownItem *ngFor="let key of actions | keyvalue" (click)="key.value(data)">
+                      {{(key.key=='Toggle_Active' ? 'Toggle Active' : (key.key=='Make_Featured' ? 'Make Featured': key.key) )}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="headerMap?.config.header.action.Placement=='Left'" style="width: 40px">
+            <a href="javascript:void(0)" (click)="onRowClick(i, data)"
+              *ngIf="headerMap.config.header.action.Link">View</a>
+          </td>
+          <td *ngFor="let key of headerMap?.config.header.columns;" class="column-td">
+            <!-- <div [innerHTML]="getValue(key, data)"></div> -->
+            <span
+              *ngIf="headerMap?.config.header.action.Link && headerMap?.config.header.action.Link.Placement==key.objectKey; else simpledata">
+              <span *ngFor="let action of headerMap.config.header.action.Link.Action | keyvalue">
+                <a href="javascript:void(0)" (click)="action.value(data)">{{data[key.objectKey]}}</a>
+              </span>
+              <a href="javascript:void(0)" (click)="onRowClick(i, data)"
+                *ngIf="headerMap.config.header.action.Link && !headerMap.config.header.action.Link.Action">View</a>
+            </span>
+            <ng-template #simpledata>
+              <div [ngSwitch]="key.dataType">
+                <span *ngSwitchCase="'Currency'">
+                  <ng-container *ngIf="data?.PriceType === '$/head'; else centPrice">
+                    {{data[key.objectKey] | currency:"AUD":"symbol-narrow"}}
+                  </ng-container>
+                  <ng-template #centPrice>
+                    {{+data[key.objectKey]}}&#162;
+                  </ng-template>
+
+                </span>
+                <span *ngSwitchCase="'Date'"
+                  class="wordwrap">{{ convertToLocalDataAndTime(data[key.objectKey],  key.format, key.timeZone,key?.DmoType ) }}</span>
+                <span *ngSwitchCase="'Link'"><a (click)="onAction(i, 'Link')" href="javascript:void(0)">
+                    {{ data[key.objectKey] }} </a> </span>
+                <span *ngSwitchCase="'TextWithColor'" [ngStyle]="{ 'color': getColorName(key,i) }">
+                  <ng-container *ngIf="key?.displayName === 'Pending Approvals'; else defaultTextWithColor">
+                    <span style="cursor: pointer;" (click)="onAction(i, 'Edit')">{{data[key.objectKey]}}</span>
+                  </ng-container>
+                  <ng-template #defaultTextWithColor>
+                    <span>{{data[key.objectKey]}}</span>
+                  </ng-template>
+                </span>
+                <span *ngSwitchCase="'LinkWithSpecialCasynchar'"><a href="javascript:void(0)"
+                    (click)="onAction(i, 'SpecialCharClick')"> {{ key.SpecialChar }} </a>
+                </span>
+                <span *ngSwitchCase="'LinkWithSpecialChar'"><a href="javascript:void(0)"
+                    (click)="onAction(i, 'SpecialCharClick')"> {{ key.SpecialChar }} </a>
+                </span>
+                <span *ngSwitchCase="'RichText'" class="wordwrap" [innerHTML]="data[key.objectKey]"></span>
+                <span
+                  *ngSwitchCase="'TextWithOtherColumn'">{{ data[key.objectKey] +', ' + data[key.OtherColumn] }}</span>
+                <span *ngSwitchCase="'TextWithSeparator'">
+                  <!-- <ng-container *ngIf="!data[key.objectKey].includes(',');else textwithhover">
+                    <a class="textwithouthover wordwrap" href="javascript:void(0)">{{ textSeprator(data[key.objectKey], key.separator) }}</a>
+                  </ng-container>
+                  <ng-template #textwithhover> -->
+                  <a class="texthover wordwrap" href="javascript:void(0)" placement="bottom" [ngbPopover]="tipContent"
+                    triggers="mouseenter:mouseleave">
+                    {{ textSeprator(data[key.objectKey], key.separator) }} </a>
+                  <!-- </ng-template> -->
+                </span>
+                <span *ngSwitchDefault>
+                  <!--Added for remove long text from Notification Grid ony for Mail To Column -->
+                  <ng-container *ngIf="key?.displayName === 'Mail To'; else defaultview">
+                    <span
+                      title="{{data[key.objectKey]}}">{{(data[key.objectKey].length>17 ? (data[key.objectKey] | slice:0:17) +'...' : data[key.objectKey] ) }}</span>
+                  </ng-container>
+                  <!-- Default Use -->
+                  <ng-template #defaultview>
+                    <span style="white-space: normal">{{data[key.objectKey]}}</span>
+                  </ng-template>
+                </span>
+              </div>
+            </ng-template>
+            <ng-template #tipContent>
+              <div [innerHTML]="textSepratorHover(data[key.objectKey], key.separator)"></div>
+            </ng-template>
+          </td>
+          <td *ngIf="headerMap?.config.header.action.Placement=='Right'" style="width: 40px">
+            <a href="javascript:void(0)" (click)="onRowClick(i, data)"
+              *ngIf="headerMap.config.header.action.Link">View</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!--Grid Paging-->
+    <nav aria-label="Page navigation" *ngIf="headerMap?.config.paging && itemsCount != 0">
+      <div class="filter_pagination justify-content-end">
+        <div>
+          <div class="input-group">
+            <div>Go to page :</div>
+            <input class="gotoPage" #pageSelect type="number" min="1" (change)="goToPage(pageSelect.value)"
+              [value]="currentPage">
+          </div>
+        </div>
+        <div class="selectListing">
+          <div class="input-group">
+            <div>Show Rows:</div>
+            <div ngbDropdown>
+              <button class="btn btn-outline-primary"
+                ngbDropdownToggle>{{itemsPerPage > 0 ? itemsPerPage : pageSizeOptions[0]}}</button>
+              <ul ngbDropdownMenu aria-labelledby="dropdownCustomFilter">
+                <li *ngFor="let item of pageSizeOptions;let i = index" ngbDropdownItem value={{item}}
+                  id="pageSizeOptionsName" (click)="pageChangeClick(item)">{{item}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="input-group">
+            <div style="padding-right:0px;"> {{first}} - {{last}} of {{itemsCount}}</div>
+          </div>
+        </div>
+        <!--Previous button-->
+        <div class="nxt_prvWrap">
+          <a [id]="prevName" tabindex="-1" title="Previous" (click)="previousPage($event)"><i aria-label="Left arrow"
+              class="fas fa-angle-left" role="img"></i></a>
+        </div>
+
+        <!--Next Button-->
+        <div class="nxt_prvWrap">
+          <a [id]="nextName" title="Next" (click)="nextPage($event)" tabindex="-1"><i aria-label="Right arrow"
+              class="fas fa-angle-right" role="img"></i></a>
+        </div>
+      </div>
+    </nav>
+  </ng-template>
+
+</div>

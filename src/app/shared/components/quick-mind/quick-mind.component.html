@@ -1,0 +1,36 @@
+<div class="breadcrumbs">
+  <span style="color: #4C9E00; margin-right: 10px">Quick
+      Mind</span>
+</div>
+
+<div class="quickMindWrap">
+
+ <!-- <div class="quick-mind">Quick Mind</div>Saleem on Mar 12 2020-->
+<form>
+  <div class="quickSearch">
+    <div class="headingWrap fs22">Find a Topic</div>
+    <div class="searchWrap">
+      <div>
+        <ng-autocomplete #auto placeHolder='Search' [data]="data" [searchKeyword]="keyword" (selected)='selectEvent($event)' 
+          (inputChanged)='onChangeSearch($event)' [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate">
+        </ng-autocomplete>
+      </div>
+      <button aria-label="Search" class="Qsearch" type="submit" (click)="search(auto.query)">
+        <i class="fas fa-search"></i>
+      </button>
+      <div> <button class="greenBtn btn btn-primary" (click)="search(auto.query)">Search</button></div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="ng-autocomplete">
+  <ng-template #itemTemplate let-item>
+    <a [innerHTML]="item.QUES"></a>
+  </ng-template>
+
+  <ng-template #notFoundTemplate let-notFound>
+    <div [innerHTML]="notFound"></div>
+  </ng-template>
+</div>

@@ -1,0 +1,55 @@
+<section class="listing_detail">
+  <h3>{{ addEditVideo }}</h3>
+  <div class="corner-button">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close(false)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="listing_detail_form">
+    <form #userForm="ngForm" novalidate autocomplete="off" (ngSubmit)="onSubmit(userForm.valid,userForm);false">
+      <input type="hidden" name="DataID" [(ngModel)]="addEditData.DataID" #QmindId="ngModel">
+      <div class="form-group">
+          <div class="row">
+        <div class="col-sm-6">
+          <label>Video Name*</label>
+          <input type="text" class="form-control" placeholder="" name="Name" [(ngModel)]="addEditData.Name"
+            #Name="ngModel" required>
+          <div *ngIf="Name.invalid && ((Name.dirty || Name.touched)||(userForm.submitted && formVal))">
+            <span class="err_message" *ngIf="Name.errors.required">Video Name is required</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label>Status*</label>
+          <select type="text" class="form-control select" placeholder="" name="Status" [(ngModel)]="addEditData.Status"
+            #Status="ngModel" required>
+          <option>Active</option>
+          <option>Inactive</option>
+          </select>
+          <div *ngIf="Status.invalid && ((Status.dirty || Status.touched)||(userForm.submitted && formVal))">
+            <span class="err_message" *ngIf="Status.errors.required">Status is required</span>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="form-group">
+        <label>Video Code*</label>
+        <input type="text" class="form-control" placeholder="YouTube Embed Code" name="Document" [(ngModel)]="addEditData.Document"
+          #Document="ngModel" required>
+        <div *ngIf="Document.invalid && ((Document.dirty || Document.touched)||(userForm.submitted && formVal))">
+          <span class="err_message" *ngIf="Document.errors.required">Video Code is required</span>
+        </div>
+      </div>
+      <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control h-100" rows="4" placeholder="" name="Description" [(ngModel)]="addEditData.Description"
+            #Description="ngModel">
+          </textarea>
+        </div>
+  
+      <div class="update_detail"  *ngIf="isShowSave">
+        <button type="button" class="btn btn-primary" (click)="activeModal.close(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary">{{addEditData.DataID == '' ? 'Save & Publish' : 'Save & Publish'}} </button>
+      </div>
+    </form>
+  </div>
+</section>

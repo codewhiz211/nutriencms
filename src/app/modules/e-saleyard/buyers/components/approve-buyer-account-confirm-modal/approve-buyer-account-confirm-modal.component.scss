@@ -1,0 +1,65 @@
+.modal-header {
+    border-bottom: none !important;
+    padding: 24px 16px 0 34px;
+    position: relative;
+    overflow: hidden;
+    color: black;
+  
+    .modal-title {
+        font-size: 22px;
+        font-weight: 500;
+    }
+
+    .btn-close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+
+        &:before {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 80px;
+            transform: rotate(45deg);
+            background: #eee;
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            z-index: 0;
+        }
+
+        span {
+            font-size: 28px;
+            position: absolute;
+            top: 0;
+            right: 8px;
+            z-index: 1;
+            line-height: 1;
+        }
+    }
+}
+
+.modal-body {
+    color: #4D4D51;
+
+    .approve-btn {
+        font-size: 12px;
+        letter-spacing: 0.35px;
+        line-height: 17px;
+        text-align: center;
+        width: 150px;
+        height: 35px;
+    }
+    
+    .cancel-btn {
+        color: #36424F;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.35px;
+        line-height: 17px;
+        text-align: center;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+}

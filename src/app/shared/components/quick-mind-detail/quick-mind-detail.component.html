@@ -1,0 +1,50 @@
+<div class="breadcrumbs">
+  <a (click)="location.back()"><img src="assets/styles/images/back-icon-black.png" width="20px"><span>Quick
+      Mind</span></a>
+</div>
+<form>
+<div class="quickMindHeader">
+  <div class="searchWrap">
+    <div class="headingWrap fs22">Find a Topic</div>
+    <div class="input">
+        <ng-autocomplete      
+        [data]="data"
+        [searchKeyword]="keyword"
+        (selected)='selectEvent($event)'
+        (inputChanged)='onChangeSearch($event)'
+        [itemTemplate]="itemTemplate"
+        [notFoundTemplate]="notFoundTemplate"
+        clear="false">                                 
+      </ng-autocomplete>
+    </div>
+    <button aria-label="Search" class="QsearchDetail" type="submit" (click)="search()">
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+</div>
+</form>
+<div class="QuickAccodionWrap">
+  <ngb-accordion #acc="ngbAccordion" [activeIds]="activeId" (panelChange)="toggleAccordian($event)">
+    <ngb-panel *ngFor="let item of listData; let i = index" id="{{'ngb-panel-'+i}}">
+      <ng-template ngbPanelTitle>
+        <div class="SideRectangle"><i class="fas" [ngClass]="{ 'fa-caret-down': 'ngb-panel-'+i == activeId, 'fa-caret-right': 'ngb-panel-'+i != activeId }"  style="font-size: -webkit-xxx-large;color: white;"></i></div>
+        <div class="sideText"><span class="f14">{{item.QUES}}</span></div>
+      </ng-template>
+      <ng-template ngbPanelContent>
+        <span class="f14">
+            <div [innerHTML]="item.ANSW"></div>
+        </span>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+
+</div>
+<div class="ng-autocomplete">
+    <ng-template #itemTemplate let-item>
+      <a [innerHTML]="item.QUES"></a>
+    </ng-template>
+  
+    <ng-template #notFoundTemplate let-notFound>
+      <div [innerHTML]="notFound"></div>
+    </ng-template>
+  </div>
